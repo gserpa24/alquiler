@@ -2,7 +2,6 @@
 // Layout para las páginas del panel administrativo.
 
 import type { Metadata } from 'next'
-import { Toaster } from 'sonner'
 import { AdminNav } from '@/components/admin/AdminNav'
 
 export const metadata: Metadata = {
@@ -24,7 +23,6 @@ export default function AdminLayout({
       <footer className="border-t border-zinc-200 bg-white py-4 px-4 text-center text-xs text-zinc-400">
         AUTORUTA — Panel de Administración de Flota • Alquiler de Autos Cotidianos
       </footer>
-      <Toaster position="bottom-right" richColors />
     </div>
   )
 }

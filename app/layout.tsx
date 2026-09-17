@@ -62,12 +62,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <Footer />
         <FloatingWhatsApp />
         <Toaster
-          position="bottom-left"
-          toastOptions={{
-            classNames: {
-              toast: 'bg-white border border-zinc-200 text-zinc-900 shadow-sm rounded-md',
-            },
-          }}
+          position="bottom-right"
+          richColors
         />
       </body>
     </html>
