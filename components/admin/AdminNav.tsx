@@ -20,7 +20,6 @@ import { logoutAdminAction } from '@/app/actions/auth-actions'
 const ADMIN_LINKS = [
   { href: '/admin',          label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/vehicles', label: 'Flota de Vehículos', icon: Car },
-  { href: '/admin/vehicles/new', label: 'Nuevo Vehículo', icon: PlusCircle },
 ]
 
 export function AdminNav() {
