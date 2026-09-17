@@ -12,8 +12,8 @@ export default async function HomePage() {
   const { vehicles } = await getVehicles({ limit: 50 })
 
   return (
-    <main className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white">
       <TransactionalVehicleCatalog vehicles={vehicles} />
-    </main>
+    </div>
   )
 }

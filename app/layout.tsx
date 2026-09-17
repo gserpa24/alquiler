@@ -56,7 +56,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     >
       <body className="min-h-full flex flex-col bg-white text-zinc-900 antialiased selection:bg-slate-900 selection:text-white">
         <Navbar />
-        <main className="flex-1 pt-16 lg:pt-20" id="main-content">
+        <main className="flex-1 pt-16" id="main-content">
           {children}
         </main>
         <Footer />
