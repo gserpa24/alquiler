@@ -2,21 +2,27 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
 
 const WA_LINK = buildGenericWhatsAppLink()
 
 /**
- * Botón flotante de WhatsApp visible en todas las páginas.
- * Pulse ring animado para captar la atención.
- * Al hover muestra un tooltip con el mensaje.
+ * Botón flotante de WhatsApp visible únicamente en el sitio público.
+ * Se oculta automáticamente en todas las rutas del panel administrativo (/admin/*).
  */
 export function FloatingWhatsApp() {
+  const pathname = usePathname()
   const [hovered, setHovered] = useState(false)
+
+  // Ocultar en todas las rutas del panel administrativo
+  if (pathname?.startsWith('/admin')) {
+    return null
+  }
 
   return (
     <div
-      className="fixed bottom-6 right-5 z-50 flex flex-col items-end gap-2"
+      className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2"
       aria-label="Contactar por WhatsApp"
     >
       {/* Tooltip */}
@@ -27,17 +33,17 @@ export function FloatingWhatsApp() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 6 }}
             transition={{ duration: 0.15 }}
-            className="bg-white border border-zinc-200 rounded-md px-3 py-1.5 shadow-xs"
+            className="bg-white border border-zinc-200 rounded-md px-3.5 py-1.5 shadow-md"
             role="tooltip"
           >
-            <p className="text-[11px] font-medium text-zinc-800 whitespace-nowrap">
+            <p className="text-xs font-medium text-zinc-800 whitespace-nowrap">
               Atención inmediata por WhatsApp
             </p>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Botón principal */}
+      {/* Botón principal — Ligeramente más grande y visible */}
       <div className="relative">
         <motion.a
           href={WA_LINK}
@@ -46,12 +52,12 @@ export function FloatingWhatsApp() {
           aria-label="Abrir WhatsApp"
           onHoverStart={() => setHovered(true)}
           onHoverEnd={() => setHovered(false)}
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.96 }}
-          className="relative flex items-center justify-center w-12 h-12 rounded-full bg-[#0A192F] text-white shadow-xs hover:bg-[#112240] transition-colors duration-150 border border-zinc-200"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="relative flex items-center justify-center w-14 h-14 rounded-full bg-[#0A192F] text-white shadow-lg hover:bg-[#112240] transition-colors duration-150 border border-zinc-300"
         >
           <svg
-            className="w-7 h-7 text-white"
+            className="w-8 h-8 text-white"
             fill="currentColor"
             viewBox="0 0 24 24"
             aria-hidden="true"
