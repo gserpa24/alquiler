@@ -39,10 +39,10 @@ export function TransactionalSearchHero({
         onSubmit={handleSubmit}
         className="bg-white border border-zinc-200 rounded-lg p-4 sm:p-5 shadow-xs grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-4 items-end"
       >
-        {/* 1. Fecha de Entrega (Pick-up) */}
+        {/* 1. Fecha de Entrega */}
         <div className="sm:col-span-4 space-y-1.5">
           <label className="block text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
-            Fecha de Entrega (Pick-up)
+            Fecha de Entrega
           </label>
           <div className="relative">
             <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 stroke-[1.5] pointer-events-none" />
@@ -55,10 +55,10 @@ export function TransactionalSearchHero({
           </div>
         </div>
 
-        {/* 2. Fecha de Devolución (Drop-off) */}
+        {/* 2. Fecha de Devolución */}
         <div className="sm:col-span-4 space-y-1.5">
           <label className="block text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
-            Fecha de Devolución (Drop-off)
+            Fecha de Devolución
           </label>
           <div className="relative">
             <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 stroke-[1.5] pointer-events-none" />

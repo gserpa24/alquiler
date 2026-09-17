@@ -55,13 +55,18 @@ export function TransactionalVehicleCatalog({ vehicles }: TransactionalVehicleCa
     <div className="w-full">
       {/* ── Buscador Principal Central (Hero Section) ─────────── */}
       <section className="pt-12 pb-10 px-4 sm:px-6 lg:px-8 border-b border-zinc-200 bg-white">
-        <div className="max-w-4xl mx-auto text-center mb-8">
-          <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-[#0A0A0A] mb-3">
-            Alquiler de Autos Cotidianos
+        <div className="max-w-4xl mx-auto text-center mb-5">
+          <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-[#0A0A0A]">
+            Alquiler de autos
           </h1>
-          <p className="text-sm sm:text-base text-zinc-500 max-w-xl mx-auto font-normal">
-            Selecciona tus fechas de entrega y devolución para consultar vehículos disponibles de forma inmediata.
-          </p>
+        </div>
+
+        {/* Indicador de selección de fechas */}
+        <div className="max-w-4xl mx-auto mb-3 flex items-center justify-center">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-100 border border-zinc-200 text-xs font-medium text-zinc-600">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+            <span>Selecciona el rango de fechas para buscar vehículos disponibles</span>
+          </div>
         </div>
 
         <TransactionalSearchHero
