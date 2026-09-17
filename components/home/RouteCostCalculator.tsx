@@ -88,12 +88,8 @@ export function RouteCostCalculator() {
     [selectedVehicleId]
   )
 
-  // Parse km/l from vehicle (defaulting to 15.0 if missing)
-  const kmPerLiter = useMemo(() => {
-    if (!currentVehicle.fuel_consumption) return 15.0
-    const match = currentVehicle.fuel_consumption.match(/([\d.]+)/)
-    return match ? parseFloat(match[1]) : 15.0
-  }, [currentVehicle])
+  // Estimación de rendimiento promedio (15.0 km/l)
+  const kmPerLiter = 15.0
 
   // Estimaciones numéricas (precio promedio de combustible en Ecuador ~$0.68/litro o $2.55/galón)
   const fuelPricePerLiter = 0.68
@@ -270,7 +266,7 @@ export function RouteCostCalculator() {
                             {vehicle.model}
                           </p>
                           <p className="text-[10px] text-zinc-500 truncate">
-                            {vehicle.fuel_consumption} • ${vehicle.daily_rate}/d
+                            ${vehicle.daily_rate}/d
                           </p>
                         </div>
                       </button>
@@ -335,9 +331,6 @@ export function RouteCostCalculator() {
                   <span className="text-zinc-600 flex items-center gap-1.5">
                     <Fuel className="w-3.5 h-3.5 text-zinc-400" />
                     Combustible ({litersNeeded} Litros)
-                  </span>
-                  <span className="block text-[10px] text-zinc-400 ml-5">
-                    Rendimiento auto: {currentVehicle.fuel_consumption}
                   </span>
                 </div>
                 <span className="font-semibold text-zinc-900 tabular-nums">

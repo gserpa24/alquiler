@@ -3,11 +3,11 @@
 import { type HTMLAttributes, forwardRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Users, Briefcase, Settings2, ArrowRight } from 'lucide-react'
+import { Users, Fuel, Settings2, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { convertPrice, formatCurrencyPrice } from '@/lib/currency'
 import { useCurrency } from '@/contexts/CurrencyContext'
-import { type VehicleCard as VehicleCardType, CATEGORY_LABELS } from '@/types/vehicle'
+import { type VehicleCard as VehicleCardType, CATEGORY_LABELS, FUEL_LABELS } from '@/types/vehicle'
 import { buildVehicleWhatsAppLink } from '@/lib/whatsapp'
 import { StatusBadge } from '@/components/vehicle/StatusBadge'
 
@@ -41,7 +41,6 @@ export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
         ? 'Automático'
         : 'Manual'
 
-    const luggageCount = vehicle.luggage ?? (vehicle.category === 'suv' ? 3 : 2)
 
     return (
       <div
@@ -108,10 +107,10 @@ export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
                 <span>{vehicle.seats} plazas</span>
               </div>
 
-              {/* Equipaje */}
-              <div className="flex items-center justify-end gap-1.5" title="Capacidad de equipaje">
-                <Briefcase className="w-3.5 h-3.5 text-zinc-400 stroke-[1.5] shrink-0" />
-                <span>{luggageCount} maletas</span>
+              {/* Combustible */}
+              <div className="flex items-center justify-end gap-1.5" title="Tipo de combustible">
+                <Fuel className="w-3.5 h-3.5 text-zinc-400 stroke-[1.5] shrink-0" />
+                <span>{FUEL_LABELS[vehicle.fuel]}</span>
               </div>
             </div>
           </div>

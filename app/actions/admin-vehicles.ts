@@ -48,9 +48,7 @@ export async function createVehicleAction(
     const data = validated.data
     const slug = buildSlug(data.brand, data.model, data.year, data.color)
 
-    // Nota: luggage y fuel_consumption son campos de UI/display solamente.
-    // No forman parte del schema de Supabase — se excluyen del insert.
-    const newVehicle: Omit<Vehicle, 'luggage' | 'fuel_consumption'> & { slug: string } = {
+    const newVehicle: Vehicle = {
       id: crypto.randomUUID(),
       slug,
       brand: data.brand,
@@ -117,7 +115,6 @@ export async function updateVehicleAction(
       transmission: data.transmission,
       fuel: data.fuel,
       seats: data.seats,
-      // luggage y fuel_consumption: campos de UI sin columna en Supabase — se omiten del update
       daily_rate: data.daily_rate,
       sale_price: data.sale_price ?? null,
       mileage: data.mileage ?? 0,

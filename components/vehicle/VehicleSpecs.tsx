@@ -71,16 +71,6 @@ export function VehicleSpecs({ vehicle, className }: VehicleSpecsProps) {
       label: 'Kilometraje',
       value: formatMileage(vehicle.mileage),
     },
-    ...(vehicle.fuel_consumption ? [{
-      icon:  <Fuel className="w-4 h-4 text-[#0A192F] stroke-[1.5]" />,
-      label: 'Rendimiento',
-      value: vehicle.fuel_consumption,
-    }] : []),
-    ...(vehicle.suitability_tag ? [{
-      icon:  <Tag className="w-4 h-4 text-[#0A192F] stroke-[1.5]" />,
-      label: 'Recomendado',
-      value: vehicle.suitability_tag,
-    }] : []),
     ...(vehicle.color ? [{
       icon:  <Palette className="w-4 h-4 text-[#0A192F] stroke-[1.5]" />,
       label: 'Color',

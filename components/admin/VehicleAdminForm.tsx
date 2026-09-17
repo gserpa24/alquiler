@@ -44,26 +44,24 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
 
   // Estado del formulario
   const [formData, setFormData] = useState<AdminVehicleInput>({
-    brand:            initialVehicle?.brand ?? '',
-    model:            initialVehicle?.model ?? '',
-    year:             initialVehicle?.year ?? new Date().getFullYear(),
-    category:         initialVehicle?.category ?? 'sedan',
-    transmission:     initialVehicle?.transmission ?? 'automatic',
-    fuel:             initialVehicle?.fuel ?? 'gasoline',
-    seats:            initialVehicle?.seats ?? 5,
-    luggage:          initialVehicle?.luggage ?? 2,
-    daily_rate:       initialVehicle?.daily_rate ?? 35,
-    sale_price:       initialVehicle?.sale_price ?? null,
-    mileage:          initialVehicle?.mileage ?? 10000,
-    color:            initialVehicle?.color ?? 'Blanco',
-    fuel_consumption: initialVehicle?.fuel_consumption ?? '16.5 km/l',
-    thumbnail:        initialVehicle?.thumbnail ?? 'https://images.unsplash.com/photo-1590362891991-f776e747a588?w=800&q=80',
-    images:           initialVehicle?.images ?? [],
-    features:         initialVehicle?.features ?? ['Aire acondicionado', 'Bluetooth', 'Cámara de retroceso', 'Apple CarPlay'],
-    description:      initialVehicle?.description ?? '',
-    status:           initialVehicle?.status ?? 'available',
-    is_featured:      initialVehicle?.is_featured ?? false,
-    sort_order:       initialVehicle?.sort_order ?? 0,
+    brand:        initialVehicle?.brand ?? '',
+    model:        initialVehicle?.model ?? '',
+    year:         initialVehicle?.year ?? new Date().getFullYear(),
+    category:     initialVehicle?.category ?? 'sedan',
+    transmission: initialVehicle?.transmission ?? 'automatic',
+    fuel:         initialVehicle?.fuel ?? 'gasoline',
+    seats:        initialVehicle?.seats ?? 5,
+    daily_rate:   initialVehicle?.daily_rate ?? 35,
+    sale_price:   initialVehicle?.sale_price ?? null,
+    mileage:      initialVehicle?.mileage ?? 0,
+    color:        initialVehicle?.color ?? 'Blanco',
+    thumbnail:    initialVehicle?.thumbnail ?? 'https://images.unsplash.com/photo-1590362891991-f776e747a588?w=800&q=80',
+    images:       initialVehicle?.images ?? [],
+    features:     initialVehicle?.features ?? ['Aire acondicionado', 'Bluetooth', 'Cámara de retroceso', 'Apple CarPlay'],
+    description:  initialVehicle?.description ?? '',
+    status:       initialVehicle?.status ?? 'available',
+    is_featured:  initialVehicle?.is_featured ?? false,
+    sort_order:   initialVehicle?.sort_order ?? 0,
   })
 
   // Helper para convertir array de features a string
@@ -89,12 +87,11 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
 
     const payload: AdminVehicleInput = {
       ...formData,
-      features: parsedFeatures,
+      features:   parsedFeatures,
       daily_rate: Number(formData.daily_rate),
-      year: Number(formData.year),
-      seats: Number(formData.seats),
-      luggage: Number(formData.luggage),
-      mileage: Number(formData.mileage),
+      year:       Number(formData.year),
+      seats:      Number(formData.seats),
+      mileage:    formData.mileage != null ? Number(formData.mileage) : 0,
       sale_price: showSaleOptions && formData.sale_price ? Number(formData.sale_price) : null,
     }
 
@@ -345,8 +342,7 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
             </div>
           </div>
 
-          {/* 4-column grid — collapses to 2 cols on mobile (fine for 320px+) */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+          <div className="grid grid-cols-2 gap-3.5">
             <div>
               <label className="block text-[11px] font-semibold text-zinc-600 uppercase tracking-wider mb-1">
                 Plazas (Pasajeros) *
@@ -358,35 +354,7 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
                 max={9}
                 value={formData.seats}
                 onChange={(e) => handleChange('seats', e.target.value)}
-                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-900 focus:outline-none focus:border-[#0A192F] focus:bg-white min-h-[44px]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-[11px] font-semibold text-zinc-600 uppercase tracking-wider mb-1">
-                Equipaje <span className="text-zinc-400 normal-case font-normal">(opcional)</span>
-              </label>
-              <input
-                type="number"
-                min={1}
-                max={8}
-                placeholder="2"
-                value={formData.luggage ?? ''}
-                onChange={(e) => handleChange('luggage', e.target.value || undefined)}
-                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-900 focus:outline-none focus:border-[#0A192F] focus:bg-white min-h-[44px]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-[11px] font-semibold text-zinc-600 uppercase tracking-wider mb-1">
-                Consumo Aprox. <span className="text-zinc-400 normal-case font-normal">(opcional)</span>
-              </label>
-              <input
-                type="text"
-                placeholder="Ej. 16.5 km/l"
-                value={formData.fuel_consumption ?? ''}
-                onChange={(e) => handleChange('fuel_consumption', e.target.value || undefined)}
-                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-900 focus:outline-none focus:border-[#0A192F] focus:bg-white min-h-[44px]"
+                className={inputCls}
               />
             </div>
 
@@ -400,7 +368,7 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
                 placeholder="0 km"
                 value={formData.mileage ?? ''}
                 onChange={(e) => handleChange('mileage', e.target.value || undefined)}
-                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-900 focus:outline-none focus:border-[#0A192F] focus:bg-white min-h-[44px]"
+                className={inputCls}
               />
             </div>
           </div>

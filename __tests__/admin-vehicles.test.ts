@@ -23,7 +23,6 @@ describe('AdminVehicleSchema', () => {
     transmission: 'manual',
     fuel: 'gasoline',
     seats: 5,
-    luggage: 2,
     daily_rate: 34,
     color: 'Gris Grafito',
     thumbnail: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800&q=80',
@@ -36,19 +35,17 @@ describe('AdminVehicleSchema', () => {
     if (result.success) {
       expect(result.data.brand).toBe('Nissan')
       expect(result.data.seats).toBe(5)
-      expect(result.data.luggage).toBe(2)
       expect(result.data.daily_rate).toBe(34)
       expect(result.data.status).toBe('available')
     }
   })
 
-  it('aplica valores por defecto de plazas y maletas si se omiten', () => {
-    const { seats: _, luggage: __, status: ___, ...withoutDefaults } = validVehicle
+  it('aplica valores por defecto de plazas si se omiten', () => {
+    const { seats: _, status: ___, ...withoutDefaults } = validVehicle
     const result = AdminVehicleSchema.safeParse(withoutDefaults)
     expect(result.success).toBe(true)
     if (result.success) {
       expect(result.data.seats).toBe(5)
-      expect(result.data.luggage).toBe(2)
       expect(result.data.status).toBe('available')
       expect(result.data.is_featured).toBe(false)
     }
@@ -90,7 +87,6 @@ describe('CRUD Server Actions de Vehículos', () => {
       transmission: 'automatic',
       fuel: 'gasoline',
       seats: 5,
-      luggage: 2,
       daily_rate: 32,
       color: 'Azul Marino',
       thumbnail: 'https://images.unsplash.com/photo-example',
@@ -102,7 +98,6 @@ describe('CRUD Server Actions de Vehículos', () => {
       sale_price: null,
       mileage: 5000,
       description: 'Auto de prueba',
-      fuel_consumption: '17.0 km/l',
     })
 
     expect(res.success).toBe(true)
@@ -135,7 +130,6 @@ describe('CRUD Server Actions de Vehículos', () => {
       transmission: 'automatic',
       fuel: 'gasoline',
       seats: 5,
-      luggage: 2,
       daily_rate: 38, // Tarifa modificada de 32 a 38
       color: 'Azul Marino',
       thumbnail: 'https://images.unsplash.com/photo-example',
@@ -147,7 +141,6 @@ describe('CRUD Server Actions de Vehículos', () => {
       sale_price: null,
       mileage: 5000,
       description: 'Auto de prueba actualizado',
-      fuel_consumption: '17.0 km/l',
     })
 
     expect(res.success).toBe(true)

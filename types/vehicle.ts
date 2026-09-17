@@ -26,11 +26,6 @@ export interface Vehicle {
   status:            VehicleStatus
   is_featured:       boolean
   sort_order:        number
-  // Movilidad cotidiana y ruteo
-  luggage?:          number // ej: 2 maletas
-  fuel_consumption?: string // ej: "18.2 km/l"
-  suitability_tag?:  string // ej: "Ideal ciudad", "Bajo consumo", "Apto ripio/montaña", "Familiar espacioso"
-  trip_type?:        'city' | 'weekend' | 'roadtrip'
   created_at:        string
   updated_at:        string
 }
@@ -42,7 +37,6 @@ export type VehicleCard = Pick<
   | 'category' | 'transmission' | 'fuel' | 'seats'
   | 'daily_rate' | 'sale_price' | 'thumbnail'
   | 'status' | 'is_featured' | 'color'
-  | 'luggage' | 'fuel_consumption' | 'suitability_tag' | 'trip_type'
 >
 
 /** Labels legibles para UI */

@@ -14,7 +14,6 @@ import {
   Trash2,
   ExternalLink,
   Users,
-  Briefcase,
   AlertCircle,
   Plus,
 } from 'lucide-react'
@@ -216,13 +215,9 @@ export function AdminVehicleTable({ initialVehicles }: AdminVehicleTableProps) {
                   <span className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-zinc-100 text-zinc-700 border border-zinc-200">
                     {CATEGORY_LABELS[vehicle.category]}
                   </span>
-                  <span className="flex items-center gap-1">
+                  <span className="flex items-center gap-1" title={`${vehicle.seats} plazas`}>
                     <Users className="w-3.5 h-3.5 text-zinc-400" />
-                    {vehicle.seats}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Briefcase className="w-3.5 h-3.5 text-zinc-400" />
-                    {vehicle.luggage ?? 2}
+                    {vehicle.seats} plazas
                   </span>
                   <span className="font-bold text-zinc-950 tabular-nums ml-auto">
                     {vehicle.daily_rate ? formatPrice(vehicle.daily_rate) : '—'}
@@ -330,15 +325,9 @@ export function AdminVehicleTable({ initialVehicles }: AdminVehicleTableProps) {
 
                       {/* Capacidad */}
                       <td className="py-3 px-4 text-zinc-600">
-                        <div className="flex items-center gap-3 text-[11px]">
-                          <span className="flex items-center gap-1" title={`${vehicle.seats} plazas`}>
-                            <Users className="w-3.5 h-3.5 text-zinc-400" />
-                            {vehicle.seats}
-                          </span>
-                          <span className="flex items-center gap-1" title={`${vehicle.luggage ?? 2} maletas`}>
-                            <Briefcase className="w-3.5 h-3.5 text-zinc-400" />
-                            {vehicle.luggage ?? 2}
-                          </span>
+                        <div className="flex items-center gap-1.5 text-[11px]" title={`${vehicle.seats} plazas`}>
+                          <Users className="w-3.5 h-3.5 text-zinc-400" />
+                          <span>{vehicle.seats} plazas</span>
                         </div>
                       </td>
 

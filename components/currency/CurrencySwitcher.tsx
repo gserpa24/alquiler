@@ -12,9 +12,9 @@ import { useCurrency } from '@/contexts/CurrencyContext'
 const CURRENCY_ORDER: CurrencyCode[] = ['PEN', 'USD', 'EUR']
 
 const CURRENCY_LABELS: Record<CurrencyCode, string> = {
-  PEN: 'S/ Sol Peruano',
-  USD: '$ Dólar USD',
-  EUR: '€ Euro',
+  PEN: 'S/ PEN',
+  USD: '$ USD',
+  EUR: '€ EUR',
 }
 
 interface CurrencySwitcherProps extends HTMLAttributes<HTMLDivElement> {

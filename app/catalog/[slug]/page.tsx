@@ -230,16 +230,6 @@ function VehicleHeader({
         <span className="inline-flex items-center text-xs sm:text-[13px] text-zinc-800 bg-zinc-100 px-3 py-1 rounded-md border border-zinc-300 font-semibold tracking-tight shadow-2xs">
           {CATEGORY_LABELS[vehicle.category]}
         </span>
-        {vehicle.suitability_tag && (
-          <span className="text-[11px] text-zinc-800 bg-white px-2 py-0.5 rounded border border-zinc-300 font-semibold shadow-2xs">
-            {vehicle.suitability_tag}
-          </span>
-        )}
-        {vehicle.fuel_consumption && (
-          <span className="text-[11px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 font-semibold tabular-nums">
-            {vehicle.fuel_consumption}
-          </span>
-        )}
       </div>
       <p className="text-[11px] font-semibold tracking-wider uppercase text-zinc-400">
         {vehicle.brand}
