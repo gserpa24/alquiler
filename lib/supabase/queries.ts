@@ -202,6 +202,15 @@ export async function getSimilarVehicles(
 
 // ── Queries y Mutaciones del Panel Administrativo ──────────────────────────
 
+async function getAdminDbClient() {
+  if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    const { createAdminClient } = await import('@/lib/supabase/admin')
+    return createAdminClient()
+  }
+  const { createClient } = await import('@/lib/supabase/server')
+  return await createClient()
+}
+
 /**
  * Obtiene todos los vehículos para el panel administrativo,
  * incluyendo vehículos en estado 'sold' o 'maintenance'.
@@ -211,8 +220,7 @@ export async function getAllAdminVehicles(): Promise<Vehicle[]> {
     return getMockVehicles()
   }
 
-  const { createClient } = await import('@/lib/supabase/server')
-  const supabase = await createClient()
+  const supabase = await getAdminDbClient()
 
   const { data, error } = await supabase
     .from('vehicles')
@@ -231,8 +239,7 @@ export async function getVehicleById(id: string): Promise<Vehicle | null> {
     return findMockVehicleById(id) ?? null
   }
 
-  const { createClient } = await import('@/lib/supabase/server')
-  const supabase = await createClient()
+  const supabase = await getAdminDbClient()
 
   const { data, error } = await supabase
     .from('vehicles')
@@ -256,8 +263,7 @@ export async function createVehicle(vehicle: Vehicle): Promise<Vehicle> {
     return addMockVehicle(vehicle)
   }
 
-  const { createClient } = await import('@/lib/supabase/server')
-  const supabase = await createClient()
+  const supabase = await getAdminDbClient()
 
   const { data, error } = await supabase
     .from('vehicles')
@@ -280,8 +286,7 @@ export async function updateVehicle(
     return updateMockVehicle(id, updates)
   }
 
-  const { createClient } = await import('@/lib/supabase/server')
-  const supabase = await createClient()
+  const supabase = await getAdminDbClient()
 
   const { data, error } = await supabase
     .from('vehicles')
@@ -316,8 +321,7 @@ export async function deleteVehicle(id: string): Promise<boolean> {
     return deleteMockVehicle(id)
   }
 
-  const { createClient } = await import('@/lib/supabase/server')
-  const supabase = await createClient()
+  const supabase = await getAdminDbClient()
 
   const { error } = await supabase
     .from('vehicles')

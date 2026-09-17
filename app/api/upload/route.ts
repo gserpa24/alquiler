@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { writeFile, mkdir } from 'fs/promises'
 import path from 'path'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export const dynamic = 'force-dynamic'
 
@@ -24,10 +25,20 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads')
-    await mkdir(uploadDir, { recursive: true })
-
     const uploadedUrls: string[] = []
+    const isSupabaseConfigured = Boolean(
+      (process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL) &&
+      (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+    )
+
+    let supabaseAdmin: ReturnType<typeof createAdminClient> | null = null
+    if (isSupabaseConfigured) {
+      try {
+        supabaseAdmin = createAdminClient()
+      } catch (err) {
+        console.warn('[Upload] No se pudo inicializar Supabase admin, usando almacenamiento local:', err)
+      }
+    }
 
     for (const file of files) {
       // Validar tipo de archivo
@@ -49,15 +60,45 @@ export async function POST(request: NextRequest) {
 
       const uniqueSuffix = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
       const fileName = `${sanitizedBase || 'vehiculo'}-${uniqueSuffix}${ext}`
-      const filePath = path.join(uploadDir, fileName)
 
-      await writeFile(filePath, buffer)
-      uploadedUrls.push(`/uploads/${fileName}`)
+      // Si Supabase Storage está disponible, subir al bucket 'vehicles'
+      if (supabaseAdmin) {
+        const { data, error } = await supabaseAdmin.storage
+          .from('vehicles')
+          .upload(fileName, buffer, {
+            contentType: file.type,
+            upsert: true,
+          })
+
+        if (!error && data) {
+          const { data: publicUrlData } = supabaseAdmin.storage
+            .from('vehicles')
+            .getPublicUrl(fileName)
+
+          if (publicUrlData?.publicUrl) {
+            uploadedUrls.push(publicUrlData.publicUrl)
+            continue
+          }
+        } else if (error) {
+          console.error('[Upload] Error al subir a Supabase Storage:', error.message)
+        }
+      }
+
+      // Fallback a almacenamiento en sistema de archivos local
+      try {
+        const uploadDir = path.join(process.cwd(), 'public', 'uploads')
+        await mkdir(uploadDir, { recursive: true })
+        const filePath = path.join(uploadDir, fileName)
+        await writeFile(filePath, buffer)
+        uploadedUrls.push(`/uploads/${fileName}`)
+      } catch (fsErr) {
+        console.error('[Upload] Fallback local falló (común en serverless):', fsErr)
+      }
     }
 
     if (uploadedUrls.length === 0) {
       return NextResponse.json(
-        { error: 'Ningún archivo de imagen válido fue procesado' },
+        { error: 'No se pudo procesar ninguna imagen' },
         { status: 400 }
       )
     }
