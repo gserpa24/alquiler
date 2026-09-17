@@ -28,6 +28,13 @@ interface VehicleAdminFormProps {
   initialVehicle?: Vehicle
 }
 
+// Shared input className — ensures 44px min-height touch target on all inputs/selects
+const inputCls =
+  'w-full px-3 py-2 min-h-[44px] bg-zinc-50 border border-zinc-200 rounded-md text-xs font-medium text-zinc-900 focus:outline-none focus:border-zinc-900 focus:bg-white transition-colors'
+
+const selectCls =
+  'w-full px-2.5 py-2 min-h-[44px] bg-zinc-50 border border-zinc-200 rounded-md text-xs font-medium text-zinc-900 focus:outline-none focus:border-zinc-900 cursor-pointer'
+
 export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
@@ -116,18 +123,19 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl mx-auto pb-12">
-      {/* ── Encabezado y Volver ──────────────────────────────────── */}
-      <div className="flex items-center justify-between border-b border-zinc-200 pb-4">
+      {/* ── Encabezado — Mobile: vertical stack / Desktop: side-by-side ── */}
+      <div className="flex flex-col gap-3 border-b border-zinc-200 pb-4 sm:flex-row sm:items-center sm:justify-between">
+        {/* Back + title row */}
         <div className="flex items-center gap-3">
           <Link
             href="/admin/vehicles"
-            className="p-2 rounded-md border border-zinc-200 bg-white text-zinc-500 hover:text-zinc-950 hover:bg-zinc-50 transition-colors"
+            className="p-2 rounded-md border border-zinc-200 bg-white text-zinc-500 hover:text-zinc-950 hover:bg-zinc-50 transition-colors shrink-0"
             title="Volver al listado"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-950">
+          <div className="min-w-0">
+            <h1 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-zinc-950 truncate">
               {mode === 'create' ? 'Agregar Nuevo Vehículo' : `Modificar ${initialVehicle?.brand} ${initialVehicle?.model}`}
             </h1>
             <p className="text-xs text-zinc-500 mt-0.5">
@@ -136,17 +144,18 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        {/* Action buttons — full-width on mobile */}
+        <div className="flex items-center gap-2 sm:shrink-0">
           <Link
             href="/admin/vehicles"
-            className="px-3 py-2 rounded-md border border-zinc-200 bg-white text-xs font-semibold text-zinc-700 hover:bg-zinc-50 transition-colors"
+            className="flex-1 sm:flex-none text-center px-3 py-2.5 min-h-[44px] rounded-md border border-zinc-200 bg-white text-xs font-semibold text-zinc-700 hover:bg-zinc-50 transition-colors flex items-center justify-center"
           >
             Cancelar
           </Link>
           <button
             type="submit"
             disabled={isPending}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-[#0A192F] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#152e52] transition-colors shadow-xs disabled:opacity-50"
+            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-md bg-zinc-900 text-white text-xs font-semibold uppercase tracking-wider hover:bg-zinc-700 transition-colors shadow-xs disabled:opacity-50"
           >
             {isPending ? (
               <>
@@ -169,7 +178,7 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
         {/* Sub-sección 1: Datos de Identificación */}
         <div className="p-5 sm:p-6 space-y-4">
           <div className="flex items-center gap-2 pb-1 text-xs font-bold text-zinc-900 uppercase tracking-wider">
-            <Car className="w-4 h-4 text-[#0A192F]" />
+            <Car className="w-4 h-4 text-zinc-700" />
             <span>Datos del Vehículo</span>
           </div>
 
@@ -184,7 +193,7 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
                 placeholder="Ej. Toyota, Nissan"
                 value={formData.brand}
                 onChange={(e) => handleChange('brand', e.target.value)}
-                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs font-medium text-zinc-900 focus:outline-none focus:border-[#0A192F] focus:bg-white transition-colors"
+                className={inputCls}
               />
             </div>
             <div>
@@ -197,7 +206,7 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
                 placeholder="Ej. Yaris Sedán, Versa"
                 value={formData.model}
                 onChange={(e) => handleChange('model', e.target.value)}
-                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs font-medium text-zinc-900 focus:outline-none focus:border-[#0A192F] focus:bg-white transition-colors"
+                className={inputCls}
               />
             </div>
           </div>
@@ -214,7 +223,7 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
                 max={new Date().getFullYear() + 2}
                 value={formData.year}
                 onChange={(e) => handleChange('year', e.target.value)}
-                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs font-medium text-zinc-900 focus:outline-none focus:border-[#0A192F] focus:bg-white transition-colors"
+                className={inputCls}
               />
             </div>
 
@@ -228,7 +237,7 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
                 placeholder="Blanco, Gris..."
                 value={formData.color ?? ''}
                 onChange={(e) => handleChange('color', e.target.value)}
-                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs font-medium text-zinc-900 focus:outline-none focus:border-[#0A192F] focus:bg-white transition-colors"
+                className={inputCls}
               />
             </div>
 
@@ -239,7 +248,7 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
               <select
                 value={formData.category}
                 onChange={(e) => handleChange('category', e.target.value as VehicleCategory)}
-                className="w-full px-2.5 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs font-medium text-zinc-900 focus:outline-none focus:border-[#0A192F] cursor-pointer"
+                className={selectCls}
               >
                 <option value="sport">Compacto</option>
                 <option value="sedan">Sedán</option>
@@ -253,8 +262,8 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
         {/* Sub-sección 2: Tarifa y Operación de Alquiler */}
         <div className="p-5 sm:p-6 space-y-4 bg-zinc-50/50">
           <div className="flex items-center gap-2 pb-1 text-xs font-bold text-zinc-900 uppercase tracking-wider">
-            <DollarSign className="w-4 h-4 text-[#0A192F]" />
-            <span>Alquiler & Disponibilidad</span>
+            <DollarSign className="w-4 h-4 text-zinc-700" />
+            <span>Alquiler &amp; Disponibilidad</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -273,7 +282,7 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
                   step="1"
                   value={formData.daily_rate ?? ''}
                   onChange={(e) => handleChange('daily_rate', e.target.value)}
-                  className="w-full pl-7 pr-3 py-2 bg-white border border-zinc-200 rounded-md text-xs font-bold text-zinc-950 focus:outline-none focus:border-[#0A192F] tabular-nums"
+                  className="w-full pl-7 pr-3 py-2 min-h-[44px] bg-white border border-zinc-200 rounded-md text-xs font-bold text-zinc-950 focus:outline-none focus:border-zinc-900 tabular-nums"
                 />
               </div>
             </div>
@@ -285,7 +294,7 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
               <select
                 value={formData.status}
                 onChange={(e) => handleChange('status', e.target.value as VehicleStatus)}
-                className="w-full px-2.5 py-2 bg-white border border-zinc-200 rounded-md text-xs font-semibold text-zinc-900 focus:outline-none focus:border-[#0A192F] cursor-pointer"
+                className={selectCls}
               >
                 <option value="available">Disponible</option>
                 <option value="rented">Alquilado</option>
@@ -299,8 +308,8 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
         {/* Sub-sección 3: Mecánica y Capacidad */}
         <div className="p-5 sm:p-6 space-y-4">
           <div className="flex items-center gap-2 pb-1 text-xs font-bold text-zinc-900 uppercase tracking-wider">
-            <Settings className="w-4 h-4 text-[#0A192F]" />
-            <span>Mecánica & Capacidad</span>
+            <Settings className="w-4 h-4 text-zinc-700" />
+            <span>Mecánica &amp; Capacidad</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -311,7 +320,7 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
               <select
                 value={formData.transmission}
                 onChange={(e) => handleChange('transmission', e.target.value as TransmissionType)}
-                className="w-full px-2.5 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-900 focus:outline-none focus:border-[#0A192F] cursor-pointer"
+                className={selectCls}
               >
                 <option value="automatic">Automático</option>
                 <option value="manual">Manual</option>
@@ -326,7 +335,7 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
               <select
                 value={formData.fuel}
                 onChange={(e) => handleChange('fuel', e.target.value as FuelType)}
-                className="w-full px-2.5 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-900 focus:outline-none focus:border-[#0A192F] cursor-pointer"
+                className={selectCls}
               >
                 <option value="gasoline">Gasolina</option>
                 <option value="diesel">Diésel</option>
@@ -336,59 +345,62 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
             </div>
           </div>
 
+          {/* 4-column grid — collapses to 2 cols on mobile (fine for 320px+) */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
             <div>
               <label className="block text-[11px] font-semibold text-zinc-600 uppercase tracking-wider mb-1">
-                Plazas (Pasajeros)
+                Plazas (Pasajeros) *
               </label>
               <input
                 type="number"
+                required
                 min={2}
                 max={9}
                 value={formData.seats}
                 onChange={(e) => handleChange('seats', e.target.value)}
-                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-900 focus:outline-none focus:border-[#0A192F] focus:bg-white"
+                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-900 focus:outline-none focus:border-[#0A192F] focus:bg-white min-h-[44px]"
               />
             </div>
 
             <div>
               <label className="block text-[11px] font-semibold text-zinc-600 uppercase tracking-wider mb-1">
-                Equipaje (Maletas)
+                Equipaje <span className="text-zinc-400 normal-case font-normal">(opcional)</span>
               </label>
               <input
                 type="number"
                 min={1}
                 max={8}
-                value={formData.luggage ?? 2}
-                onChange={(e) => handleChange('luggage', e.target.value)}
-                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-900 focus:outline-none focus:border-[#0A192F] focus:bg-white"
+                placeholder="2"
+                value={formData.luggage ?? ''}
+                onChange={(e) => handleChange('luggage', e.target.value || undefined)}
+                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-900 focus:outline-none focus:border-[#0A192F] focus:bg-white min-h-[44px]"
               />
             </div>
 
             <div>
               <label className="block text-[11px] font-semibold text-zinc-600 uppercase tracking-wider mb-1">
-                Consumo Aprox.
+                Consumo Aprox. <span className="text-zinc-400 normal-case font-normal">(opcional)</span>
               </label>
               <input
                 type="text"
-                placeholder="16.5 km/l"
+                placeholder="Ej. 16.5 km/l"
                 value={formData.fuel_consumption ?? ''}
-                onChange={(e) => handleChange('fuel_consumption', e.target.value)}
-                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-900 focus:outline-none focus:border-[#0A192F] focus:bg-white"
+                onChange={(e) => handleChange('fuel_consumption', e.target.value || undefined)}
+                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-900 focus:outline-none focus:border-[#0A192F] focus:bg-white min-h-[44px]"
               />
             </div>
 
             <div>
               <label className="block text-[11px] font-semibold text-zinc-600 uppercase tracking-wider mb-1">
-                Odómetro (km)
+                Odómetro (km) <span className="text-zinc-400 normal-case font-normal">(opcional)</span>
               </label>
               <input
                 type="number"
                 min={0}
                 placeholder="0 km"
-                value={formData.mileage ?? 0}
-                onChange={(e) => handleChange('mileage', e.target.value)}
-                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-900 focus:outline-none focus:border-[#0A192F] focus:bg-white"
+                value={formData.mileage ?? ''}
+                onChange={(e) => handleChange('mileage', e.target.value || undefined)}
+                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-900 focus:outline-none focus:border-[#0A192F] focus:bg-white min-h-[44px]"
               />
             </div>
           </div>
@@ -398,7 +410,7 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
         {/* ── 2. Galería y Carga de Fotos ─────────────────────────── */}
         <div className="bg-white p-5 sm:p-6 rounded-lg border border-zinc-200 space-y-4 shadow-2xs">
           <div className="flex items-center gap-2 pb-2 border-b border-zinc-100 text-xs font-bold text-zinc-900 uppercase tracking-wider">
-            <ImageIcon className="w-4 h-4 text-[#0A192F]" />
+            <ImageIcon className="w-4 h-4 text-zinc-700" />
             <span>Fotos del Vehículo (Subida y Carrete)</span>
           </div>
 
@@ -419,7 +431,7 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
                 placeholder="Aire acondicionado, Apple CarPlay, Sensor de retroceso..."
                 value={featuresText}
                 onChange={(e) => setFeaturesText(e.target.value)}
-                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-900 focus:outline-none focus:border-[#0A192F] focus:bg-white"
+                className={inputCls}
               />
             </div>
 
@@ -432,7 +444,7 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
                 placeholder="Detalles sobre el vehículo para el cliente..."
                 value={formData.description ?? ''}
                 onChange={(e) => handleChange('description', e.target.value)}
-                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-900 focus:outline-none focus:border-[#0A192F] focus:bg-white resize-none"
+                className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-900 focus:outline-none focus:border-zinc-900 focus:bg-white resize-none"
               />
             </div>
           </div>
@@ -477,7 +489,7 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
                   placeholder="Ej. 18500"
                   value={formData.sale_price ?? ''}
                   onChange={(e) => handleChange('sale_price', e.target.value ? Number(e.target.value) : null)}
-                  className="w-full pl-7 pr-3 py-2 bg-white border border-zinc-200 rounded-md text-xs font-medium text-zinc-900 focus:outline-none focus:border-[#0A192F]"
+                  className="w-full pl-7 pr-3 py-2 min-h-[44px] bg-white border border-zinc-200 rounded-md text-xs font-medium text-zinc-900 focus:outline-none focus:border-zinc-900"
                 />
               </div>
             </div>
@@ -485,18 +497,18 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
         )}
       </div>
 
-      {/* ── Botones de Guardar Inferiores ──────────────────────────── */}
-      <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-200">
+      {/* ── Botones de Guardar Inferiores — full-width on mobile ──── */}
+      <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 pt-4 border-t border-zinc-200">
         <Link
           href="/admin/vehicles"
-          className="px-4 py-2.5 rounded-md border border-zinc-200 bg-white text-xs font-semibold text-zinc-700 hover:bg-zinc-50 transition-colors"
+          className="flex items-center justify-center min-h-[44px] px-4 py-2.5 rounded-md border border-zinc-200 bg-white text-xs font-semibold text-zinc-700 hover:bg-zinc-50 transition-colors w-full sm:w-auto"
         >
           Cancelar
         </Link>
         <button
           type="submit"
           disabled={isPending}
-          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-md bg-[#0A192F] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#152e52] transition-colors shadow-xs disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-2 min-h-[44px] px-6 py-2.5 rounded-md bg-zinc-900 text-white text-xs font-semibold uppercase tracking-wider hover:bg-zinc-700 transition-colors shadow-xs disabled:opacity-50 w-full sm:w-auto"
         >
           {isPending ? (
             <>
