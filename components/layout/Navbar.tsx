@@ -86,7 +86,7 @@ export function Navbar() {
               'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#0A192F]',
             )}
           >
-            Reservar / Cotizar
+            Reservar
           </Link>
         </div>
 
