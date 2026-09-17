@@ -20,7 +20,7 @@ const FOOTER_LINKS = [
 
 export function Footer() {
   const year = new Date().getFullYear()
-  let waLink = 'https://wa.me/593987654321'
+  let waLink = 'https://wa.me/51997936599'
   try {
     waLink = buildGenericWhatsAppLink()
   } catch {
@@ -93,21 +93,21 @@ export function Footer() {
           {/* Columna — Contacto */}
           <div>
             <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-900 mb-4">
-              Atención y Showroom
+              Atención
             </h3>
             <ul className="space-y-3 text-xs" role="list">
               <li className="flex items-start gap-2.5 text-zinc-500">
                 <Clock className="w-4 h-4 mt-0.5 shrink-0 text-[#0A192F] stroke-[1.5]" aria-hidden="true" />
-                <span>Lunes — Viernes: 8:00 – 19:00<br />Sábados: 9:00 – 17:00</span>
+                <span>Horario de lunes a sábado</span>
               </li>
               <li className="flex items-start gap-2.5 text-zinc-500">
                 <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-[#0A192F] stroke-[1.5]" aria-hidden="true" />
-                <span>Av. Principal 123, Guayaquil</span>
+                <span>Tarapoto</span>
               </li>
               <li className="flex items-start gap-2.5 text-zinc-500">
                 <Phone className="w-4 h-4 mt-0.5 shrink-0 text-[#0A192F] stroke-[1.5]" aria-hidden="true" />
                 <a href={waLink} className="hover:text-zinc-900 font-medium transition-colors">
-                  +593 98 765 4321
+                  +51 997 936 599
                 </a>
               </li>
             </ul>

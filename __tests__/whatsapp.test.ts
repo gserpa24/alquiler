@@ -7,13 +7,13 @@ const BASE_PARAMS = {
   model: 'Hilux',
   year:  2024,
   color: 'Blanco',
-  phone: '593987654321',
+  phone: '51997936599',
 } as const
 
 describe('buildVehicleWhatsAppLink', () => {
   it('genera URL válida de wa.me', () => {
     const url = buildVehicleWhatsAppLink(BASE_PARAMS)
-    expect(url).toMatch(/^https:\/\/wa\.me\/593987654321\?text=/)
+    expect(url).toMatch(/^https:\/\/wa\.me\/51997936599\?text=/)
   })
 
   it('el mensaje contiene el nombre del vehículo codificado', () => {
@@ -32,8 +32,8 @@ describe('buildVehicleWhatsAppLink', () => {
   })
 
   it('sanitiza el número eliminando caracteres no numéricos', () => {
-    const url = buildVehicleWhatsAppLink({ ...BASE_PARAMS, phone: '+593 98 765-4321' })
-    expect(url).toContain('wa.me/593987654321')
+    const url = buildVehicleWhatsAppLink({ ...BASE_PARAMS, phone: '+51 997 936-599' })
+    expect(url).toContain('wa.me/51997936599')
   })
 
   it('lanza error si el número está vacío', () => {
@@ -67,7 +67,7 @@ describe('Encoding de mensajes genéricos — buildGenericWhatsAppLink logic', (
 
   it('el mensaje decodificado conserva emojis y acentos', () => {
     const msg  = '¡Hola! Quiero info. 🚗'
-    const url  = `https://wa.me/593987654321?text=${encodeURIComponent(msg)}`
+    const url  = `https://wa.me/51997936599?text=${encodeURIComponent(msg)}`
     const back = decodeURIComponent(url.split('?text=')[1])
     expect(back).toBe(msg)
   })

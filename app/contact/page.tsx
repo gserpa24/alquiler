@@ -18,14 +18,14 @@ export default function ContactPage() {
       {/* ── Header ─────────────────────────────────────────── */}
       <header className="max-w-3xl mb-12">
         <p className="text-[11px] font-semibold tracking-wider uppercase text-zinc-400 mb-1.5">
-          Atención y Showroom
+          Atención
         </p>
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-950 mb-3">
           Contacto y Ubicación
         </h1>
         <p className="text-zinc-500 text-sm sm:text-base leading-relaxed">
-          ¿Tienes consultas sobre disponibilidad, modelos o venta de vehículos?
-          Escríbenos directamente por WhatsApp o visita nuestro showroom comercial.
+          ¿Tienes consultas sobre disponibilidad, modelos o cotizaciones de vehículos?
+          Escríbenos directamente por WhatsApp o comunícate con nuestro equipo.
         </p>
       </header>
 
@@ -64,15 +64,14 @@ export default function ContactPage() {
           {/* Información de contacto */}
           <div className="p-6 rounded-lg bg-white border border-zinc-200 space-y-4">
             <h3 className="text-sm font-bold text-zinc-900 mb-3">
-              Información del Showroom
+              Información de Contacto
             </h3>
 
             <div className="flex items-start gap-3 text-xs text-zinc-500">
               <MapPin className="w-4 h-4 text-[#0A192F] shrink-0 mt-0.5 stroke-[1.5]" />
               <div>
                 <strong className="block text-zinc-900 font-semibold mb-0.5">Dirección</strong>
-                Av. Principal 123, Sector Automotriz<br />
-                Guayaquil, Ecuador
+                Tarapoto, San Martín, Perú
               </div>
             </div>
 
@@ -80,16 +79,15 @@ export default function ContactPage() {
               <Clock className="w-4 h-4 text-[#0A192F] shrink-0 mt-0.5 stroke-[1.5]" />
               <div>
                 <strong className="block text-zinc-900 font-semibold mb-0.5">Horarios de Atención</strong>
-                Lunes a Viernes: 08:00 – 19:00<br />
-                Sábados: 09:00 – 17:00
+                Horario de lunes a sábado
               </div>
             </div>
 
             <div className="flex items-start gap-3 text-xs text-zinc-500">
               <Phone className="w-4 h-4 text-[#0A192F] shrink-0 mt-0.5 stroke-[1.5]" />
               <div>
-                <strong className="block text-zinc-900 font-semibold mb-0.5">Teléfono</strong>
-                +593 98 765 4321
+                <strong className="block text-zinc-900 font-semibold mb-0.5">Teléfono / WhatsApp</strong>
+                +51 997 936 599
               </div>
             </div>
 
@@ -106,8 +104,8 @@ export default function ContactPage() {
           <div className="rounded-lg border border-zinc-200 overflow-hidden h-40 bg-zinc-50 relative flex items-center justify-center">
             <div className="text-center p-4">
               <MapPin className="w-5 h-5 text-[#0A192F] mx-auto mb-1.5 stroke-[1.5]" />
-              <p className="text-xs font-semibold text-zinc-900">Showroom Central</p>
-              <p className="text-[11px] text-zinc-400 mt-0.5">Av. Principal 123, Guayaquil</p>
+              <p className="text-xs font-semibold text-zinc-900">Atención Central</p>
+              <p className="text-[11px] text-zinc-400 mt-0.5">Tarapoto, San Martín, Perú</p>
             </div>
           </div>
         </div>

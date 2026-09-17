@@ -94,7 +94,7 @@ export function ContactForm() {
             id="phone"
             name="phone"
             type="tel"
-            placeholder="+593 98 765 4321"
+            placeholder="+51 997 936 599"
             className="w-full px-3.5 py-2.5 rounded-md bg-white border border-zinc-200 focus:border-[#0A192F] text-zinc-900 text-xs transition-colors outline-none"
           />
           {state?.errors?.phone && (
