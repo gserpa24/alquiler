@@ -1,6 +1,7 @@
 // lib/whatsapp.ts
 
-const WA_NUMBER      = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? ''
+const DEFAULT_FALLBACK_PHONE = '593987654321'
+const WA_NUMBER      = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || DEFAULT_FALLBACK_PHONE
 const WA_BASE        = 'https://wa.me'
 const MAX_URL_LENGTH = 3500
 

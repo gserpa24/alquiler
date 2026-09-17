@@ -2,14 +2,12 @@ import Link from 'next/link'
 import { Car, Phone, MapPin, Clock, Share2, Users } from 'lucide-react'
 import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
 
-const WA_LINK = buildGenericWhatsAppLink()
-
 const FOOTER_LINKS = [
   { section: 'Explora', links: [
     { label: 'Inicio',            href: '/' },
     { label: 'Autos y Flota',     href: '/catalog' },
-    { label: 'Sedanes Premium',   href: '/catalog?category=sedan' },
-    { label: 'SUVs & 4x4',        href: '/catalog?category=suv' },
+    { label: 'Sedanes',           href: '/catalog?category=sedan' },
+    { label: 'SUVs',              href: '/catalog?category=suv' },
     { label: 'Preguntas Frecuentes', href: '/#faq-heading' },
   ]},
   { section: 'Información Legal', links: [
@@ -22,6 +20,12 @@ const FOOTER_LINKS = [
 
 export function Footer() {
   const year = new Date().getFullYear()
+  let waLink = 'https://wa.me/593987654321'
+  try {
+    waLink = buildGenericWhatsAppLink()
+  } catch {
+    // fallback
+  }
 
   return (
     <footer className="bg-zinc-50 border-t border-zinc-200 mt-20" role="contentinfo">
@@ -102,7 +106,7 @@ export function Footer() {
               </li>
               <li className="flex items-start gap-2.5 text-zinc-500">
                 <Phone className="w-4 h-4 mt-0.5 shrink-0 text-[#0A192F] stroke-[1.5]" aria-hidden="true" />
-                <a href={WA_LINK} className="hover:text-zinc-900 font-medium transition-colors">
+                <a href={waLink} className="hover:text-zinc-900 font-medium transition-colors">
                   +593 98 765 4321
                 </a>
               </li>
