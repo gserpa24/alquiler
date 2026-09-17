@@ -1,8 +1,9 @@
 'use client'
 
 // components/admin/AdminNav.tsx
-// Barra de navegación del Panel Administrativo — Estilo SaaS ultra-minimalista.
+// Barra de navegación del Panel Administrativo — Estilo SaaS ultra-minimalista con logout.
 
+import { useTransition } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
@@ -11,8 +12,10 @@ import {
   PlusCircle,
   ExternalLink,
   ShieldCheck,
+  LogOut,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { logoutAdminAction } from '@/app/actions/auth-actions'
 
 const ADMIN_LINKS = [
   { href: '/admin',          label: 'Dashboard', icon: LayoutDashboard },
@@ -22,6 +25,18 @@ const ADMIN_LINKS = [
 
 export function AdminNav() {
   const pathname = usePathname()
+  const [isPending, startTransition] = useTransition()
+
+  // En la página de login no mostramos la barra administrativa
+  if (pathname === '/admin/login') {
+    return null
+  }
+
+  const handleLogout = () => {
+    startTransition(async () => {
+      await logoutAdminAction()
+    })
+  }
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-zinc-200">
@@ -87,9 +102,19 @@ export function AdminNav() {
               className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border border-zinc-200 bg-white text-zinc-700 text-xs font-medium hover:bg-zinc-50 hover:text-zinc-900 transition-colors"
               title="Abrir catálogo público en una nueva pestaña"
             >
-              <span>Ver Sitio Público</span>
+              <span>Sitio Público</span>
               <ExternalLink className="w-3 h-3 text-zinc-400" />
             </Link>
+
+            <button
+              onClick={handleLogout}
+              disabled={isPending}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium text-red-600 hover:bg-red-50 hover:text-red-700 border border-transparent hover:border-red-200 transition-colors disabled:opacity-50"
+              title="Cerrar sesión administrativa"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Cerrar Sesión</span>
+            </button>
           </div>
         </div>
       </div>
