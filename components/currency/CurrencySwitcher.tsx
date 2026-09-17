@@ -86,7 +86,7 @@ export function CurrencySwitcher({ className, ...props }: CurrencySwitcherProps)
           aria-label="Seleccionar moneda"
           className={cn(
             'absolute right-0 top-full mt-1.5 z-50',
-            'w-44 bg-white rounded-lg border border-zinc-200 shadow-md py-1',
+            'w-max min-w-full bg-white rounded-lg border border-zinc-200 shadow-lg py-1',
             'animate-in fade-in-0 zoom-in-95 duration-100',
           )}
         >
@@ -103,15 +103,17 @@ export function CurrencySwitcher({ className, ...props }: CurrencySwitcherProps)
                   setOpen(false)
                 }}
                 className={cn(
-                  'w-full flex items-center justify-between px-3 py-2 text-xs font-medium transition-colors duration-100',
+                  'w-full flex items-center justify-between gap-3.5 px-3 py-1.5 text-xs transition-colors duration-100 whitespace-nowrap',
                   isActive
-                    ? 'text-[#0A192F] bg-zinc-50 font-semibold'
-                    : 'text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900',
+                    ? 'text-[#0A192F] bg-zinc-50 font-bold'
+                    : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 font-normal',
                 )}
               >
-                <span>{CURRENCY_LABELS[code]}</span>
+                <span className={isActive ? 'font-bold text-zinc-950' : 'font-normal'}>
+                  {CURRENCY_LABELS[code]}
+                </span>
                 {isActive && (
-                  <Check className="w-3.5 h-3.5 text-[#0A192F] shrink-0" aria-hidden="true" />
+                  <Check className="w-3.5 h-3.5 text-[#0A192F] shrink-0 stroke-[2.5]" aria-hidden="true" />
                 )}
               </button>
             )
