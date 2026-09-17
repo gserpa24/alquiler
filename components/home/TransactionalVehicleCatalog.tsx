@@ -63,12 +63,13 @@ export function TransactionalVehicleCatalog({ vehicles }: TransactionalVehicleCa
             alt="Carretera asfaltada sin autos serpenteando en medio de la selva peruana y montañas verdes"
             fill
             priority
-            quality={95}
+            quality={100}
+            unoptimized
             sizes="100vw"
             className="object-cover object-[center_55%]"
           />
-          {/* Overlay suave para mantener el brillo y belleza natural de la selva y destacar el buscador */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/15 to-black/55 backdrop-blur-[0.5px]" />
+          {/* Overlay suave cristalino sin desenfoques para máxima nitidez del paisaje */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40" />
         </div>
 
         {/* Bloque central del formulario de búsqueda */}
