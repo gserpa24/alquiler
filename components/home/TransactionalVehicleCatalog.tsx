@@ -54,21 +54,21 @@ export function TransactionalVehicleCatalog({ vehicles }: TransactionalVehicleCa
 
   return (
     <div className="w-full">
-      {/* ── Hero Principal con Imagen de Carretera Panorámica en Ultra Alta Definición ── */}
+      {/* ── Hero Principal con Imagen de Carretera en la Selva Peruana (Sin autos, paisaje amazónico) ── */}
       <section className="relative min-h-[460px] sm:min-h-[520px] lg:min-h-[560px] flex items-center justify-center py-20 sm:py-28 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-zinc-200">
-        {/* Imagen de fondo en resolución 2.5K (2560x1549): carretera serpenteante entre árboles y colinas verdes */}
+        {/* Fotografía de carretera en la selva peruana serpenteando entre montañas verdes y frondosa vegetación tropical */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/hero-carretera-panoramica.jpg"
-            alt="Carretera panorámica serpenteando entre frondosos árboles y colinas verdes"
+            src="/images/hero-selva-peru.jpg"
+            alt="Carretera asfaltada sin autos serpenteando en medio de la selva peruana y montañas verdes"
             fill
             priority
             quality={95}
             sizes="100vw"
-            className="object-cover object-[center_42%]"
+            className="object-cover object-[center_55%]"
           />
-          {/* Overlay oscuro sutil para máxima legibilidad sin perder la nitidez del paisaje */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-black/60 backdrop-blur-[0.5px]" />
+          {/* Overlay suave para mantener el brillo y belleza natural de la selva y destacar el buscador */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/15 to-black/55 backdrop-blur-[0.5px]" />
         </div>
 
         {/* Bloque central del formulario de búsqueda */}
