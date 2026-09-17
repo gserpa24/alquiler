@@ -73,7 +73,7 @@ function LoginForm() {
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="percyman"
+            placeholder="Ingresa tu usuario"
             className="block w-full rounded-lg border border-zinc-300 pl-10 pr-3 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-[#0A192F] focus:outline-none focus:ring-1 focus:ring-[#0A192F] transition-colors"
           />
         </div>
