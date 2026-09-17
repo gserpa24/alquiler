@@ -13,12 +13,14 @@ import {
   ExternalLink,
   ShieldCheck,
   LogOut,
+  MessageSquare,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { logoutAdminAction } from '@/app/actions/auth-actions'
 
 const ADMIN_LINKS = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin/messages', label: 'Mensajes', icon: MessageSquare },
 ]
 
 export function AdminNav() {
@@ -56,8 +58,8 @@ export function AdminNav() {
               </div>
             </Link>
 
-            {/* Desktop Navigation Links */}
-            <nav className="hidden md:flex items-center gap-1" aria-label="Navegación administrativa">
+            {/* Navigation Links */}
+            <nav className="flex items-center gap-1" aria-label="Navegación administrativa">
               {ADMIN_LINKS.map(({ href, label, icon: Icon }) => {
                 const isActive =
                   href === '/admin'
@@ -69,7 +71,7 @@ export function AdminNav() {
                     key={href}
                     href={href}
                     className={cn(
-                      'flex items-center gap-2 px-3 py-2 rounded-md text-xs font-semibold tracking-tight transition-colors',
+                      'flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-md text-xs font-semibold tracking-tight transition-colors',
                       isActive
                         ? 'bg-[#0A192F] text-white'
                         : 'text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100'

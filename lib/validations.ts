@@ -22,7 +22,7 @@ export const VehicleFilterSchema = z.object({
 export const ContactFormSchema = z.object({
   name:     z.string().min(2, 'Nombre demasiado corto').max(100),
   email:    z.string().email('Dirección de email inválida'),
-  phone:    z.string().regex(/^\+?[1-9]\d{7,14}$/, 'Teléfono inválido').optional(),
+  phone:    z.string().regex(/^\+?[\d\s\-()]{7,20}$/, 'Teléfono inválido').optional(),
   subject:  z.enum(['rental', 'purchase', 'maintenance', 'other']).refine(
     (v) => ['rental', 'purchase', 'maintenance', 'other'].includes(v),
     { message: 'Selecciona un asunto válido' }

@@ -10,14 +10,19 @@ import {
   PlusCircle,
   ArrowRight,
   ExternalLink,
+  MessageSquare,
 } from 'lucide-react'
 import { getAllAdminVehicles } from '@/lib/supabase/queries'
+import { getPendingMessagesCount } from '@/lib/supabase/messages'
 import { AdminVehicleTable } from '@/components/admin/AdminVehicleTable'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboardPage() {
-  const vehicles = await getAllAdminVehicles()
+  const [vehicles, pendingMessages] = await Promise.all([
+    getAllAdminVehicles(),
+    getPendingMessagesCount(),
+  ])
 
   const total = vehicles.length
   const available = vehicles.filter((v) => v.status === 'available').length
@@ -72,7 +77,20 @@ export default async function AdminDashboardPage() {
           </h1>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <Link
+            href="/admin/messages"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-md border border-zinc-200 bg-white text-zinc-700 text-xs font-semibold hover:bg-zinc-50 hover:text-zinc-950 transition-colors shadow-2xs"
+          >
+            <MessageSquare className="w-3.5 h-3.5 text-zinc-400" />
+            <span>Bandeja de Mensajes</span>
+            {pendingMessages > 0 && (
+              <span className="px-1.5 py-0.2 rounded-full bg-amber-500 text-white text-[10px] font-bold">
+                {pendingMessages}
+              </span>
+            )}
+          </Link>
+
           <Link
             href="/admin/vehicles/new"
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-md bg-[#0A192F] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#152e52] transition-colors shadow-xs"

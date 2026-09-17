@@ -41,10 +41,25 @@ export async function submitContactAction(
     }
   }
 
-  // Si RESEND_API_KEY está configurada, se enviaría el correo real aquí
-  // En fallback registra el mensaje de contacto de forma estructurada
-  return {
-    success: true,
-    message: '¡Mensaje enviado con éxito! Nos pondremos en contacto contigo a la brevedad.',
+  try {
+    const { saveContactMessage } = await import('@/lib/supabase/messages')
+    await saveContactMessage({
+      name:    validated.data.name,
+      email:   validated.data.email,
+      phone:   validated.data.phone ?? null,
+      subject: validated.data.subject,
+      message: validated.data.message,
+    })
+
+    return {
+      success: true,
+      message: '¡Mensaje enviado con éxito! Nuestro equipo lo revisará en la brevedad posible.',
+    }
+  } catch (err) {
+    console.error('[submitContactAction Error]:', err)
+    return {
+      success: false,
+      message: 'Ocurrió un inconveniente al registrar tu mensaje. Por favor intenta nuevamente.',
+    }
   }
 }
