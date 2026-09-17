@@ -18,8 +18,7 @@ import { cn } from '@/lib/utils'
 import { logoutAdminAction } from '@/app/actions/auth-actions'
 
 const ADMIN_LINKS = [
-  { href: '/admin',          label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/vehicles', label: 'Flota de Vehículos', icon: Car },
+  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
 ]
 
 export function AdminNav() {

@@ -227,7 +227,7 @@ function VehicleHeader({
     <div className="space-y-2">
       <div className="flex items-center gap-2 flex-wrap">
         <StatusBadge status={vehicle.status} />
-        <span className="text-[11px] text-zinc-600 bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200 font-medium">
+        <span className="inline-flex items-center text-xs sm:text-[13px] text-zinc-800 bg-zinc-100 px-3 py-1 rounded-md border border-zinc-300 font-semibold tracking-tight shadow-2xs">
           {CATEGORY_LABELS[vehicle.category]}
         </span>
         {vehicle.suitability_tag && (

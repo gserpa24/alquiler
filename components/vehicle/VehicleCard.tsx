@@ -7,6 +7,7 @@ import { Users, Briefcase, Settings2, ArrowRight } from 'lucide-react'
 import { cn, formatPrice } from '@/lib/utils'
 import { type VehicleCard as VehicleCardType, CATEGORY_LABELS } from '@/types/vehicle'
 import { buildVehicleWhatsAppLink } from '@/lib/whatsapp'
+import { StatusBadge } from '@/components/vehicle/StatusBadge'
 
 interface VehicleCardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   vehicle: VehicleCardType
@@ -62,25 +63,16 @@ export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
               priority={vehicle.is_featured}
             />
 
-            {/* Badge sutil de categoría */}
+            {/* Badge de tipo de vehículo (Categoría) */}
             <div className="absolute top-3 left-3 z-10">
-              <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-white text-zinc-700 border border-zinc-200">
+              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs sm:text-[13px] font-semibold bg-white/95 backdrop-blur-xs text-zinc-900 border border-zinc-300 shadow-xs tracking-tight">
                 {CATEGORY_LABELS[vehicle.category]}
               </span>
             </div>
 
-            {/* Disponibilidad */}
+            {/* Indicador de Disponibilidad */}
             <div className="absolute top-3 right-3 z-10">
-              <span
-                className={cn(
-                  'px-2 py-0.5 rounded text-[10px] font-semibold border',
-                  vehicle.status === 'available'
-                    ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                    : 'bg-zinc-100 text-zinc-600 border-zinc-200'
-                )}
-              >
-                {vehicle.status === 'available' ? 'Disponible' : 'En uso'}
-              </span>
+              <StatusBadge status={vehicle.status} />
             </div>
           </Link>
 
