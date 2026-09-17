@@ -4,7 +4,7 @@
 // Se cierra al hacer clic fuera o al seleccionar una opción.
 
 import { useState, useRef, useEffect, type HTMLAttributes } from 'react'
-import { ChevronDown, Check, Loader2 } from 'lucide-react'
+import { ChevronDown, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { CURRENCIES, type CurrencyCode } from '@/lib/currency'
 import { useCurrency } from '@/contexts/CurrencyContext'
@@ -103,7 +103,7 @@ export function CurrencySwitcher({ className, ...props }: CurrencySwitcherProps)
                   setOpen(false)
                 }}
                 className={cn(
-                  'w-full flex items-center justify-between gap-3.5 px-3 py-1.5 text-xs transition-colors duration-100 whitespace-nowrap',
+                  'w-full text-left px-3 py-1.5 text-xs transition-colors duration-100 whitespace-nowrap',
                   isActive
                     ? 'text-[#0A192F] bg-zinc-50 font-bold'
                     : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 font-normal',
@@ -112,9 +112,6 @@ export function CurrencySwitcher({ className, ...props }: CurrencySwitcherProps)
                 <span className={isActive ? 'font-bold text-zinc-950' : 'font-normal'}>
                   {CURRENCY_LABELS[code]}
                 </span>
-                {isActive && (
-                  <Check className="w-3.5 h-3.5 text-[#0A192F] shrink-0 stroke-[2.5]" aria-hidden="true" />
-                )}
               </button>
             )
           })}
