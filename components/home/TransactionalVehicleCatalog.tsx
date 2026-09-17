@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import Image from 'next/image'
 import { Filter, SlidersHorizontal, Check } from 'lucide-react'
 import { type VehicleCard as VehicleCardType } from '@/types/vehicle'
 import { VehicleCard } from '@/components/vehicle/VehicleCard'
@@ -53,28 +54,31 @@ export function TransactionalVehicleCatalog({ vehicles }: TransactionalVehicleCa
 
   return (
     <div className="w-full">
-      {/* ── Buscador Principal Central (Hero Section) ─────────── */}
-      <section className="pt-12 pb-10 px-4 sm:px-6 lg:px-8 border-b border-zinc-200 bg-white">
-        <div className="max-w-4xl mx-auto text-center mb-5">
-          <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-[#0A0A0A]">
-            Alquiler de autos
-          </h1>
+      {/* ── Hero Principal con Imagen de Carretera Escénica (Auto entre árboles y naturaleza) ── */}
+      <section className="relative min-h-[380px] sm:min-h-[460px] flex items-center justify-center py-16 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-zinc-200">
+        {/* Imagen de fondo de alta resolución: auto en carretera rodeada de árboles y vegetación (estilo Tarapoto - Yurimaguas) */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=1920&q=85"
+            alt="Auto recorriendo carretera rodeada de frondosos árboles y selva"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+          {/* Overlay oscuro sutil con viñeta para destacar el formulario */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/25 to-black/55 backdrop-blur-[0.5px]" />
         </div>
 
-        {/* Indicador de selección de fechas */}
-        <div className="max-w-4xl mx-auto mb-3 flex items-center justify-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-100 border border-zinc-200 text-xs font-medium text-zinc-600">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
-            <span>Selecciona el rango de fechas para buscar vehículos disponibles</span>
-          </div>
+        {/* Bloque central del formulario de búsqueda */}
+        <div className="relative z-10 w-full max-w-4xl mx-auto">
+          <TransactionalSearchHero
+            onSearch={handleSearch}
+            initialCategory={selectedCategory}
+            initialPickup={pickupDate}
+            initialReturn={returnDate}
+          />
         </div>
-
-        <TransactionalSearchHero
-          onSearch={handleSearch}
-          initialCategory={selectedCategory}
-          initialPickup={pickupDate}
-          initialReturn={returnDate}
-        />
       </section>
 
       {/* ── Catálogo de Resultados (Transaccional) ─────────────── */}

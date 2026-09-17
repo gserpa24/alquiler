@@ -37,7 +37,7 @@ export function TransactionalSearchHero({
     <div className="w-full max-w-4xl mx-auto">
       <form
         onSubmit={handleSubmit}
-        className="bg-white border border-zinc-200 rounded-lg p-4 sm:p-5 shadow-xs grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-4 items-end"
+        className="bg-white/95 backdrop-blur-md border border-white/60 rounded-xl p-5 sm:p-6 shadow-2xl grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-4 items-end"
       >
         {/* 1. Fecha de Entrega */}
         <div className="sm:col-span-4 space-y-1.5">
