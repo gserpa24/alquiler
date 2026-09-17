@@ -3,8 +3,8 @@
 
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { Inbox, MessageSquare, ArrowLeft } from 'lucide-react'
-import { getContactMessages } from '@/lib/supabase/messages'
+import { ArrowLeft } from 'lucide-react'
+import { getContactMessagesWithStatus } from '@/lib/supabase/messages'
 import { AdminMessagesInbox } from '@/components/admin/AdminMessagesInbox'
 
 export const dynamic = 'force-dynamic'
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 }
 
 export default async function AdminMessagesPage() {
-  const messages = await getContactMessages()
+  const { messages, isTableMissing } = await getContactMessagesWithStatus()
   const pendingCount = messages.filter((m) => m.status === 'pending').length
 
   return (
@@ -49,7 +49,10 @@ export default async function AdminMessagesPage() {
       </div>
 
       {/* ── Inbox Component ── */}
-      <AdminMessagesInbox initialMessages={messages} />
+      <AdminMessagesInbox
+        initialMessages={messages}
+        initialTableMissing={isTableMissing}
+      />
     </div>
   )
 }

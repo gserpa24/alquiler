@@ -5,10 +5,24 @@
 
 import { revalidatePath } from 'next/cache'
 import {
+  getContactMessagesWithStatus,
   updateContactMessageStatus,
   deleteContactMessage,
+  type MessagesQueryResult,
 } from '@/lib/supabase/messages'
 import { type MessageStatus } from '@/types/message'
+
+/**
+ * Obtiene los mensajes actualizados y el estado de la tabla sin recargar la página.
+ */
+export async function getContactMessagesAction(): Promise<MessagesQueryResult> {
+  try {
+    return await getContactMessagesWithStatus()
+  } catch (err) {
+    console.error('[getContactMessagesAction Error]:', err)
+    return { messages: [], isTableMissing: false }
+  }
+}
 
 export async function updateMessageStatusAction(id: string, status: MessageStatus) {
   try {

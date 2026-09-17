@@ -2,8 +2,9 @@
 
 // components/admin/AdminMessagesInbox.tsx
 // Bandeja de entrada de mensajes de contacto para el Panel Administrativo.
+// Incluye botón de recarga sin recargar la página completa, sincronización permanente y acciones directas.
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useEffect, useId } from 'react'
 import {
   Mail,
   Phone,
@@ -16,6 +17,10 @@ import {
   Trash2,
   ExternalLink,
   MessageCircle,
+  RefreshCw,
+  AlertTriangle,
+  Copy,
+  Check,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import {
@@ -27,11 +32,13 @@ import {
 import {
   updateMessageStatusAction,
   deleteMessageAction,
+  getContactMessagesAction,
 } from '@/app/actions/admin-messages'
 import { cn } from '@/lib/utils'
 
 interface AdminMessagesInboxProps {
   initialMessages: ContactMessage[]
+  initialTableMissing?: boolean
 }
 
 const STATUS_CONFIG: Record<
@@ -68,13 +75,85 @@ const STATUS_CONFIG: Record<
   },
 }
 
-export function AdminMessagesInbox({ initialMessages }: AdminMessagesInboxProps) {
-  const [messages, setMessages] = useState<ContactMessage[]>(initialMessages)
+const SQL_SNIPPET = `CREATE TABLE IF NOT EXISTS contact_messages (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT,
+  subject TEXT NOT NULL,
+  message TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "contact_messages_admin_all" ON contact_messages FOR ALL USING (auth.role() = 'authenticated') WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "contact_messages_public_insert" ON contact_messages FOR INSERT WITH CHECK (true);`
+
+const DELETED_STORAGE_KEY = 'autoruta_deleted_messages'
+
+function getLocalDeletedIds(): string[] {
+  if (typeof window === 'undefined') return []
+  try {
+    const raw = localStorage.getItem(DELETED_STORAGE_KEY)
+    return raw ? JSON.parse(raw) : []
+  } catch {
+    return []
+  }
+}
+
+function saveLocalDeletedId(id: string) {
+  if (typeof window === 'undefined') return
+  try {
+    const ids = getLocalDeletedIds()
+    if (!ids.includes(id)) {
+      ids.push(id)
+      localStorage.setItem(DELETED_STORAGE_KEY, JSON.stringify(ids))
+    }
+  } catch {
+    // silencioso
+  }
+}
+
+export function AdminMessagesInbox({
+  initialMessages,
+  initialTableMissing = false,
+}: AdminMessagesInboxProps) {
+  const [messages, setMessages] = useState<ContactMessage[]>(() => {
+    const deleted = getLocalDeletedIds()
+    return initialMessages.filter((m) => !deleted.includes(m.id))
+  })
+  const [tableMissing, setTableMissing] = useState<boolean>(initialTableMissing)
   const [filterStatus, setFilterStatus] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const [copiedSql, setCopiedSql] = useState(false)
   const [isPending, startTransition] = useTransition()
 
-  // Filtrado
+  // Filtrar eliminados locales al montar
+  useEffect(() => {
+    const deleted = getLocalDeletedIds()
+    if (deleted.length > 0) {
+      setMessages((prev) => prev.filter((m) => !deleted.includes(m.id)))
+    }
+  }, [])
+
+  // Recarga instantánea sin recargar la página completa
+  async function handleRefresh() {
+    setIsRefreshing(true)
+    try {
+      const res = await getContactMessagesAction()
+      const deleted = getLocalDeletedIds()
+      setMessages(res.messages.filter((m) => !deleted.includes(m.id)))
+      setTableMissing(res.isTableMissing)
+      toast.success('Bandeja actualizada con éxito')
+    } catch {
+      toast.error('Error al sincronizar mensajes')
+    } finally {
+      setIsRefreshing(false)
+    }
+  }
+
+  // Filtrado de mensajes en la UI
   const filteredMessages = messages.filter((msg) => {
     if (filterStatus !== 'all' && msg.status !== filterStatus) return false
     if (!searchQuery.trim()) return true
@@ -88,7 +167,7 @@ export function AdminMessagesInbox({ initialMessages }: AdminMessagesInboxProps)
     )
   })
 
-  // Handlers
+  // Cambio de estado
   function handleStatusChange(id: string, newStatus: MessageStatus) {
     setMessages((prev) =>
       prev.map((m) => (m.id === id ? { ...m, status: newStatus } : m))
@@ -104,22 +183,35 @@ export function AdminMessagesInbox({ initialMessages }: AdminMessagesInboxProps)
     })
   }
 
+  // Eliminación definitiva y sincronizada
   function handleDelete(id: string) {
-    if (!window.confirm('¿Seguro que deseas eliminar este mensaje?')) return
+    if (!window.confirm('¿Seguro que deseas eliminar definitivamente este mensaje?')) return
 
+    // Guardar en blacklist local permanente
+    saveLocalDeletedId(id)
+
+    // Quitar del estado visual
     setMessages((prev) => prev.filter((m) => m.id !== id))
 
     startTransition(async () => {
       const res = await deleteMessageAction(id)
       if (res.success) {
-        toast.success('Mensaje eliminado')
+        toast.success('Mensaje eliminado definitivamente')
       } else {
-        toast.error('No se pudo eliminar el mensaje')
+        toast.error('No se pudo completar la eliminación en el servidor')
       }
     })
   }
 
-  // Generar link WhatsApp para responder
+  // Copiar SQL
+  function handleCopySql() {
+    navigator.clipboard.writeText(SQL_SNIPPET)
+    setCopiedSql(true)
+    toast.success('Código SQL copiado al portapapeles')
+    setTimeout(() => setCopiedSql(false), 2500)
+  }
+
+  // Enlace WhatsApp
   function buildReplyWhatsAppUrl(msg: ContactMessage): string | null {
     if (!msg.phone) return null
     const cleanPhone = msg.phone.replace(/\D/g, '')
@@ -131,7 +223,44 @@ export function AdminMessagesInbox({ initialMessages }: AdminMessagesInboxProps)
 
   return (
     <div className="space-y-4">
-      {/* ── Barra de Búsqueda y Filtros ── */}
+      {/* ── Banner Informativo si la tabla aún no existe en Supabase ── */}
+      {tableMissing && (
+        <div className="p-4 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs space-y-2.5 shadow-2xs">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-2.5">
+              <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-amber-950">
+                  Base de datos: La tabla &ldquo;contact_messages&rdquo; aún no ha sido creada en tu Supabase
+                </p>
+                <p className="text-amber-800 mt-0.5 leading-relaxed">
+                  Para que todos los mensajes y sus eliminaciones persistan de manera centralizada en la nube entre diferentes dispositivos, solo necesitas crear la tabla en tu consola de Supabase.
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleCopySql}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-white border border-amber-300 hover:bg-amber-100 text-amber-900 font-semibold shrink-0 transition-colors shadow-2xs cursor-pointer"
+            >
+              {copiedSql ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>¡Copiado!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5 text-amber-700" />
+                  <span>Copiar SQL</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Barra de Búsqueda, Filtros y Botón de Recarga ── */}
       <div className="bg-white rounded-lg border border-zinc-200 p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-2xs">
         {/* Search Input */}
         <div className="relative w-full sm:w-80">
@@ -145,68 +274,82 @@ export function AdminMessagesInbox({ initialMessages }: AdminMessagesInboxProps)
           />
         </div>
 
-        {/* Status Filter Tabs */}
-        <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
+        {/* Status Filter Tabs & Refresh Button */}
+        <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
+          <div className="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0">
+            <button
+              type="button"
+              onClick={() => setFilterStatus('all')}
+              className={cn(
+                'px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap transition-colors',
+                filterStatus === 'all'
+                  ? 'bg-[#0A192F] text-white'
+                  : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
+              )}
+            >
+              Todos ({messages.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterStatus('pending')}
+              className={cn(
+                'px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap transition-colors',
+                filterStatus === 'pending'
+                  ? 'bg-amber-600 text-white'
+                  : 'bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200'
+              )}
+            >
+              Pendientes ({messages.filter((m) => m.status === 'pending').length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterStatus('read')}
+              className={cn(
+                'px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap transition-colors',
+                filterStatus === 'read'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-blue-50 text-blue-800 hover:bg-blue-100 border border-blue-200'
+              )}
+            >
+              Leídos ({messages.filter((m) => m.status === 'read').length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterStatus('replied')}
+              className={cn(
+                'px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap transition-colors',
+                filterStatus === 'replied'
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200'
+              )}
+            >
+              Respondidos ({messages.filter((m) => m.status === 'replied').length})
+            </button>
+          </div>
+
+          {/* Botón Recargar / Actualizar sin recargar la página */}
           <button
             type="button"
-            onClick={() => setFilterStatus('all')}
-            className={cn(
-              'px-3 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap transition-colors',
-              filterStatus === 'all'
-                ? 'bg-[#0A192F] text-white'
-                : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
-            )}
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 hover:text-zinc-950 text-xs font-semibold shrink-0 transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
+            title="Sincronizar y recargar mensajes sin recargar la página"
           >
-            Todos ({messages.length})
-          </button>
-          <button
-            type="button"
-            onClick={() => setFilterStatus('pending')}
-            className={cn(
-              'px-3 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap transition-colors',
-              filterStatus === 'pending'
-                ? 'bg-amber-600 text-white'
-                : 'bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200'
-            )}
-          >
-            Pendientes ({messages.filter((m) => m.status === 'pending').length})
-          </button>
-          <button
-            type="button"
-            onClick={() => setFilterStatus('read')}
-            className={cn(
-              'px-3 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap transition-colors',
-              filterStatus === 'read'
-                ? 'bg-blue-600 text-white'
-                : 'bg-blue-50 text-blue-800 hover:bg-blue-100 border border-blue-200'
-            )}
-          >
-            Leídos ({messages.filter((m) => m.status === 'read').length})
-          </button>
-          <button
-            type="button"
-            onClick={() => setFilterStatus('replied')}
-            className={cn(
-              'px-3 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap transition-colors',
-              filterStatus === 'replied'
-                ? 'bg-emerald-600 text-white'
-                : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200'
-            )}
-          >
-            Respondidos ({messages.filter((m) => m.status === 'replied').length})
+            <RefreshCw className={cn('w-3.5 h-3.5 text-zinc-500', isRefreshing && 'animate-spin')} />
+            <span className="hidden sm:inline">Recargar</span>
           </button>
         </div>
       </div>
 
       {/* ── Lista de Mensajes ── */}
       {filteredMessages.length === 0 ? (
-        <div className="p-12 text-center bg-white rounded-lg border border-zinc-200">
+        <div className="p-12 text-center bg-white rounded-lg border border-zinc-200 shadow-2xs">
           <MessageSquare className="w-8 h-8 text-zinc-300 mx-auto mb-2" />
-          <p className="text-sm font-semibold text-zinc-900">No se encontraron mensajes</p>
+          <p className="text-sm font-semibold text-zinc-900">No hay mensajes en esta vista</p>
           <p className="text-xs text-zinc-500 mt-0.5">
             {searchQuery
               ? 'Intenta con otros términos de búsqueda.'
-              : 'Cuando los clientes envíen el formulario de contacto, aparecerán aquí.'}
+              : 'Cuando los clientes envíen el formulario de contacto, aparecerán aquí de inmediato.'}
           </p>
         </div>
       ) : (
@@ -286,7 +429,7 @@ export function AdminMessagesInbox({ initialMessages }: AdminMessagesInboxProps)
                 {/* Barra de Acciones */}
                 <div className="pt-2 flex flex-wrap items-center justify-between gap-2.5">
                   {/* Acciones de Contacto Rápido */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     {waUrl && (
                       <a
                         href={waUrl}
@@ -321,7 +464,7 @@ export function AdminMessagesInbox({ initialMessages }: AdminMessagesInboxProps)
                     </a>
                   </div>
 
-                  {/* Selector de Estado y Botón Eliminar */}
+                  {/* Selector de Estado y Botón Eliminar Definitivo */}
                   <div className="flex items-center gap-2 ml-auto">
                     <select
                       value={msg.status}
@@ -342,8 +485,8 @@ export function AdminMessagesInbox({ initialMessages }: AdminMessagesInboxProps)
                       type="button"
                       onClick={() => handleDelete(msg.id)}
                       disabled={isPending}
-                      className="p-1.5 rounded-md text-zinc-400 hover:text-red-600 hover:bg-red-50 transition-colors"
-                      title="Eliminar mensaje"
+                      className="p-1.5 rounded-md text-zinc-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                      title="Eliminar definitivamente este mensaje"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>

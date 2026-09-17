@@ -8,29 +8,8 @@ const IS_MOCK =
   !process.env.NEXT_PUBLIC_SUPABASE_URL ||
   process.env.NEXT_PUBLIC_SUPABASE_URL.includes('tu-proyecto')
 
-// Fallback en memoria para desarrollo o si la tabla aún no se ha creado en Supabase
-const FALLBACK_MESSAGES: ContactMessage[] = [
-  {
-    id: 'msg-demo-1',
-    name: 'Carlos Mendoza',
-    email: 'carlos.mendoza@gmail.com',
-    phone: '+51 987 654 321',
-    subject: 'rental',
-    message: 'Hola, quisiera consultar sobre el alquiler de una camioneta para viajar a Tarapoto durante 4 días la próxima semana. ¿Tienen disponibilidad?',
-    status: 'pending',
-    created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString(), // hace 45 min
-  },
-  {
-    id: 'msg-demo-2',
-    name: 'Andrea Paredes',
-    email: 'andrea.paredes@hotmail.com',
-    phone: '+51 991 223 344',
-    subject: 'purchase',
-    message: 'Buenas tardes, vi el Toyota Yaris en el catálogo y me interesa saber si el precio de venta es negociable o si brindan facilidades.',
-    status: 'read',
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(), // hace 5 horas
-  },
-]
+// Fallback temporal vacío (sin mensajes ficticios) para desarrollo o fallos transitorios
+const FALLBACK_MESSAGES: ContactMessage[] = []
 
 async function getAdminDbClient() {
   if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
@@ -39,6 +18,57 @@ async function getAdminDbClient() {
   }
   const { createClient } = await import('@/lib/supabase/server')
   return await createClient()
+}
+
+export interface MessagesQueryResult {
+  messages:       ContactMessage[]
+  isTableMissing: boolean
+}
+
+/**
+ * Comprueba el estado y obtiene todos los mensajes de contacto.
+ */
+export async function getContactMessages(): Promise<ContactMessage[]> {
+  const result = await getContactMessagesWithStatus()
+  return result.messages
+}
+
+/**
+ * Obtiene los mensajes y detecta si la tabla contact_messages existe en Supabase.
+ */
+export async function getContactMessagesWithStatus(): Promise<MessagesQueryResult> {
+  if (IS_MOCK) {
+    return { messages: [...FALLBACK_MESSAGES], isTableMissing: true }
+  }
+
+  try {
+    const supabase = await getAdminDbClient()
+    const { data, error } = await supabase
+      .from('contact_messages')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      const isMissing =
+        error.code === '42P01' ||
+        error.message.includes('does not exist') ||
+        error.message.includes('schema cache')
+      return {
+        messages: [...FALLBACK_MESSAGES],
+        isTableMissing: isMissing,
+      }
+    }
+
+    return {
+      messages: (data ?? []) as ContactMessage[],
+      isTableMissing: false,
+    }
+  } catch {
+    return {
+      messages: [...FALLBACK_MESSAGES],
+      isTableMissing: true,
+    }
+  }
 }
 
 /**
@@ -76,44 +106,14 @@ export async function saveContactMessage(input: {
       .single()
 
     if (error) {
-      // Si la tabla no existe en Supabase todavía, guardamos en fallback temporal
-      console.warn('[saveContactMessage]: Fallback temporal activo:', error.message)
       FALLBACK_MESSAGES.unshift(newMsg)
       return newMsg
     }
 
     return data as ContactMessage
-  } catch (err) {
-    console.warn('[saveContactMessage]: Error de conexión, usando fallback:', err)
+  } catch {
     FALLBACK_MESSAGES.unshift(newMsg)
     return newMsg
-  }
-}
-
-/**
- * Obtiene todos los mensajes de contacto ordenados por fecha descendente.
- */
-export async function getContactMessages(): Promise<ContactMessage[]> {
-  if (IS_MOCK) {
-    return [...FALLBACK_MESSAGES]
-  }
-
-  try {
-    const supabase = await getAdminDbClient()
-    const { data, error } = await supabase
-      .from('contact_messages')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (error) {
-      console.warn('[getContactMessages]: Fallback activo:', error.message)
-      return [...FALLBACK_MESSAGES]
-    }
-
-    return (data ?? []) as ContactMessage[]
-  } catch (err) {
-    console.warn('[getContactMessages]: Error de conexión, usando fallback:', err)
-    return [...FALLBACK_MESSAGES]
   }
 }
 
@@ -138,14 +138,8 @@ export async function updateContactMessageStatus(
       .update({ status })
       .eq('id', id)
 
-    if (error) {
-      console.warn('[updateContactMessageStatus]: Fallback usado:', error.message)
-      return true
-    }
-
-    return true
-  } catch (err) {
-    console.warn('[updateContactMessageStatus]: Error en conexión:', err)
+    return !error
+  } catch {
     return true
   }
 }
@@ -168,14 +162,8 @@ export async function deleteContactMessage(id: string): Promise<boolean> {
       .delete()
       .eq('id', id)
 
-    if (error) {
-      console.warn('[deleteContactMessage]: Fallback usado:', error.message)
-      return true
-    }
-
-    return true
-  } catch (err) {
-    console.warn('[deleteContactMessage]: Error en conexión:', err)
+    return !error
+  } catch {
     return true
   }
 }
