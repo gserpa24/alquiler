@@ -3,9 +3,9 @@ import { describe, it, expect } from 'vitest'
 import { createSessionToken, verifySessionToken } from '@/lib/auth/session'
 
 describe('Sistema de Sesiones Administrativas', () => {
-  it('genera y verifica un token de sesión legítimo', async () => {
-    const email = 'admin@autoruta.pe'
-    const token = await createSessionToken(email)
+  it('genera y verifica un token de sesión legítimo para el usuario percyman', async () => {
+    const username = 'percyman'
+    const token = await createSessionToken(username)
 
     expect(token).toBeDefined()
     expect(typeof token).toBe('string')
@@ -13,7 +13,7 @@ describe('Sistema de Sesiones Administrativas', () => {
 
     const verification = await verifySessionToken(token)
     expect(verification.valid).toBe(true)
-    expect(verification.email).toBe(email)
+    expect(verification.email).toBe(username)
   })
 
   it('rechaza un token nulo, vacío o con formato inválido', async () => {
@@ -23,7 +23,7 @@ describe('Sistema de Sesiones Administrativas', () => {
   })
 
   it('rechaza un token con firma manipulada', async () => {
-    const token = await createSessionToken('admin@autoruta.pe')
+    const token = await createSessionToken('percyman')
     const [payload, signature] = token.split('.')
 
     // Manipulamos la firma
@@ -35,7 +35,7 @@ describe('Sistema de Sesiones Administrativas', () => {
   })
 
   it('rechaza un token cuyo contenido fue alterado', async () => {
-    const token = await createSessionToken('admin@autoruta.pe')
+    const token = await createSessionToken('percyman')
     const [, signature] = token.split('.')
 
     // Manipulamos el payload

@@ -6,7 +6,7 @@
 import { useState, useTransition, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { ShieldCheck, Lock, Mail, Eye, EyeOff, ArrowRight, ArrowLeft } from 'lucide-react'
+import { ShieldCheck, Lock, User, Eye, EyeOff, ArrowRight, ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
 import { loginAdminAction } from '@/app/actions/auth-actions'
 
@@ -15,7 +15,7 @@ function LoginForm() {
   const searchParams = useSearchParams()
   const redirectPath = searchParams.get('redirect') || '/admin'
 
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -25,13 +25,13 @@ function LoginForm() {
     e.preventDefault()
     setErrorMessage(null)
 
-    if (!email || !password) {
-      setErrorMessage('Por favor ingresa tanto tu correo como tu contraseña.')
+    if (!username || !password) {
+      setErrorMessage('Por favor ingresa tu usuario y contraseña.')
       return
     }
 
     startTransition(async () => {
-      const result = await loginAdminAction({ email, password })
+      const result = await loginAdminAction({ username, password })
 
       if (result.success) {
         toast.success('¡Bienvenido! Accediendo al panel...')
@@ -53,27 +53,27 @@ function LoginForm() {
         </div>
       )}
 
-      {/* Campo Email */}
+      {/* Campo Usuario */}
       <div>
         <label
-          htmlFor="email"
+          htmlFor="username"
           className="block text-xs font-semibold uppercase tracking-wider text-zinc-700 mb-1.5"
         >
-          Correo Electrónico
+          Usuario o Correo
         </label>
         <div className="relative rounded-lg shadow-xs">
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-zinc-400">
-            <Mail className="h-4 w-4" />
+            <User className="h-4 w-4" />
           </div>
           <input
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
+            id="username"
+            name="username"
+            type="text"
+            autoComplete="username"
             required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="admin@autoruta.pe"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="percyman"
             className="block w-full rounded-lg border border-zinc-300 pl-10 pr-3 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-[#0A192F] focus:outline-none focus:ring-1 focus:ring-[#0A192F] transition-colors"
           />
         </div>

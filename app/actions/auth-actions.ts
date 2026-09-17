@@ -13,8 +13,8 @@ import {
 } from '@/lib/auth/session'
 
 const LoginSchema = z.object({
-  email: z.string().email('Por favor ingresa un correo electrónico válido'),
-  password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres'),
+  username: z.string().min(3, 'Por favor ingresa un usuario o correo válido'),
+  password: z.string().min(4, 'La contraseña debe tener al menos 4 caracteres'),
 })
 
 export interface LoginResult {
@@ -23,15 +23,15 @@ export interface LoginResult {
 }
 
 /**
- * Credenciales por defecto para el acceso administrativo inicial.
- * Se pueden sobrescribir en las variables de entorno (.env.local o Vercel).
+ * Credenciales de administrador solicitadas.
+ * Se pueden sobrescribir también en las variables de entorno (.env.local o Vercel).
  */
-const DEFAULT_ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@autoruta.pe'
-const DEFAULT_ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'AdminAutoruta2026!'
+const DEFAULT_ADMIN_USERNAME = process.env.ADMIN_USERNAME || process.env.ADMIN_EMAIL || 'percyman'
+const DEFAULT_ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Fortinet$1'
 
 /**
  * Server Action: Iniciar sesión de administrador.
- * Soporta credenciales maestras de entorno y Supabase Auth.
+ * Valida usuario/contraseña maestra (percyman / Fortinet$1) y soporte opcional para Supabase Auth.
  */
 export async function loginAdminAction(formData: unknown): Promise<LoginResult> {
   const validated = LoginSchema.safeParse(formData)
@@ -42,16 +42,17 @@ export async function loginAdminAction(formData: unknown): Promise<LoginResult> 
     }
   }
 
-  const { email, password } = validated.data
-  const normalizedEmail = email.toLowerCase().trim()
+  const { username, password } = validated.data
+  const normalizedUser = username.toLowerCase().trim()
 
-  // 1. Verificación por credenciales maestras de administrador
+  // 1. Verificación por credenciales maestras de administrador (percyman / Fortinet$1)
   const isMasterMatch =
-    normalizedEmail === DEFAULT_ADMIN_EMAIL.toLowerCase() &&
+    (normalizedUser === DEFAULT_ADMIN_USERNAME.toLowerCase() ||
+      normalizedUser === `${DEFAULT_ADMIN_USERNAME.toLowerCase()}@autoruta.pe`) &&
     password === DEFAULT_ADMIN_PASSWORD
 
   if (isMasterMatch) {
-    const token = await createSessionToken(normalizedEmail)
+    const token = await createSessionToken(normalizedUser)
     const cookieStore = await cookies()
     cookieStore.set(SESSION_COOKIE_NAME, token, {
       httpOnly: true,
@@ -64,35 +65,37 @@ export async function loginAdminAction(formData: unknown): Promise<LoginResult> 
     return { success: true }
   }
 
-  // 2. Verificación alternativa mediante Supabase Auth
-  try {
-    const { createClient } = await import('@/lib/supabase/server')
-    const supabase = await createClient()
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: normalizedEmail,
-      password,
-    })
-
-    if (!error && data?.user) {
-      const token = await createSessionToken(normalizedEmail)
-      const cookieStore = await cookies()
-      cookieStore.set(SESSION_COOKIE_NAME, token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        path: '/',
-        maxAge: SESSION_MAX_AGE,
+  // 2. Verificación secundaria con Supabase Auth si se ingresó formato de correo
+  if (normalizedUser.includes('@')) {
+    try {
+      const { createClient } = await import('@/lib/supabase/server')
+      const supabase = await createClient()
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: normalizedUser,
+        password,
       })
 
-      return { success: true }
+      if (!error && data?.user) {
+        const token = await createSessionToken(normalizedUser)
+        const cookieStore = await cookies()
+        cookieStore.set(SESSION_COOKIE_NAME, token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          path: '/',
+          maxAge: SESSION_MAX_AGE,
+        })
+
+        return { success: true }
+      }
+    } catch (supabaseErr) {
+      console.error('[Auth Supabase Error]:', supabaseErr)
     }
-  } catch (supabaseErr) {
-    console.error('[Auth Supabase Error]:', supabaseErr)
   }
 
   return {
     success: false,
-    error: 'Correo electrónico o contraseña incorrectos.',
+    error: 'Usuario o contraseña incorrectos.',
   }
 }
 
