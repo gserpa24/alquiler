@@ -1,11 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
 import './globals.css'
-import { Navbar } from '@/components/layout/Navbar'
-import { Footer } from '@/components/layout/Footer'
-import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp'
-import { Toaster } from '@/components/ui/sonner'
-import { CurrencyProvider } from '@/contexts/CurrencyContext'
+import { SiteLayout } from '@/components/layout/SiteLayout'
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -63,18 +59,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-white text-zinc-900 antialiased selection:bg-slate-900 selection:text-white">
-        <CurrencyProvider>
-          <Navbar />
-          <main className="flex-1 pt-16" id="main-content">
-            {children}
-          </main>
-          <Footer />
-          <FloatingWhatsApp />
-          <Toaster
-            position="bottom-right"
-            richColors
-          />
-        </CurrencyProvider>
+        <SiteLayout>{children}</SiteLayout>
       </body>
     </html>
   )
