@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Car } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { CurrencySwitcher } from '@/components/currency/CurrencySwitcher'
 
 const NAV_LINKS = [
   { href: '/',        label: 'Inicio' },
@@ -77,6 +78,7 @@ export function Navbar() {
 
         {/* CTA desktop */}
         <div className="hidden md:flex items-center gap-3">
+          <CurrencySwitcher />
           <Link
             href="/catalog"
             className={cn(
@@ -136,6 +138,9 @@ export function Navbar() {
                   </li>
                 )
               })}
+              <li className="pt-2">
+                <CurrencySwitcher className="justify-center" />
+              </li>
               <li className="pt-2">
                 <Link
                   href="/catalog"

@@ -12,11 +12,13 @@ export function cn(...inputs: ClassValue[]): string {
 
 /**
  * Formatea un precio numérico como string con símbolo de moneda.
- * @example formatPrice(1500) → '$1,500.00'
+ * Locale por defecto: es-PE (Perú). Moneda por defecto: PEN.
+ * @example formatPrice(150) → 'S/ 150'
+ * @example formatPrice(50, 'USD') → 'US$ 50'
  */
-export function formatPrice(amount: number, currency = 'USD'): string {
-  return new Intl.NumberFormat('es-EC', {
-    style:    'currency',
+export function formatPrice(amount: number, currency = 'PEN'): string {
+  return new Intl.NumberFormat('es-PE', {
+    style:                'currency',
     currency,
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,

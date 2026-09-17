@@ -4,7 +4,9 @@ import { type HTMLAttributes, forwardRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Users, Briefcase, Settings2, ArrowRight } from 'lucide-react'
-import { cn, formatPrice } from '@/lib/utils'
+import { cn } from '@/lib/utils'
+import { convertPrice, formatCurrencyPrice } from '@/lib/currency'
+import { useCurrency } from '@/contexts/CurrencyContext'
 import { type VehicleCard as VehicleCardType, CATEGORY_LABELS } from '@/types/vehicle'
 import { buildVehicleWhatsAppLink } from '@/lib/whatsapp'
 import { StatusBadge } from '@/components/vehicle/StatusBadge'
@@ -18,6 +20,9 @@ interface VehicleCardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'childre
 
 export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
   ({ vehicle, variant, pickupDate, returnDate, className, ...props }, ref) => {
+    // Currency context for price conversion
+    const { currency, rates, isLoading: ratesLoading } = useCurrency()
+
     // Generar enlace directo a WhatsApp para "Reservar"
     let waUrl = '#'
     try {
@@ -113,23 +118,29 @@ export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
         </div>
 
         {/* ── Footer de Tarjeta: Precio y Botón Reservar ── */}
-        <div className="px-5 pb-5 sm:px-6 sm:pb-6 pt-0 flex items-center justify-between gap-3">
-          <div>
+        <div className="px-5 pb-5 sm:px-6 sm:pb-6 pt-0 flex flex-wrap items-center justify-between gap-2">
+          <div className="shrink-0">
             <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider block">
               Tarifa diaria
             </span>
             <div className="flex items-baseline">
-              <span className="text-xl font-bold text-[#0A0A0A] tabular-nums">
-                {vehicle.daily_rate ? formatPrice(vehicle.daily_rate) : '--'}
-              </span>
+              {ratesLoading ? (
+                <span className="h-7 w-20 rounded bg-zinc-100 animate-pulse inline-block" aria-label="Cargando precio" />
+              ) : (
+                <span className="text-xl font-bold text-[#0A0A0A] tabular-nums">
+                  {vehicle.daily_rate != null
+                    ? formatCurrencyPrice(convertPrice(vehicle.daily_rate, currency, rates), currency)
+                    : '--'}
+                </span>
+              )}
               <span className="text-xs text-zinc-400 font-normal ml-1">/día</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <Link
               href={`/catalog/${vehicle.slug}`}
-              className="px-3 py-2 rounded-md border border-zinc-200 text-xs font-semibold text-zinc-700 hover:border-zinc-400 hover:text-zinc-950 transition-colors bg-white"
+              className="px-3 py-2 min-h-[40px] flex items-center rounded-md border border-zinc-200 text-xs font-semibold text-zinc-700 hover:border-zinc-400 hover:text-zinc-950 transition-colors bg-white"
             >
               Info
             </Link>
@@ -137,10 +148,10 @@ export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-[#0A192F] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#152e52] active:scale-[0.99] transition-all shadow-xs"
+              className="inline-flex items-center gap-1.5 px-3 xs:px-4 py-2 min-h-[40px] rounded-md bg-[#0A192F] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#152e52] active:scale-[0.99] transition-all shadow-xs whitespace-nowrap"
             >
               <span>Reservar</span>
-              <ArrowRight className="w-3.5 h-3.5 stroke-[1.5]" />
+              <ArrowRight className="w-3.5 h-3.5 stroke-[1.5] shrink-0" />
             </a>
           </div>
         </div>

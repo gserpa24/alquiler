@@ -5,6 +5,7 @@ import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp'
 import { Toaster } from '@/components/ui/sonner'
+import { CurrencyProvider } from '@/contexts/CurrencyContext'
 
 const inter = Inter({
   subsets:  ['latin'],
@@ -55,16 +56,18 @@ export default function RootLayout({ children }: RootLayoutProps) {
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-white text-zinc-900 antialiased selection:bg-slate-900 selection:text-white">
-        <Navbar />
-        <main className="flex-1 pt-16" id="main-content">
-          {children}
-        </main>
-        <Footer />
-        <FloatingWhatsApp />
-        <Toaster
-          position="bottom-right"
-          richColors
-        />
+        <CurrencyProvider>
+          <Navbar />
+          <main className="flex-1 pt-16" id="main-content">
+            {children}
+          </main>
+          <Footer />
+          <FloatingWhatsApp />
+          <Toaster
+            position="bottom-right"
+            richColors
+          />
+        </CurrencyProvider>
       </body>
     </html>
   )

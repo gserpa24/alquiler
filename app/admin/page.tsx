@@ -90,18 +90,18 @@ export default async function AdminDashboardPage() {
           return (
             <div
               key={kpi.label}
-              className={`p-5 rounded-lg border bg-white shadow-2xs flex items-center justify-between ${kpi.border}`}
+              className={`p-4 sm:p-5 rounded-lg border bg-white shadow-2xs flex items-center justify-between gap-2 min-w-0 ${kpi.border}`}
             >
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
+              <div className="min-w-0">
+                <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-500 truncate">
                   {kpi.label}
                 </p>
                 <p className={`text-2xl sm:text-3xl font-bold tracking-tight mt-1.5 tabular-nums ${kpi.color}`}>
                   {kpi.count}
                 </p>
               </div>
-              <div className={`w-10 h-10 rounded-md flex items-center justify-center ${kpi.bg} ${kpi.color}`}>
-                <Icon className="w-5 h-5 stroke-[1.75]" />
+              <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-md flex items-center justify-center shrink-0 ${kpi.bg} ${kpi.color}`}>
+                <Icon className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.75]" />
               </div>
             </div>
           )

@@ -7,6 +7,8 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SlidersHorizontal, X, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { convertPrice, formatCurrencyPrice } from '@/lib/currency'
+import { useCurrency } from '@/contexts/CurrencyContext'
 import { useVehicleFilters } from '@/hooks/useVehicleFilters'
 
 // ── Opciones de filtros ────────────────────────────────────────────────────
@@ -37,11 +39,15 @@ const STATUSES = [
   { value: 'maintenance', label: 'Mantenimiento' },
 ] as const
 
-const PRICE_RANGES = [
-  { label: 'Hasta $35/día',  min: undefined, max: 35 },
-  { label: '$35 – $50/día',  min: 35,        max: 50 },
-  { label: '$50 – $70/día',  min: 50,        max: 70 },
-  { label: 'Más de $70/día', min: 70,        max: undefined },
+/**
+ * Filter boundary values are always stored in USD (matching the DB column).
+ * Display labels are generated dynamically via usePriceRangeLabels().
+ */
+const PRICE_RANGES_USD = [
+  { min: undefined as number | undefined, max: 35 as number | undefined },
+  { min: 35,                              max: 50 as number | undefined },
+  { min: 50,                              max: 70 as number | undefined },
+  { min: 70 as number | undefined,        max: undefined as number | undefined },
 ] as const
 
 // ── Sub-componentes ────────────────────────────────────────────────────────
@@ -125,6 +131,24 @@ export function VehicleFilters({ totalResults, className }: VehicleFiltersProps)
   const { filters, activeCount, setFilter, clearFilters } = useVehicleFilters()
   const [mobileOpen, setMobileOpen] = useState(false)
 
+  // Build display labels from live rates — filter values remain in USD
+  const { currency, rates } = useCurrency()
+  const priceRanges = PRICE_RANGES_USD.map(({ min, max }) => {
+    const fmt = (usd: number) =>
+      formatCurrencyPrice(convertPrice(usd, currency, rates), currency)
+    let label: string
+    if (min === undefined && max !== undefined) {
+      label = `Hasta ${fmt(max)}/día`
+    } else if (min !== undefined && max === undefined) {
+      label = `Más de ${fmt(min)}/día`
+    } else if (min !== undefined && max !== undefined) {
+      label = `${fmt(min)} – ${fmt(max)}/día`
+    } else {
+      label = 'Cualquier precio'
+    }
+    return { label, min, max }
+  })
+
   const filterPanel = (
     <div className="space-y-0">
       {/* Categoría */}
@@ -194,7 +218,7 @@ export function VehicleFilters({ totalResults, className }: VehicleFiltersProps)
       {/* Rango de precio */}
       <FilterSection title="Precio por día">
         <div className="flex flex-wrap gap-2">
-          {PRICE_RANGES.map(({ label, min, max }) => {
+          {priceRanges.map(({ label, min, max }) => {
             const active = filters.priceMin === min && filters.priceMax === max
             return (
               <FilterPill

@@ -3,6 +3,7 @@
 // components/admin/AdminVehicleTable.tsx
 // Tabla interactiva de gestión de flota de vehículos.
 // Permite filtrar, cambiar estado con 1 clic, editar y eliminar.
+// Mobile: card list. Desktop: full table with overflow-x-auto.
 
 import { useState, useTransition } from 'react'
 import Image from 'next/image'
@@ -102,37 +103,39 @@ export function AdminVehicleTable({ initialVehicles }: AdminVehicleTableProps) {
   return (
     <div className="space-y-4">
       {/* ── Barra Superior de Búsqueda y Filtros ──────────────────── */}
-      <div className="bg-white p-4 rounded-lg border border-zinc-200 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-2xs">
-        <div className="relative w-full sm:w-80">
+      <div className="bg-white p-4 rounded-lg border border-zinc-200 flex flex-col gap-3 shadow-2xs">
+        {/* Search — full width */}
+        <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 stroke-[1.75]" />
           <input
             type="text"
             placeholder="Buscar por marca, modelo o año..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-[#0A192F] focus:bg-white transition-colors"
+            className="w-full pl-9 pr-3 py-2 min-h-[44px] bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-900 focus:bg-white transition-colors"
           />
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        {/* Filters + Add button row */}
+        <div className="flex flex-wrap items-center gap-2">
           {/* Filtro Estado */}
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-2.5 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-800 font-medium focus:outline-none focus:border-[#0A192F] cursor-pointer"
+            className="flex-1 min-w-[120px] px-2.5 py-2 min-h-[40px] bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-800 font-medium focus:outline-none focus:border-zinc-900 cursor-pointer"
           >
             <option value="all">Todos los estados</option>
-            <option value="available">Solo Disponibles</option>
-            <option value="rented">Solo Alquilados</option>
-            <option value="maintenance">Solo Mantenimiento</option>
-            <option value="sold">Solo Retirados</option>
+            <option value="available">Disponibles</option>
+            <option value="rented">Alquilados</option>
+            <option value="maintenance">Mantenimiento</option>
+            <option value="sold">Retirados</option>
           </select>
 
           {/* Filtro Categoría */}
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-2.5 py-2 bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-800 font-medium focus:outline-none focus:border-[#0A192F] cursor-pointer"
+            className="flex-1 min-w-[120px] px-2.5 py-2 min-h-[40px] bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-800 font-medium focus:outline-none focus:border-zinc-900 cursor-pointer"
           >
             <option value="all">Todas las categorías</option>
             <option value="sport">Compacto</option>
@@ -143,7 +146,7 @@ export function AdminVehicleTable({ initialVehicles }: AdminVehicleTableProps) {
 
           <Link
             href="/admin/vehicles/new"
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md bg-[#0A192F] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#152e52] transition-colors shrink-0"
+            className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[40px] rounded-md bg-zinc-900 text-white text-xs font-semibold uppercase tracking-wider hover:bg-zinc-700 transition-colors shrink-0"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Agregar</span>
@@ -151,8 +154,117 @@ export function AdminVehicleTable({ initialVehicles }: AdminVehicleTableProps) {
         </div>
       </div>
 
-      {/* ── Tabla Principal de Datos ──────────────────────────────── */}
-      <div className="bg-white rounded-lg border border-zinc-200 overflow-hidden shadow-2xs">
+      {/* ── Mobile: Card List (shown < md) ────────────────────────── */}
+      <div className="md:hidden space-y-3">
+        {filteredVehicles.length === 0 ? (
+          <div className="bg-white rounded-lg border border-zinc-200 py-12 text-center text-zinc-400">
+            <AlertCircle className="w-6 h-6 mx-auto mb-2 text-zinc-300" />
+            <p className="text-xs">No se encontraron vehículos que coincidan con los filtros.</p>
+          </div>
+        ) : (
+          filteredVehicles.map((vehicle) => {
+            const vehicleName = `${vehicle.brand} ${vehicle.model} ${vehicle.year}`
+            const isBusy = isPending && deletingId === vehicle.id
+
+            return (
+              <div
+                key={vehicle.id}
+                className={cn(
+                  'bg-white rounded-lg border border-zinc-200 p-4 space-y-3 shadow-2xs',
+                  isBusy && 'opacity-50 pointer-events-none'
+                )}
+              >
+                {/* Top row: image + name + status selector */}
+                <div className="flex items-center gap-3">
+                  <div className="relative w-16 h-11 rounded border border-zinc-100 bg-zinc-50 overflow-hidden shrink-0">
+                    <Image
+                      src={vehicle.thumbnail}
+                      alt={vehicleName}
+                      fill
+                      sizes="64px"
+                      className="object-contain p-0.5"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-xs text-zinc-900 leading-tight truncate">
+                      {vehicle.brand} {vehicle.model}
+                    </p>
+                    <p className="text-[11px] text-zinc-500">
+                      {vehicle.year} · {vehicle.color ?? 'Estándar'}
+                    </p>
+                  </div>
+                  <select
+                    value={vehicle.status}
+                    disabled={isPending}
+                    onChange={(e) =>
+                      handleStatusChange(vehicle.id, e.target.value as VehicleStatus)
+                    }
+                    className={cn(
+                      'text-[11px] font-semibold px-2 py-1 rounded-md border focus:outline-none transition-colors cursor-pointer shrink-0',
+                      STATUS_BADGE_STYLES[vehicle.status]
+                    )}
+                  >
+                    <option value="available">Disponible</option>
+                    <option value="rented">Alquilado</option>
+                    <option value="maintenance">Mantenimiento</option>
+                    <option value="sold">Retirado</option>
+                  </select>
+                </div>
+
+                {/* Middle row: category + capacity + rate */}
+                <div className="flex items-center gap-3 text-[11px] text-zinc-600 flex-wrap">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-zinc-100 text-zinc-700 border border-zinc-200">
+                    {CATEGORY_LABELS[vehicle.category]}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Users className="w-3.5 h-3.5 text-zinc-400" />
+                    {vehicle.seats}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Briefcase className="w-3.5 h-3.5 text-zinc-400" />
+                    {vehicle.luggage ?? 2}
+                  </span>
+                  <span className="font-bold text-zinc-950 tabular-nums ml-auto">
+                    {vehicle.daily_rate ? formatPrice(vehicle.daily_rate) : '—'}
+                    <span className="text-[10px] font-normal text-zinc-400">/día</span>
+                  </span>
+                </div>
+
+                {/* Action buttons */}
+                <div className="flex items-center justify-end gap-2 pt-1 border-t border-zinc-100">
+                  <Link
+                    href={`/catalog/${vehicle.slug}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 rounded text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 transition-colors"
+                    title="Ver en catálogo público"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </Link>
+                  <Link
+                    href={`/admin/vehicles/${vehicle.id}/edit`}
+                    className="p-2 rounded text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100 transition-colors"
+                    title="Modificar vehículo"
+                  >
+                    <Edit2 className="w-3.5 h-3.5" />
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(vehicle.id, vehicleName)}
+                    className="p-2 rounded text-zinc-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                    title="Eliminar vehículo"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            )
+          })
+        )}
+      </div>
+
+      {/* ── Desktop: Table (shown >= md) ──────────────────────────── */}
+      <div className="hidden md:block bg-white rounded-lg border border-zinc-200 overflow-hidden shadow-2xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -305,6 +417,11 @@ export function AdminVehicleTable({ initialVehicles }: AdminVehicleTableProps) {
           <span>Mostrando <strong>{filteredVehicles.length}</strong> de <strong>{vehicles.length}</strong> vehículos</span>
           <span className="text-[11px] text-zinc-400">Actualización en tiempo real</span>
         </div>
+      </div>
+
+      {/* Mobile footer count */}
+      <div className="md:hidden text-xs text-zinc-500 text-center">
+        Mostrando <strong>{filteredVehicles.length}</strong> de <strong>{vehicles.length}</strong> vehículos
       </div>
     </div>
   )

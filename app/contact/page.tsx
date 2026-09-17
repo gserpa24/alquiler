@@ -14,13 +14,13 @@ export default function ContactPage() {
   const waLink = buildGenericWhatsAppLink()
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-16">
       {/* ── Header ─────────────────────────────────────────── */}
-      <header className="max-w-3xl mb-12">
+      <header className="max-w-3xl mb-8 sm:mb-12">
         <p className="text-[11px] font-semibold tracking-wider uppercase text-zinc-400 mb-1.5">
           Atención
         </p>
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-950 mb-3">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-zinc-950 mb-3">
           Contacto y Ubicación
         </h1>
         <p className="text-zinc-500 text-sm sm:text-base leading-relaxed">

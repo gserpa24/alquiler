@@ -14,6 +14,8 @@ import {
   Loader2,
   Image as ImageIcon,
   Link as LinkIcon,
+  Camera,
+  Images,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
@@ -23,6 +25,7 @@ interface VehiclePhotoUploaderProps {
   images: string[]
   onThumbnailChange: (url: string) => void
   onImagesChange: (urls: string[]) => void
+  className?: string
 }
 
 export function VehiclePhotoUploader({
@@ -30,12 +33,15 @@ export function VehiclePhotoUploader({
   images,
   onThumbnailChange,
   onImagesChange,
+  className,
 }: VehiclePhotoUploaderProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
   const [urlInput, setUrlInput] = useState('')
   const [showUrlField, setShowUrlField] = useState(false)
+  // Separate refs: gallery picker (no capture) and camera capture
   const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const cameraInputRef = useRef<HTMLInputElement | null>(null)
 
   // Lista unificada de fotos: la miniatura principal + la lista de imágenes sin duplicados
   const allPhotos = Array.from(
@@ -91,6 +97,7 @@ export function VehiclePhotoUploader({
     } finally {
       setIsUploading(false)
       if (fileInputRef.current) fileInputRef.current.value = ''
+      if (cameraInputRef.current) cameraInputRef.current.value = ''
     }
   }
 
@@ -158,34 +165,47 @@ export function VehiclePhotoUploader({
   }
 
   return (
-    <div className="space-y-4">
-      {/* ── Zona de Carga / Drag & Drop ───────────────────────────── */}
+    <div className={cn('space-y-4', className)}>
+      {/* Hidden file inputs */}
+      {/* Gallery/multi-file picker — no capture attribute so iOS shows gallery */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        accept="image/png, image/jpeg, image/webp, image/avif, image/jpg"
+        className="hidden"
+        onChange={(e) => handleFilesUpload(e.target.files)}
+        disabled={isUploading}
+      />
+      {/* Camera capture input */}
+      <input
+        ref={cameraInputRef}
+        type="file"
+        accept="image/png, image/jpeg, image/webp, image/jpg"
+        capture="environment"
+        className="hidden"
+        onChange={(e) => handleFilesUpload(e.target.files)}
+        disabled={isUploading}
+      />
+
+      {/* ── Zona de Carga — Desktop: Drag & Drop / Mobile: Botones tap ── */}
+      {/* Desktop drag zone (hidden on mobile) */}
       <div
         onDragEnter={handleDrag}
         onDragOver={handleDrag}
         onDragLeave={handleDrag}
         onDrop={handleDrop}
         className={cn(
-          'relative rounded-lg border-2 border-dashed p-6 text-center transition-all duration-150',
+          'hidden lg:block relative rounded-lg border-2 border-dashed p-6 text-center transition-all duration-150',
           dragActive
-            ? 'border-[#0A192F] bg-blue-50/40 ring-2 ring-[#0A192F]/20'
-            : 'border-zinc-200 bg-[#F8FAFC]/60 hover:bg-[#F8FAFC] hover:border-zinc-300'
+            ? 'border-primary bg-blue-50/40 ring-2 ring-primary/20'
+            : 'border-zinc-200 bg-zinc-50/60 hover:bg-zinc-50 hover:border-zinc-300'
         )}
       >
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          accept="image/png, image/jpeg, image/webp, image/avif, image/jpg"
-          className="hidden"
-          onChange={(e) => handleFilesUpload(e.target.files)}
-          disabled={isUploading}
-        />
-
         <div className="flex flex-col items-center justify-center gap-2.5">
-          <div className="w-11 h-11 rounded-full bg-white border border-zinc-200 flex items-center justify-center text-[#0A192F] shadow-2xs">
+          <div className="w-11 h-11 rounded-full bg-white border border-zinc-200 flex items-center justify-center text-zinc-700 shadow-2xs">
             {isUploading ? (
-              <Loader2 className="w-5 h-5 animate-spin text-[#0A192F]" />
+              <Loader2 className="w-5 h-5 animate-spin text-zinc-700" />
             ) : (
               <UploadCloud className="w-5 h-5 stroke-[1.75]" />
             )}
@@ -205,7 +225,7 @@ export function VehiclePhotoUploader({
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-[#0A192F] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#152e52] transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-zinc-900 text-white text-xs font-semibold uppercase tracking-wider hover:bg-zinc-700 transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Examinar fotos</span>
@@ -223,6 +243,55 @@ export function VehiclePhotoUploader({
         </div>
       </div>
 
+      {/* Mobile upload area (shown only on < lg) */}
+      <div className="lg:hidden rounded-lg border border-zinc-200 bg-zinc-50/60 p-4 space-y-3">
+        {isUploading ? (
+          <div className="flex items-center justify-center gap-2 py-2 text-zinc-600 text-xs font-medium">
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <span>Procesando y optimizando fotos...</span>
+          </div>
+        ) : (
+          <>
+            <p className="text-xs font-bold text-zinc-900 text-center">
+              Carga fotos del vehículo
+            </p>
+            {/* Two buttons: gallery + camera */}
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploading}
+                className="flex items-center justify-center gap-2 min-h-[44px] px-3 py-2.5 rounded-md bg-zinc-900 text-white text-xs font-semibold hover:bg-zinc-700 transition-colors disabled:opacity-50"
+              >
+                <Images className="w-4 h-4" />
+                <span>Desde galería</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => cameraInputRef.current?.click()}
+                disabled={isUploading}
+                className="flex items-center justify-center gap-2 min-h-[44px] px-3 py-2.5 rounded-md border border-zinc-200 bg-white text-xs font-semibold text-zinc-700 hover:bg-zinc-50 transition-colors disabled:opacity-50"
+              >
+                <Camera className="w-4 h-4" />
+                <span>Tomar foto</span>
+              </button>
+            </div>
+            <p className="text-[11px] text-zinc-400 text-center leading-relaxed">
+              iOS: selecciona una foto por sesión y repite para agregar más.
+              Pulsa <strong className="text-zinc-500">Desde galería</strong> para subir en lotes.
+            </p>
+            <button
+              type="button"
+              onClick={() => setShowUrlField((v) => !v)}
+              className="w-full flex items-center justify-center gap-1.5 min-h-[36px] px-3 py-2 rounded-md border border-zinc-200 bg-white text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition-colors"
+            >
+              <LinkIcon className="w-3 h-3 text-zinc-400" />
+              <span>Pegar URL de imagen</span>
+            </button>
+          </>
+        )}
+      </div>
+
       {/* Input opcional para pegar URL directa */}
       {showUrlField && (
         <form onSubmit={handleAddFromUrl} className="flex gap-2">
@@ -231,7 +300,7 @@ export function VehiclePhotoUploader({
             placeholder="https://images.unsplash.com/... o /uploads/..."
             value={urlInput}
             onChange={(e) => setUrlInput(e.target.value)}
-            className="flex-1 px-3 py-2 bg-white border border-zinc-200 rounded-md text-xs font-medium text-zinc-900 focus:outline-none focus:border-[#0A192F]"
+            className="flex-1 px-3 py-2 bg-white border border-zinc-200 rounded-md text-xs font-medium text-zinc-900 focus:outline-none focus:border-zinc-900"
           />
           <button
             type="submit"
@@ -248,7 +317,7 @@ export function VehiclePhotoUploader({
           <span className="text-[11px] font-semibold text-zinc-600 uppercase tracking-wider">
             Carrete de Fotos ({allPhotos.length})
           </span>
-          <span className="text-[10px] text-zinc-400">
+          <span className="text-[10px] text-zinc-400 hidden sm:block">
             ★ Haz clic en la estrella para definir la foto principal de portada
           </span>
         </div>
@@ -270,7 +339,7 @@ export function VehiclePhotoUploader({
                   className={cn(
                     'group relative aspect-[16/10] rounded-lg border bg-zinc-50 overflow-hidden transition-all',
                     isPrimary
-                      ? 'border-[#0A192F] ring-2 ring-[#0A192F]/20'
+                      ? 'border-zinc-900 ring-2 ring-zinc-900/20'
                       : 'border-zinc-200 hover:border-zinc-300'
                   )}
                 >
@@ -284,7 +353,7 @@ export function VehiclePhotoUploader({
 
                   {/* Badge de Portada Principal */}
                   {isPrimary ? (
-                    <div className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded bg-[#0A192F] text-white text-[9px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-xs z-10">
+                    <div className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded bg-zinc-900 text-white text-[9px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-xs z-10">
                       <Star className="w-2.5 h-2.5 fill-current text-amber-300" />
                       <span>Portada</span>
                     </div>
@@ -292,18 +361,19 @@ export function VehiclePhotoUploader({
                     <button
                       type="button"
                       onClick={() => handleSetPrimary(url)}
-                      className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-white/90 backdrop-blur-xs text-zinc-700 hover:text-zinc-950 hover:bg-white text-[9px] font-semibold border border-zinc-200 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                      // Always visible on mobile (touch), reveal-on-hover only on desktop
+                      className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-white/90 backdrop-blur-xs text-zinc-700 hover:text-zinc-950 hover:bg-white text-[9px] font-semibold border border-zinc-200 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity z-10 min-h-[28px]"
                       title="Establecer como foto de portada"
                     >
                       Hacer principal
                     </button>
                   )}
 
-                  {/* Botón Eliminar Foto */}
+                  {/* Botón Eliminar Foto — always visible on mobile */}
                   <button
                     type="button"
                     onClick={() => handleRemovePhoto(url)}
-                    className="absolute top-1.5 right-1.5 p-1 rounded bg-black/60 text-white hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100 z-10"
+                    className="absolute top-1.5 right-1.5 p-1.5 rounded bg-black/60 text-white hover:bg-red-600 transition-colors opacity-100 lg:opacity-0 lg:group-hover:opacity-100 z-10 min-h-[28px] min-w-[28px] flex items-center justify-center"
                     title="Eliminar esta foto"
                   >
                     <X className="w-3 h-3" />
