@@ -67,3 +67,26 @@ export const AdminVehicleSchema = z.object({
 })
 
 export type AdminVehicleInput = z.infer<typeof AdminVehicleSchema>
+
+/** Esquema de validación oficial para Libro de Reclamaciones (Ley N° 29571 y D.S. 011-2011-PCM) */
+export const LibroReclamacionSchema = z.object({
+  nombreCompleto: z.string().min(3, 'Ingresa tus nombres y apellidos completos').max(120),
+  tipoDocumento:  z.enum(['DNI', 'CE', 'PASAPORTE']),
+  numeroDocumento: z.string().min(5, 'Documento inválido').max(20),
+  telefono:       z.string().min(7, 'Teléfono inválido').max(15),
+  email:          z.string().email('Correo electrónico no válido'),
+  domicilio:      z.string().min(5, 'Ingresa tu dirección o ciudad'),
+  tipoBien:       z.enum(['servicio', 'producto']).default('servicio'),
+  montoReclamado: z.string().max(30).optional(),
+  descripcionBien: z.string().min(3, 'Especifica el bien o servicio').max(200),
+  tipoReclamacion: z.enum(['reclamo', 'queja'], {
+    message: 'Selecciona si es Reclamo o Queja',
+  }),
+  detalleHechos:  z.string().min(15, 'El detalle debe contener al menos 15 caracteres').max(2000),
+  pedidoConcreto: z.string().min(5, 'Describe tu pedido concreto al proveedor').max(1000),
+  terminosAceptados: z.boolean().refine((v) => v === true, {
+    message: 'Debes declarar la veracidad de la información',
+  }),
+})
+
+export type LibroReclamacionInput = z.infer<typeof LibroReclamacionSchema>

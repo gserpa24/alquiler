@@ -13,6 +13,25 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/terms',
+        destination: '/legal/terminos',
+        permanent: true,
+      },
+      {
+        source: '/privacy',
+        destination: '/legal/privacidad',
+        permanent: true,
+      },
+      {
+        source: '/libro-de-reclamaciones',
+        destination: '/reclamaciones',
+        permanent: true,
+      },
+    ]
+  },
 };
 
 export default nextConfig;

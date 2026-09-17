@@ -11,10 +11,10 @@ const FOOTER_LINKS = [
     { label: 'Preguntas Frecuentes', href: '/#faq-heading' },
   ]},
   { section: 'Información Legal', links: [
-    { label: 'Términos y Condiciones', href: '/contact' },
-    { label: 'Políticas de Privacidad', href: '/contact' },
-    { label: 'Depósito y Garantías',   href: '/#faq-heading' },
-    { label: 'Libro de Reclamaciones',  href: '/contact' },
+    { label: 'Términos y Condiciones', href: '/legal/terminos' },
+    { label: 'Políticas de Privacidad', href: '/legal/privacidad' },
+    { label: 'Depósito y Garantías',   href: '/legal/garantias' },
+    { label: 'Libro de Reclamaciones',  href: '/reclamaciones' },
   ]},
 ]
 
