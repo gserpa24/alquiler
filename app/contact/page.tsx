@@ -71,7 +71,7 @@ export default function ContactPage() {
               <MapPin className="w-4 h-4 text-[#0A192F] shrink-0 mt-0.5 stroke-[1.5]" />
               <div>
                 <strong className="block text-zinc-900 font-semibold mb-0.5">Dirección</strong>
-                Tarapoto, San Martín, Perú
+                Tarapoto, San Martín
               </div>
             </div>
 
@@ -79,7 +79,8 @@ export default function ContactPage() {
               <Clock className="w-4 h-4 text-[#0A192F] shrink-0 mt-0.5 stroke-[1.5]" />
               <div>
                 <strong className="block text-zinc-900 font-semibold mb-0.5">Horarios de Atención</strong>
-                Horario de lunes a sábado
+                Lunes a Viernes: 08:00 – 19:00<br />
+                Sábados: 09:00 – 17:00
               </div>
             </div>
 
@@ -105,7 +106,7 @@ export default function ContactPage() {
             <div className="text-center p-4">
               <MapPin className="w-5 h-5 text-[#0A192F] mx-auto mb-1.5 stroke-[1.5]" />
               <p className="text-xs font-semibold text-zinc-900">Atención Central</p>
-              <p className="text-[11px] text-zinc-400 mt-0.5">Tarapoto, San Martín, Perú</p>
+              <p className="text-[11px] text-zinc-400 mt-0.5">Tarapoto, San Martín</p>
             </div>
           </div>
         </div>

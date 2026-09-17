@@ -98,11 +98,11 @@ export function Footer() {
             <ul className="space-y-3 text-xs" role="list">
               <li className="flex items-start gap-2.5 text-zinc-500">
                 <Clock className="w-4 h-4 mt-0.5 shrink-0 text-[#0A192F] stroke-[1.5]" aria-hidden="true" />
-                <span>Horario de lunes a sábado</span>
+                <span>Lunes — Viernes: 8:00 – 19:00<br />Sábados: 9:00 – 17:00</span>
               </li>
               <li className="flex items-start gap-2.5 text-zinc-500">
                 <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-[#0A192F] stroke-[1.5]" aria-hidden="true" />
-                <span>Tarapoto</span>
+                <span>Tarapoto, San Martín</span>
               </li>
               <li className="flex items-start gap-2.5 text-zinc-500">
                 <Phone className="w-4 h-4 mt-0.5 shrink-0 text-[#0A192F] stroke-[1.5]" aria-hidden="true" />
