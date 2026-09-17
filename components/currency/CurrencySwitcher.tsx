@@ -60,7 +60,7 @@ export function CurrencySwitcher({ className, ...props }: CurrencySwitcherProps)
         aria-expanded={open}
         aria-label="Cambiar moneda"
         className={cn(
-          'inline-flex items-center gap-1.5 px-3 py-2 rounded-md border text-xs font-semibold transition-colors duration-150',
+          'inline-flex items-center justify-between gap-1 px-2.5 py-1.5 rounded-md border text-xs font-semibold transition-colors duration-150',
           'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 hover:text-zinc-900',
           open && 'border-[#0A192F] text-[#0A192F]',
         )}
@@ -85,36 +85,36 @@ export function CurrencySwitcher({ className, ...props }: CurrencySwitcherProps)
           role="listbox"
           aria-label="Seleccionar moneda"
           className={cn(
-            'absolute right-0 top-full mt-1.5 z-50',
-            'w-max min-w-full bg-white rounded-lg border border-zinc-200 shadow-lg py-1',
+            'absolute right-0 top-full mt-1 z-50',
+            'bg-white rounded-md border border-zinc-200 shadow-md p-1 min-w-full',
             'animate-in fade-in-0 zoom-in-95 duration-100',
           )}
         >
-          {CURRENCY_ORDER.map((code) => {
-            const isActive = currency === code
-            return (
-              <button
-                key={code}
-                type="button"
-                role="option"
-                aria-selected={isActive}
-                onClick={() => {
-                  setCurrency(code)
-                  setOpen(false)
-                }}
-                className={cn(
-                  'w-full text-left px-3 py-1.5 text-xs transition-colors duration-100 whitespace-nowrap',
-                  isActive
-                    ? 'text-[#0A192F] bg-zinc-50 font-bold'
-                    : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 font-normal',
-                )}
-              >
-                <span className={isActive ? 'font-bold text-zinc-950' : 'font-normal'}>
+          <div className="flex flex-col gap-0.5">
+            {CURRENCY_ORDER.map((code) => {
+              const isActive = currency === code
+              return (
+                <button
+                  key={code}
+                  type="button"
+                  role="option"
+                  aria-selected={isActive}
+                  onClick={() => {
+                    setCurrency(code)
+                    setOpen(false)
+                  }}
+                  className={cn(
+                    'w-full text-center px-2 py-1 text-xs rounded transition-colors duration-100 whitespace-nowrap block',
+                    isActive
+                      ? 'text-[#0A192F] bg-zinc-100 font-bold'
+                      : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 font-normal',
+                  )}
+                >
                   {CURRENCY_LABELS[code]}
-                </span>
-              </button>
-            )
-          })}
+                </button>
+              )
+            })}
+          </div>
         </div>
       )}
     </div>
