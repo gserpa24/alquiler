@@ -56,18 +56,18 @@ export function TransactionalVehicleCatalog({ vehicles }: TransactionalVehicleCa
     <div className="w-full">
       {/* ── Hero Principal con Imagen de Carretera Escénica (Auto entre árboles y naturaleza) ── */}
       <section className="relative min-h-[380px] sm:min-h-[460px] flex items-center justify-center py-16 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-zinc-200">
-        {/* Imagen de fondo de alta resolución: auto en carretera rodeada de árboles y vegetación (estilo Tarapoto - Yurimaguas) */}
+        {/* Imagen de fondo: Carretera Marginal con selva y árboles frondosos */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=1920&q=85"
-            alt="Auto recorriendo carretera rodeada de frondosos árboles y selva"
+            src="/images/hero-carretera-marginal.png"
+            alt="Carretera Marginal de la Selva atravesando frondosos árboles y naturaleza"
             fill
             priority
             sizes="100vw"
-            className="object-cover object-center"
+            className="object-cover object-center brightness-[0.9]"
           />
           {/* Overlay oscuro sutil con viñeta para destacar el formulario */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/25 to-black/55 backdrop-blur-[0.5px]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/50 backdrop-blur-[0.5px]" />
         </div>
 
         {/* Bloque central del formulario de búsqueda */}
