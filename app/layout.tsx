@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
 import './globals.css'
 import { Navbar } from '@/components/layout/Navbar'
@@ -6,6 +6,13 @@ import { Footer } from '@/components/layout/Footer'
 import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp'
 import { Toaster } from '@/components/ui/sonner'
 import { CurrencyProvider } from '@/contexts/CurrencyContext'
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: 'cover',
+}
 
 const inter = Inter({
   subsets:  ['latin'],
