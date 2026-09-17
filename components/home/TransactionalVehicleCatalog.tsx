@@ -6,6 +6,7 @@ import { Filter, SlidersHorizontal, Check } from 'lucide-react'
 import { type VehicleCard as VehicleCardType } from '@/types/vehicle'
 import { VehicleCard } from '@/components/vehicle/VehicleCard'
 import { TransactionalSearchHero } from '@/components/home/TransactionalSearchHero'
+import { FAQSection } from '@/components/faq/FAQSection'
 import { cn } from '@/lib/utils'
 
 interface TransactionalVehicleCatalogProps {
@@ -166,6 +167,17 @@ export function TransactionalVehicleCatalog({ vehicles }: TransactionalVehicleCa
               </button>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* ── Sección de Preguntas Frecuentes Integrada ───────────── */}
+      <section id="faq-heading" className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-white border-t border-zinc-200">
+        <div className="max-w-4xl mx-auto">
+          <FAQSection
+            showCategoryFilters={true}
+            title="Preguntas Frecuentes sobre el Servicio"
+            subtitle="Respuestas claras a las dudas más comunes sobre requisitos, garantías, formas de pago y ruteo en Tarapoto y Perú."
+          />
         </div>
       </section>
     </div>

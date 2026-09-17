@@ -8,7 +8,7 @@ const FOOTER_LINKS = [
     { label: 'Autos y Flota',     href: '/catalog' },
     { label: 'Sedanes',           href: '/catalog?category=sedan' },
     { label: 'SUVs',              href: '/catalog?category=suv' },
-    { label: 'Preguntas Frecuentes', href: '/#faq-heading' },
+    { label: 'Preguntas Frecuentes', href: '/faq' },
   ]},
   { section: 'Información Legal', links: [
     { label: 'Términos y Condiciones', href: '/legal/terminos' },
