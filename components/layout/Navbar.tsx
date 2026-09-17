@@ -138,8 +138,11 @@ export function Navbar() {
                   </li>
                 )
               })}
-              <li className="pt-2">
-                <CurrencySwitcher className="justify-center" />
+              <li className="pt-1 border-t border-zinc-100">
+                <div className="px-1 py-2 flex items-center justify-between">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">Moneda</span>
+                  <CurrencySwitcher />
+                </div>
               </li>
               <li className="pt-2">
                 <Link
