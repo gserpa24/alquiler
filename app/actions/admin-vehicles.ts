@@ -12,6 +12,7 @@ import {
   deleteVehicle,
   updateVehicleStatus,
   getVehicleById,
+  updateVehiclesOrder,
 } from '@/lib/supabase/queries'
 import { deleteStorageFiles } from '@/lib/supabase/storage'
 import { requireAdminSession } from '@/lib/auth/guard'
@@ -252,5 +253,43 @@ export async function deleteStorageFileAction(url: string): Promise<ActionResult
   } catch (err) {
     console.error('[deleteStorageFileAction Error]:', err)
     return { success: false, error: 'Error al eliminar la foto' }
+  }
+}
+
+/**
+ * Server Action: Reorganiza el orden de aparición de los vehículos en el catálogo.
+ */
+export async function reorderVehiclesAction(
+  orderedIds: string[]
+): Promise<ActionResult> {
+  try {
+    await requireAdminSession()
+
+    if (!Array.isArray(orderedIds) || orderedIds.length === 0) {
+      return { success: false, error: 'Lista de vehículos no válida para reordenar' }
+    }
+
+    const items = orderedIds.map((id, index) => ({
+      id,
+      sort_order: index + 1,
+    }))
+
+    const ok = await updateVehiclesOrder(items)
+    if (!ok) {
+      return { success: false, error: 'No se pudo guardar el orden de los vehículos' }
+    }
+
+    revalidatePath('/')
+    revalidatePath('/catalog')
+    revalidatePath('/admin')
+    revalidatePath('/admin/vehicles')
+
+    return { success: true }
+  } catch (err) {
+    console.error('[reorderVehiclesAction Error]:', err)
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Error inesperado al reordenar vehículos',
+    }
   }
 }

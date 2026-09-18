@@ -26,7 +26,7 @@ export const MOCK_VEHICLES: Vehicle[] = [
     thumbnail: 'https://images.unsplash.com/photo-1590362891991-f776e747a588?w=800&q=80',
     description: 'Sedán cotidiano por excelencia. Mecánica confiable, marcha suave y consumo reducido para traslados urbanos y diligencias.',
     status: 'available',
-    is_featured: true,
+    is_featured: false,
     sort_order: 1,
     created_at: '2024-01-01T00:00:00Z',
     updated_at: '2024-01-01T00:00:00Z',
@@ -52,7 +52,7 @@ export const MOCK_VEHICLES: Vehicle[] = [
     thumbnail: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800&q=80',
     description: 'Sedán espacioso en plazas traseras con excelente equipamiento de seguridad activa y gran rendimiento de combustible.',
     status: 'available',
-    is_featured: true,
+    is_featured: false,
     sort_order: 2,
     created_at: '2024-01-01T00:00:00Z',
     updated_at: '2024-01-01T00:00:00Z',
@@ -78,7 +78,7 @@ export const MOCK_VEHICLES: Vehicle[] = [
     thumbnail: 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800&q=80',
     description: 'El sedán mediano más probado del mercado. Estabilidad impecable en autopista, excelente insonorización y amplio maletero.',
     status: 'available',
-    is_featured: true,
+    is_featured: false,
     sort_order: 3,
     created_at: '2024-01-01T00:00:00Z',
     updated_at: '2024-01-01T00:00:00Z',
@@ -104,7 +104,7 @@ export const MOCK_VEHICLES: Vehicle[] = [
     thumbnail: 'https://images.unsplash.com/photo-1600661653561-629509216228?w=800&q=80',
     description: 'SUV espaciosa ideal para viajes en familia. Asientos traseros reclinables, piso plano y capacidad de carga generosa.',
     status: 'available',
-    is_featured: true,
+    is_featured: false,
     sort_order: 4,
     created_at: '2024-01-01T00:00:00Z',
     updated_at: '2024-01-01T00:00:00Z',
@@ -322,7 +322,7 @@ export const MOCK_VEHICLES: Vehicle[] = [
 // ── CRUD Helpers para Desarrollo / Mock Store ───────────────────────────────
 
 export function getMockVehicles(): Vehicle[] {
-  return [...MOCK_VEHICLES]
+  return [...MOCK_VEHICLES].sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
 }
 
 export function findMockVehicleById(id: string): Vehicle | undefined {

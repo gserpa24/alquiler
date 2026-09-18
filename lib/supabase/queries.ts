@@ -65,6 +65,7 @@ export async function getVehicles(
 
   if (IS_MOCK) {
     const filtered = applyMockFilters(MOCK_VEHICLES, filters)
+    filtered.sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
     const start    = (page - 1) * limit
     const slice    = filtered.slice(start, start + limit)
 
@@ -249,6 +250,7 @@ export async function getAllAdminVehicles(): Promise<Vehicle[]> {
   const { data, error } = await supabase
     .from('vehicles')
     .select('*')
+    .order('sort_order', { ascending: true })
     .order('created_at', { ascending: false })
 
   if (error) {
@@ -359,3 +361,34 @@ export async function deleteVehicle(id: string): Promise<boolean> {
   return true
 }
 
+/**
+ * Actualiza el orden (sort_order) de múltiples vehículos simultáneamente.
+ */
+export async function updateVehiclesOrder(
+  items: { id: string; sort_order: number }[]
+): Promise<boolean> {
+  if (IS_MOCK) {
+    items.forEach(({ id, sort_order }) => {
+      updateMockVehicle(id, { sort_order })
+    })
+    return true
+  }
+
+  const supabase = await getAdminDbClient()
+
+  const promises = items.map(({ id, sort_order }) =>
+    supabase
+      .from('vehicles')
+      .update({ sort_order })
+      .eq('id', id)
+  )
+
+  const results = await Promise.all(promises)
+  const failed = results.find((r) => r.error)
+  if (failed && failed.error) {
+    console.error('[updateVehiclesOrder] Error actualizando orden:', failed.error)
+    return false
+  }
+
+  return true
+}

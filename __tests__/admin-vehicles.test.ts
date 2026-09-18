@@ -6,6 +6,7 @@ import {
   updateVehicleAction,
   updateVehicleStatusAction,
   deleteVehicleAction,
+  reorderVehiclesAction,
 } from '@/app/actions/admin-vehicles'
 import { getVehicleById } from '@/lib/supabase/queries'
 
@@ -123,6 +124,16 @@ describe('Seguridad y Control de Acceso (Broken Access Control)', () => {
     expect(res.success).toBe(false)
     expect(res.error).toContain('No autorizado')
   })
+
+  it('rechaza reorderVehiclesAction si no hay sesión de administrador', async () => {
+    mockRequireAdminSession.mockRejectedValueOnce(
+      new Error('No autorizado: se requiere sesión de administrador.')
+    )
+
+    const res = await reorderVehiclesAction(['1', '2'])
+    expect(res.success).toBe(false)
+    expect(res.error).toContain('No autorizado')
+  })
 })
 
 describe('CRUD Server Actions de Vehículos', () => {
@@ -209,5 +220,15 @@ describe('CRUD Server Actions de Vehículos', () => {
 
     const vehicle = await getVehicleById(createdVehicleId)
     expect(vehicle).toBeNull()
+  })
+
+  it('reorderVehiclesAction actualiza el orden de los vehículos', async () => {
+    const res = await reorderVehiclesAction(['2', '1'])
+    expect(res.success).toBe(true)
+
+    const v2 = await getVehicleById('2')
+    const v1 = await getVehicleById('1')
+    expect(v2?.sort_order).toBe(1)
+    expect(v1?.sort_order).toBe(2)
   })
 })
