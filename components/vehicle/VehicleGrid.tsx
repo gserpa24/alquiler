@@ -58,11 +58,12 @@ export function VehicleGrid({ vehicles, 'aria-label': ariaLabel }: VehicleGridPr
       initial="hidden"
       animate="show"
     >
-      {vehicles.map((vehicle) => (
+      {vehicles.map((vehicle, index) => (
         <motion.li key={vehicle.id} variants={itemVariants}>
           <VehicleCard
             vehicle={vehicle}
             variant={vehicle.is_featured ? 'featured' : 'default'}
+            priority={index < 3}
           />
         </motion.li>
       ))}

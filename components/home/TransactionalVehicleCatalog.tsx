@@ -63,8 +63,6 @@ export function TransactionalVehicleCatalog({ vehicles }: TransactionalVehicleCa
             alt="Carretera asfaltada sin autos serpenteando en medio de la selva peruana y montañas verdes"
             fill
             priority
-            quality={100}
-            unoptimized
             sizes="100vw"
             className="object-cover object-[center_55%]"
           />
@@ -137,10 +135,11 @@ export function TransactionalVehicleCatalog({ vehicles }: TransactionalVehicleCa
           {/* Grid de Vehículos */}
           {filteredVehicles.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-              {filteredVehicles.map((vehicle) => (
+              {filteredVehicles.map((vehicle, index) => (
                 <VehicleCard
                   key={vehicle.id}
                   vehicle={vehicle}
+                  priority={index < 2}
                 />
               ))}
             </div>

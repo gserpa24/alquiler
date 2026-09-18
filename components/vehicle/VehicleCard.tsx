@@ -14,10 +14,11 @@ import { StatusBadge } from '@/components/vehicle/StatusBadge'
 interface VehicleCardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   vehicle: VehicleCardType
   variant?: 'default' | 'featured'
+  priority?: boolean
 }
 
 export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
-  ({ vehicle, variant = 'default', className, ...props }, ref) => {
+  ({ vehicle, variant = 'default', priority = false, className, ...props }, ref) => {
     // Currency context for price conversion
     const { currency, rates, isLoading: ratesLoading } = useCurrency()
 
@@ -63,7 +64,7 @@ export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-contain p-2 transition-transform duration-200 group-hover:scale-[1.02]"
-              priority={vehicle.is_featured}
+              priority={priority || vehicle.is_featured}
             />
 
             {/* Badge de tipo de vehículo (Categoría) */}
