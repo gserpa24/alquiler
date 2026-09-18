@@ -1,22 +1,18 @@
 // app/admin/page.tsx
 // Dashboard principal de administración — 100% Analítico e Informativo (Módulo: dashboard).
-// No incluye CRUD de flota (el CRUD se encuentra centralizado en /admin/vehicles).
+// Secciones perfectamente alineadas y simétricas por dominio operativo (Flota | Consultas).
 
 import Link from 'next/link'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import {
   Car,
-  CheckCircle2,
   Clock,
-  Wrench,
   MessageSquare,
   ArrowRight,
   TrendingUp,
-  SlidersHorizontal,
-  Mail,
   Gauge,
-  Sparkles,
+  Inbox,
 } from 'lucide-react'
 import { getAllAdminVehicles } from '@/lib/supabase/queries'
 import { getContactMessagesWithStatus } from '@/lib/supabase/messages'
@@ -85,7 +81,7 @@ export default async function AdminDashboardPage() {
   const purchaseInquiries = messages.filter((m) => m.subject === 'purchase').length
   const otherInquiries = totalMessages - (rentalInquiries + purchaseInquiries)
 
-  const recentMessages = messages.slice(0, 4)
+  const recentMessages = messages.slice(0, 3)
 
   return (
     <div className="space-y-8">
@@ -132,90 +128,57 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* ── Métricas Clave (KPIs Principales) ─────────────────────── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Total Flota */}
-        <div className="p-4 sm:p-5 rounded-xl border border-zinc-200 bg-white shadow-2xs">
-          <div className="flex items-center justify-between gap-2 mb-2">
-            <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
-              Total Flota
-            </span>
-            <div className="w-8 h-8 rounded-md bg-zinc-100 flex items-center justify-center text-[#0A192F]">
-              <Car className="w-4 h-4 stroke-[1.75]" />
-            </div>
-          </div>
-          <p className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-950 tabular-nums">
-            {totalVehicles}
-          </p>
-          <p className="text-xs text-zinc-500 mt-1 flex items-center gap-1">
-            <span className="text-emerald-600 font-semibold">{availablePct}%</span> lista para reserva
-          </p>
-        </div>
-
-        {/* En Alquiler */}
-        <div className="p-4 sm:p-5 rounded-xl border border-amber-200 bg-amber-50/30 shadow-2xs">
-          <div className="flex items-center justify-between gap-2 mb-2">
-            <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-amber-800">
-              En Alquiler
-            </span>
-            <div className="w-8 h-8 rounded-md bg-amber-100 flex items-center justify-center text-amber-800">
-              <Clock className="w-4 h-4 stroke-[1.75]" />
-            </div>
-          </div>
-          <p className="text-2xl sm:text-3xl font-bold tracking-tight text-amber-900 tabular-nums">
-            {rentedVehicles}
-          </p>
-          <p className="text-xs text-amber-700/80 mt-1">
-            Tasa de ocupación: <strong className="font-semibold text-amber-900">{rentedPct}%</strong>
-          </p>
-        </div>
-
-        {/* Consultas y Leads */}
-        <div className="p-4 sm:p-5 rounded-xl border border-zinc-200 bg-white shadow-2xs">
-          <div className="flex items-center justify-between gap-2 mb-2">
-            <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
-              Consultas Totales
-            </span>
-            <div className="w-8 h-8 rounded-md bg-blue-50 flex items-center justify-center text-blue-700">
-              <MessageSquare className="w-4 h-4 stroke-[1.75]" />
-            </div>
-          </div>
-          <p className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-950 tabular-nums">
-            {totalMessages}
-          </p>
-          <p className="text-xs text-zinc-500 mt-1">
-            {pendingMessages > 0 ? (
-              <span className="text-amber-600 font-semibold">{pendingMessages} pendientes</span>
-            ) : (
-              <span className="text-emerald-600 font-medium">Todas atendidas</span>
-            )}
-          </p>
-        </div>
-
-        {/* Tarifa Promedio */}
-        <div className="p-4 sm:p-5 rounded-xl border border-zinc-200 bg-white shadow-2xs">
-          <div className="flex items-center justify-between gap-2 mb-2">
-            <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
-              Tarifa Diaria Promedio
-            </span>
-            <div className="w-8 h-8 rounded-md bg-emerald-50 flex items-center justify-center text-emerald-700">
-              <TrendingUp className="w-4 h-4 stroke-[1.75]" />
-            </div>
-          </div>
-          <p className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-950 tabular-nums">
-            {formatPrice(averageRate)}
-          </p>
-          <p className="text-xs text-zinc-500 mt-1">
-            Promedio diario por auto
-          </p>
-        </div>
-      </div>
-
-      {/* ── Bloque Analítico Principal (2 Columnas Simétricas 50/50 y Misma Altura) ── */}
+      {/* ── Columnas de Análisis Perfectamente Alineadas (Flota vs Consultas) ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
-        {/* Columna Izquierda: Análisis de Flota */}
-        <div className="h-full">
-          <div className="p-6 sm:p-7 rounded-xl bg-white border border-zinc-200 shadow-2xs h-full flex flex-col justify-between">
+        {/* ========================================================= */}
+        {/* ── COLUMNA 1: OPERACIONES Y ANÁLISIS DE FLOTA ─────────── */}
+        {/* ========================================================= */}
+        <div className="flex flex-col gap-6 h-full">
+          {/* Tarjetas Superiores de Flota (Alineadas al 100% con el panel inferior) */}
+          <div className="grid grid-cols-2 gap-4 sm:gap-5">
+            {/* KPI 1: Total Flota */}
+            <div className="p-4 sm:p-5 rounded-xl border border-zinc-200 bg-white shadow-2xs flex flex-col justify-between">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
+                  Total Flota
+                </span>
+                <div className="w-8 h-8 rounded-md bg-zinc-100 flex items-center justify-center text-[#0A192F] shrink-0">
+                  <Car className="w-4 h-4 stroke-[1.75]" />
+                </div>
+              </div>
+              <div>
+                <p className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-950 tabular-nums">
+                  {totalVehicles}
+                </p>
+                <p className="text-xs text-zinc-500 mt-1 flex items-center gap-1">
+                  <span className="text-emerald-600 font-semibold">{availablePct}%</span> lista para reserva
+                </p>
+              </div>
+            </div>
+
+            {/* KPI 2: Tarifa Promedio */}
+            <div className="p-4 sm:p-5 rounded-xl border border-zinc-200 bg-white shadow-2xs flex flex-col justify-between">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
+                  Tarifa Promedio
+                </span>
+                <div className="w-8 h-8 rounded-md bg-emerald-50 flex items-center justify-center text-emerald-700 shrink-0">
+                  <TrendingUp className="w-4 h-4 stroke-[1.75]" />
+                </div>
+              </div>
+              <div>
+                <p className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-950 tabular-nums">
+                  {formatPrice(averageRate)}
+                </p>
+                <p className="text-xs text-zinc-500 mt-1">
+                  Ocupación actual: <strong className="font-semibold text-zinc-800">{rentedPct}%</strong>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Panel Principal: Estado Operativo de Flota */}
+          <div className="p-6 sm:p-7 rounded-xl bg-white border border-zinc-200 shadow-2xs flex-1 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2.5">
@@ -356,9 +319,59 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* Columna Derecha: Demanda y Mensajes */}
-        <div className="h-full">
-          <div className="p-6 sm:p-7 rounded-xl bg-white border border-zinc-200 shadow-2xs h-full flex flex-col justify-between">
+        {/* ========================================================= */}
+        {/* ── COLUMNA 2: ATENCIÓN Y DEMANDA DE CONSULTAS ─────────── */}
+        {/* ========================================================= */}
+        <div className="flex flex-col gap-6 h-full">
+          {/* Tarjetas Superiores de Consultas (Alineadas al 100% con el panel inferior) */}
+          <div className="grid grid-cols-2 gap-4 sm:gap-5">
+            {/* KPI 3: Consultas Totales */}
+            <div className="p-4 sm:p-5 rounded-xl border border-zinc-200 bg-white shadow-2xs flex flex-col justify-between">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
+                  Consultas Totales
+                </span>
+                <div className="w-8 h-8 rounded-md bg-blue-50 flex items-center justify-center text-blue-700 shrink-0">
+                  <Inbox className="w-4 h-4 stroke-[1.75]" />
+                </div>
+              </div>
+              <div>
+                <p className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-950 tabular-nums">
+                  {totalMessages}
+                </p>
+                <p className="text-xs text-zinc-500 mt-1">
+                  Efectividad: <strong className="font-semibold text-emerald-700">{attentionRate}% resueltas</strong>
+                </p>
+              </div>
+            </div>
+
+            {/* KPI 4: Por Atender */}
+            <div className="p-4 sm:p-5 rounded-xl border border-amber-200 bg-amber-50/30 shadow-2xs flex flex-col justify-between">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-amber-800">
+                  Por Atender
+                </span>
+                <div className="w-8 h-8 rounded-md bg-amber-100 flex items-center justify-center text-amber-800 shrink-0">
+                  <Clock className="w-4 h-4 stroke-[1.75]" />
+                </div>
+              </div>
+              <div>
+                <p className="text-2xl sm:text-3xl font-bold tracking-tight text-amber-900 tabular-nums">
+                  {pendingMessages}
+                </p>
+                <p className="text-xs text-amber-700 mt-1">
+                  {pendingMessages > 0 ? (
+                    <span className="font-semibold text-amber-800">Requieren respuesta</span>
+                  ) : (
+                    <span className="text-emerald-700 font-medium">Bandeja al día</span>
+                  )}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Panel Principal: Atención de Consultas */}
+          <div className="p-6 sm:p-7 rounded-xl bg-white border border-zinc-200 shadow-2xs flex-1 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2.5">
@@ -443,7 +456,7 @@ export default async function AdminDashboardPage() {
                   </h3>
                   {recentMessages.length > 0 ? (
                     <div className="space-y-1.5">
-                      {recentMessages.slice(0, 3).map((msg) => (
+                      {recentMessages.map((msg) => (
                         <div
                           key={msg.id}
                           className="p-1.5 px-2 rounded-md bg-zinc-50 border border-zinc-100 flex items-center justify-between gap-2 text-xs"
