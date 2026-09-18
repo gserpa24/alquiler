@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import { SiteLayout } from '@/components/layout/SiteLayout'
 
@@ -60,6 +61,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     >
       <body className="min-h-full flex flex-col bg-white text-zinc-900 antialiased selection:bg-slate-900 selection:text-white">
         <SiteLayout>{children}</SiteLayout>
+        <Analytics />
       </body>
     </html>
   )
