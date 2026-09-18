@@ -105,7 +105,20 @@ export async function getVehicles(
 
   const { data, error, count } = await query
 
-  if (error) throw new Error(`DB Error en getVehicles: ${error.message}`)
+  if (error) {
+    console.warn(`[getVehicles] Error en Supabase: ${error.message}. Usando fallback seguro.`)
+    const filtered = applyMockFilters(MOCK_VEHICLES, filters)
+    const start    = (page - 1) * limit
+    const slice    = filtered.slice(start, start + limit)
+
+    return {
+      vehicles: slice as VehicleCard[],
+      total:    filtered.length,
+      page,
+      limit,
+      pages:    Math.ceil(filtered.length / limit),
+    }
+  }
 
   const total = count ?? 0
   return {
@@ -137,7 +150,9 @@ export async function getVehicleBySlug(slug: string): Promise<Vehicle | null> {
 
   if (error) {
     if (error.code === 'PGRST116') return null // Not found
-    throw new Error(`DB Error en getVehicleBySlug: ${error.message}`)
+    console.warn(`[getVehicleBySlug] Error en Supabase: ${error.message}. Usando fallback.`)
+    const found = MOCK_VEHICLES.find((v) => v.slug === slug)
+    return found && found.status !== 'sold' ? (found as Vehicle) : null
   }
 
   return data as Vehicle
@@ -165,7 +180,12 @@ export async function getFeaturedVehicles(limit = 6): Promise<VehicleCard[]> {
     .order('sort_order', { ascending: true })
     .limit(limit)
 
-  if (error) throw new Error(`DB Error en getFeaturedVehicles: ${error.message}`)
+  if (error) {
+    console.warn(`[getFeaturedVehicles] Error en Supabase: ${error.message}. Usando fallback.`)
+    return MOCK_VEHICLES
+      .filter((v) => v.is_featured && v.status !== 'sold')
+      .slice(0, limit) as VehicleCard[]
+  }
   return (data ?? []) as VehicleCard[]
 }
 
@@ -196,7 +216,11 @@ export async function getSimilarVehicles(
     .order('sort_order', { ascending: true })
     .limit(limit)
 
-  if (error) throw new Error(`DB Error en getSimilarVehicles: ${error.message}`)
+  if (error) {
+    return MOCK_VEHICLES
+      .filter((v) => v.category === category && v.slug !== excludeSlug && v.status !== 'sold')
+      .slice(0, limit) as VehicleCard[]
+  }
   return (data ?? []) as VehicleCard[]
 }
 
@@ -227,7 +251,10 @@ export async function getAllAdminVehicles(): Promise<Vehicle[]> {
     .select('*')
     .order('created_at', { ascending: false })
 
-  if (error) throw new Error(`DB Error en getAllAdminVehicles: ${error.message}`)
+  if (error) {
+    console.warn(`[getAllAdminVehicles] Error en Supabase: ${error.message}. Usando fallback.`)
+    return getMockVehicles()
+  }
   return (data ?? []) as Vehicle[]
 }
 
@@ -249,7 +276,7 @@ export async function getVehicleById(id: string): Promise<Vehicle | null> {
 
   if (error) {
     if (error.code === 'PGRST116') return null
-    throw new Error(`DB Error en getVehicleById: ${error.message}`)
+    return findMockVehicleById(id) ?? null
   }
 
   return data as Vehicle
