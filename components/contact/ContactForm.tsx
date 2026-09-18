@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect, useRef } from 'react'
 import { toast } from 'sonner'
+import { Toaster } from '@/components/ui/sonner'
 import { Send, CheckCircle2, AlertCircle } from 'lucide-react'
 import { submitContactAction, type ContactActionResult } from '@/app/actions/contact'
 
@@ -178,6 +179,7 @@ export function ContactForm() {
           <span>{state.message}</span>
         </div>
       )}
+      <Toaster position="bottom-right" richColors />
     </form>
   )
 }

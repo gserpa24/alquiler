@@ -3,6 +3,7 @@
 
 import type { Metadata } from 'next'
 import { AdminNav } from '@/components/admin/AdminNav'
+import { Toaster } from '@/components/ui/sonner'
 
 export const metadata: Metadata = {
   title: 'Panel Administrativo | AUTORUTA',
@@ -23,6 +24,7 @@ export default function AdminLayout({
       <footer className="border-t border-zinc-200 bg-white py-4 px-4 text-center text-xs text-zinc-400">
         AUTORUTA — Panel de Administración de Flota • Alquiler de Autos Cotidianos
       </footer>
+      <Toaster position="bottom-right" richColors />
     </div>
   )
 }

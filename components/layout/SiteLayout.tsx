@@ -8,7 +8,6 @@ import { usePathname } from 'next/navigation'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp'
-import { Toaster } from '@/components/ui/sonner'
 import { CurrencyProvider } from '@/contexts/CurrencyContext'
 
 export function SiteLayout({ children }: { children: React.ReactNode }) {
@@ -21,7 +20,6 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
         <main className="flex-1" id="main-content">
           {children}
         </main>
-        <Toaster position="bottom-right" richColors />
       </CurrencyProvider>
     )
   }
@@ -34,7 +32,6 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
       </main>
       <Footer />
       <FloatingWhatsApp />
-      <Toaster position="bottom-right" richColors />
     </CurrencyProvider>
   )
 }
