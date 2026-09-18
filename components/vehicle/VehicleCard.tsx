@@ -64,7 +64,7 @@ export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-contain p-2 transition-transform duration-200 group-hover:scale-[1.02]"
-              priority={priority || vehicle.is_featured}
+              priority={priority}
             />
 
             {/* Badge de tipo de vehículo (Categoría) */}

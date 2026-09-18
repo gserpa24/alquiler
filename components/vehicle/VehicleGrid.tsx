@@ -63,7 +63,7 @@ export function VehicleGrid({ vehicles, 'aria-label': ariaLabel }: VehicleGridPr
           <VehicleCard
             vehicle={vehicle}
             variant={vehicle.is_featured ? 'featured' : 'default'}
-            priority={index < 3}
+            priority={index < 2}
           />
         </motion.li>
       ))}
