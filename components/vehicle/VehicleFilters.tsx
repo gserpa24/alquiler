@@ -243,40 +243,32 @@ export function VehicleFilters({ totalResults, className }: VehicleFiltersProps)
   )
 
   return (
-    <div className={cn('w-full lg:w-64 lg:shrink-0 space-y-4', className)}>
-      {/* ── Barra superior (mobile + desktop resumen) ─────────── */}
-      <div className="flex items-center justify-between lg:justify-start gap-3 flex-wrap">
+    <div className={cn('w-full lg:w-64 lg:shrink-0 space-y-4 lg:space-y-0', className)}>
+      {/* ── Barra superior (solo mobile) ─────────── */}
+      <div className="lg:hidden flex items-center justify-between gap-3">
         {/* Botón filtros mobile */}
         <button
           type="button"
           onClick={() => setMobileOpen(true)}
-          className="lg:hidden flex items-center gap-2 px-3.5 py-2 rounded-md bg-white border border-zinc-200 text-xs font-semibold text-zinc-800 hover:border-zinc-300 hover:bg-zinc-50 transition-colors"
+          className="flex items-center gap-2 px-3.5 py-2 rounded-md bg-white border border-zinc-200 text-xs font-semibold text-zinc-800 hover:border-zinc-300 hover:bg-zinc-50 transition-colors"
           aria-expanded={mobileOpen}
           aria-controls="mobile-filter-panel"
         >
           <SlidersHorizontal className="w-3.5 h-3.5 text-[#0A192F]" aria-hidden="true" />
           Filtros
           {activeCount > 0 && (
-            <span className="flex items-center justify-center px-1.5 py-0.2 rounded text-[10px] font-bold bg-[#0A192F] text-white">
+            <span className="flex items-center justify-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#0A192F] text-white">
               {activeCount}
             </span>
           )}
         </button>
-
-        {/* Resultados */}
-        {totalResults !== undefined && (
-          <p className="text-xs text-zinc-500 font-medium">
-            <span className="font-semibold text-zinc-900">{totalResults}</span>{' '}
-            {totalResults === 1 ? 'vehículo disponible' : 'vehículos disponibles'}
-          </p>
-        )}
 
         {/* Clear filters */}
         {activeCount > 0 && (
           <button
             type="button"
             onClick={clearFilters}
-            className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-900 transition-colors ml-auto lg:ml-0"
+            className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-900 transition-colors"
           >
             <X className="w-3.5 h-3.5" aria-hidden="true" />
             Limpiar
