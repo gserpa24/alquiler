@@ -6,17 +6,18 @@ import { type Metadata } from 'next'
 import { notFound }        from 'next/navigation'
 import Link                from 'next/link'
 import { ChevronRight }    from 'lucide-react'
-import { VehicleGallery }  from '@/components/vehicle/VehicleGallery'
-import { VehicleSpecs }    from '@/components/vehicle/VehicleSpecs'
-import { WhatsAppCTA }     from '@/components/whatsapp/WhatsAppCTA'
-import { StatusBadge }     from '@/components/vehicle/StatusBadge'
-import { VehicleCard }     from '@/components/vehicle/VehicleCard'
+import { VehicleGallery }      from '@/components/vehicle/VehicleGallery'
+import { VehicleSpecs }        from '@/components/vehicle/VehicleSpecs'
+import { WhatsAppCTA }         from '@/components/whatsapp/WhatsAppCTA'
+import { StatusBadge }         from '@/components/vehicle/StatusBadge'
+import { VehicleCard }         from '@/components/vehicle/VehicleCard'
+import { VehicleDetailPrice }  from '@/components/vehicle/VehicleDetailPrice'
 import {
   getVehicleBySlug,
   getSimilarVehicles,
 } from '@/lib/supabase/queries'
-import { formatPrice, formatMileage } from '@/lib/utils'
-import { CATEGORY_LABELS }            from '@/types/vehicle'
+import { formatPrice }         from '@/lib/utils'
+import { CATEGORY_LABELS }     from '@/types/vehicle'
 
 // Páginas SSG con revalidación por demanda
 export const revalidate = 3600 // 1 hora
@@ -69,7 +70,7 @@ export default async function VehicleDetailPage({
   const vehicleName = `${vehicle.brand} ${vehicle.model} ${vehicle.year}`
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-5 lg:py-6">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 xl:px-8 py-3 sm:py-5 lg:py-6">
 
       {/* ── Breadcrumb compacto ─────────────────────────────────── */}
       <nav aria-label="Ruta de navegación" className="flex items-center gap-2 text-xs text-zinc-400 mb-3 sm:mb-4">
@@ -81,10 +82,10 @@ export default async function VehicleDetailPage({
       </nav>
 
       {/* ── Contenido principal adaptativo ─────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_360px] gap-5 lg:gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_300px] xl:grid-cols-[minmax(0,1fr)_340px] 2xl:grid-cols-[minmax(0,1fr)_360px] gap-5 lg:gap-6 xl:gap-8 items-start">
 
         {/* Columna izquierda: galería + descripción */}
-        <div className="space-y-5">
+        <div className="min-w-0 w-full space-y-5">
 
           {/* Header mobile */}
           <div className="lg:hidden">
@@ -126,41 +127,19 @@ export default async function VehicleDetailPage({
         </div>
 
         {/* Columna derecha: info + CTA adaptativo a la altura de pantalla */}
-        <aside className="lg:sticky lg:top-18 space-y-3">
+        <aside className="min-w-0 w-full lg:sticky lg:top-20 space-y-3">
 
           {/* Header desktop */}
           <div className="hidden lg:block">
             <VehicleHeader vehicle={vehicle} />
           </div>
 
-          {/* Precios */}
-          <div className="p-3 sm:p-3.5 rounded-lg bg-white border border-zinc-200 space-y-2 shadow-2xs">
-            {vehicle.daily_rate && (
-              <div className="flex items-baseline justify-between">
-                <span className="text-zinc-500 text-xs font-medium">Tarifa de alquiler</span>
-                <div className="text-right">
-                  <span className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900">
-                    {formatPrice(vehicle.daily_rate)}
-                  </span>
-                  <span className="text-zinc-400 text-xs ml-1 font-normal">/día</span>
-                </div>
-              </div>
-            )}
-            {vehicle.sale_price && (
-              <div className="flex items-baseline justify-between pt-1.5 border-t border-zinc-100">
-                <span className="text-zinc-500 text-xs font-medium">Precio de venta</span>
-                <span className="text-lg sm:text-xl font-bold text-[#0A192F]">
-                  {formatPrice(vehicle.sale_price)}
-                </span>
-              </div>
-            )}
-
-            {/* Kilometraje */}
-            <div className="flex items-center justify-between text-xs text-zinc-500 pt-1.5 border-t border-zinc-100">
-              <span>Kilometraje actual</span>
-              <span className="font-semibold text-zinc-800">{formatMileage(vehicle.mileage)}</span>
-            </div>
-          </div>
+          {/* Precios y kilometraje con CurrencyContext reactivo */}
+          <VehicleDetailPrice
+            dailyRate={vehicle.daily_rate}
+            salePrice={vehicle.sale_price}
+            mileage={vehicle.mileage}
+          />
 
           {/* CTA principal */}
           <WhatsAppCTA
@@ -222,7 +201,7 @@ function VehicleHeader({
   if (!vehicle) return null
 
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-1.5 min-w-0 w-full">
       <div className="flex items-center gap-1.5 flex-wrap">
         <StatusBadge status={vehicle.status} />
         <span className="inline-flex items-center text-xs text-zinc-800 bg-zinc-100 px-2.5 py-0.5 rounded-md border border-zinc-200 font-semibold tracking-tight shadow-2xs">
@@ -232,12 +211,12 @@ function VehicleHeader({
       <p className="text-[10px] font-semibold tracking-wider uppercase text-zinc-400 pt-0.5">
         {vehicle.brand}
       </p>
-      <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-950 leading-tight">
+      <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-zinc-950 leading-tight break-words">
         {vehicle.model}{' '}
-        <span className="text-zinc-400 font-normal text-xl">{vehicle.year}</span>
+        <span className="text-zinc-400 font-normal text-lg sm:text-xl">{vehicle.year}</span>
       </h1>
       {vehicle.color && (
-        <p className="text-xs text-zinc-500 font-medium">{vehicle.color}</p>
+        <p className="text-xs text-zinc-500 font-medium truncate">{vehicle.color}</p>
       )}
     </div>
   )

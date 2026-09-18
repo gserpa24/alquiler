@@ -19,15 +19,15 @@ interface SpecItemProps {
 
 function SpecItem({ icon, label, value }: SpecItemProps) {
   return (
-    <div className="flex items-center gap-3 p-3.5 rounded-lg bg-zinc-50/70 border border-zinc-200">
+    <div className="flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3.5 rounded-lg bg-zinc-50/70 border border-zinc-200 min-w-0">
       <div
-        className="w-8 h-8 flex items-center justify-center rounded bg-white border border-zinc-200 shrink-0 text-[#0A192F]"
+        className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded bg-white border border-zinc-200 shrink-0 text-[#0A192F]"
         aria-hidden="true"
       >
         {icon}
       </div>
-      <div className="min-w-0">
-        <p className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">{label}</p>
+      <div className="min-w-0 flex-1">
+        <p className="text-[10px] sm:text-[11px] font-medium text-zinc-400 uppercase tracking-wider truncate">{label}</p>
         <p className="text-xs font-semibold text-zinc-900 truncate mt-0.5">{value}</p>
       </div>
     </div>

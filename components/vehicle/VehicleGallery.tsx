@@ -42,9 +42,9 @@ export function VehicleGallery({ images, alt, className }: VehicleGalleryProps) 
   }
 
   return (
-    <div className={cn('flex flex-col gap-2.5', className)}>
+    <div className={cn('flex flex-col gap-2.5 min-w-0 w-full max-w-full', className)}>
       {/* ── Imagen principal adaptativa a la altura de pantalla ── */}
-      <div className="relative aspect-[16/10] max-h-[50vh] sm:max-h-[54vh] rounded-lg overflow-hidden bg-zinc-100 border border-zinc-200 group">
+      <div className="relative w-full aspect-[16/10] max-h-[50vh] sm:max-h-[54vh] rounded-lg overflow-hidden bg-zinc-100 border border-zinc-200 group">
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.div
             key={current}
@@ -112,14 +112,14 @@ export function VehicleGallery({ images, alt, className }: VehicleGalleryProps) 
 
       {/* ── Carrete de Miniaturas ───────────────────────────────── */}
       {total > 1 && (
-        <div className="space-y-1.5 pt-1">
+        <div className="space-y-1.5 pt-1 min-w-0 w-full max-w-full">
           <div className="flex items-center justify-between text-[11px] text-zinc-400 font-medium px-0.5">
             <span>Carrete de fotos ({total})</span>
             <span>Desliza para explorar</span>
           </div>
 
           <div
-            className="flex gap-2 overflow-x-auto pb-2 pt-0.5 scrollbar-thin"
+            className="flex gap-2 overflow-x-auto pb-2 pt-0.5 scrollbar-thin min-w-0 w-full max-w-full"
             role="tablist"
             aria-label="Miniaturas de imágenes del vehículo"
           >
@@ -132,7 +132,7 @@ export function VehicleGallery({ images, alt, className }: VehicleGalleryProps) 
                 aria-label={`Ver imagen ${i + 1}`}
                 onClick={() => goTo(i, i > current ? 1 : -1)}
                 className={cn(
-                  'relative shrink-0 w-20 sm:w-24 h-14 sm:h-16 rounded-md overflow-hidden border transition-all duration-150 cursor-pointer bg-zinc-50',
+                  'relative shrink-0 w-16 sm:w-20 lg:w-22 xl:w-24 h-12 sm:h-14 lg:h-15 xl:h-16 rounded-md overflow-hidden border transition-all duration-150 cursor-pointer bg-zinc-50',
                   i === current
                     ? 'border-[#0A192F] ring-2 ring-[#0A192F] shadow-xs'
                     : 'border-zinc-200 hover:border-zinc-400 opacity-60 hover:opacity-100',
