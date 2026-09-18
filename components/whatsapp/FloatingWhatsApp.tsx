@@ -43,8 +43,14 @@ export function FloatingWhatsApp() {
         )}
       </AnimatePresence>
 
-      {/* Botón principal — Ligeramente más grande y visible */}
-      <div className="relative">
+      {/* Botón principal — Verde oficial de WhatsApp (#25D366) con pulso continuo */}
+      <div className="relative flex items-center justify-center">
+        {/* Onda de pulso sutil y elegante */}
+        <span className="absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-35 animate-ping duration-1000 pointer-events-none" />
+
+        {/* Segundo anillo concéntrico de resplandor */}
+        <span className="absolute -inset-1 rounded-full bg-[#25D366]/20 animate-pulse pointer-events-none" />
+
         <motion.a
           href={WA_LINK}
           target="_blank"
@@ -52,12 +58,12 @@ export function FloatingWhatsApp() {
           aria-label="Abrir WhatsApp"
           onHoverStart={() => setHovered(true)}
           onHoverEnd={() => setHovered(false)}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="relative flex items-center justify-center w-14 h-14 rounded-full bg-[#0A192F] text-white shadow-lg hover:bg-[#112240] transition-colors duration-150 border border-zinc-300"
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.94 }}
+          className="relative z-10 flex items-center justify-center w-[70px] h-[70px] rounded-full bg-[#25D366] text-white shadow-2xl hover:bg-[#20bd5a] transition-all duration-200 border-[2.5px] border-white"
         >
           <svg
-            className="w-8 h-8 text-white"
+            className="w-10 h-10 text-white drop-shadow-xs"
             fill="currentColor"
             viewBox="0 0 24 24"
             aria-hidden="true"

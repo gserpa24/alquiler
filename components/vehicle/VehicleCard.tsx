@@ -11,26 +11,37 @@ import { type VehicleCard as VehicleCardType, CATEGORY_LABELS, FUEL_LABELS } fro
 import { buildVehicleWhatsAppLink } from '@/lib/whatsapp'
 import { StatusBadge } from '@/components/vehicle/StatusBadge'
 
-interface VehicleCardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+interface VehicleCardProps extends HTMLAttributes<HTMLDivElement> {
   vehicle: VehicleCardType
   variant?: 'default' | 'featured'
   priority?: boolean
+  pickupDate?: string
+  returnDate?: string
 }
 
 export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
-  ({ vehicle, variant = 'default', priority = false, className, ...props }, ref) => {
+  ({ vehicle, variant = 'default', priority = false, pickupDate, returnDate, className, ...props }, ref) => {
     // Currency context for price conversion
     const { currency, rates, isLoading: ratesLoading } = useCurrency()
 
-    // Generar enlace directo a WhatsApp para "Reservar"
+    // Generar enlace directo a WhatsApp para "Reservar" (incluyendo rango de fechas si se especificaron)
     let waUrl = '#'
     try {
-      waUrl = buildVehicleWhatsAppLink({
+      const baseWaUrl = buildVehicleWhatsAppLink({
         brand: vehicle.brand,
         model: vehicle.model,
         year: vehicle.year,
         color: vehicle.color,
       })
+
+      if (pickupDate && returnDate) {
+        const vehicleName = `${vehicle.brand} ${vehicle.model} ${vehicle.year}${vehicle.color ? ` (${vehicle.color})` : ''}`
+        const customMessage = `¡Hola! Vi el *${vehicleName}* en su catálogo y me gustaría reservarlo del *${pickupDate}* al *${returnDate}*. 🚗\n\n¿Podría confirmarme disponibilidad y precio final? ¡Muchas gracias!`
+        const baseUrl = baseWaUrl.split('?text=')[0]
+        waUrl = `${baseUrl}?text=${encodeURIComponent(customMessage)}`
+      } else {
+        waUrl = baseWaUrl
+      }
     } catch {
       waUrl = `https://wa.me/?text=Hola%2C%20deseo%20reservar%20el%20${encodeURIComponent(vehicle.brand + ' ' + vehicle.model)}`
     }

@@ -38,6 +38,8 @@ export function TransactionalVehicleCatalog({ vehicles }: TransactionalVehicleCa
     setSelectedCategory(category)
     setPickupDate(pDate)
     setReturnDate(rDate)
+    // Al buscar disponibilidad, filtrar automáticamente para mostrar solo los vehículos disponibles
+    setOnlyAvailable(true)
   }
 
   const filteredVehicles = useMemo(() => {
@@ -55,7 +57,7 @@ export function TransactionalVehicleCatalog({ vehicles }: TransactionalVehicleCa
   return (
     <div className="w-full">
       {/* ── Hero Principal con Imagen de Carretera en la Selva Peruana (Sin autos, paisaje amazónico) ── */}
-      <section className="relative min-h-[460px] sm:min-h-[520px] lg:min-h-[560px] flex items-center justify-center pt-24 pb-14 sm:py-28 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-zinc-200">
+      <section className="relative flex items-center justify-center py-8 sm:py-10 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-zinc-200">
         {/* Fotografía de carretera en la selva peruana serpenteando entre montañas verdes y frondosa vegetación tropical */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -139,6 +141,8 @@ export function TransactionalVehicleCatalog({ vehicles }: TransactionalVehicleCa
                 <VehicleCard
                   key={vehicle.id}
                   vehicle={vehicle}
+                  pickupDate={pickupDate}
+                  returnDate={returnDate}
                 />
               ))}
             </div>

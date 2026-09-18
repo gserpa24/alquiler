@@ -37,11 +37,11 @@ export function TransactionalSearchHero({
     <div className="w-full max-w-4xl mx-auto">
       <form
         onSubmit={handleSubmit}
-        className="bg-white/95 backdrop-blur-md border border-white/60 rounded-xl p-4 sm:p-6 shadow-2xl grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-4 items-end"
+        className="bg-white/95 backdrop-blur-md border border-white/60 rounded-xl p-3.5 sm:p-5 shadow-xl grid grid-cols-1 sm:grid-cols-12 gap-2.5 sm:gap-3.5 items-end"
       >
         {/* 1. Fecha de Entrega */}
-        <div className="sm:col-span-4 space-y-1.5">
-          <label className="block text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
+        <div className="sm:col-span-4 space-y-1">
+          <label className="block text-[10px] sm:text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
             Fecha de Entrega
           </label>
           <div className="relative flex items-center">
@@ -50,14 +50,14 @@ export function TransactionalSearchHero({
               type="date"
               value={pickupDate}
               onChange={(e) => setPickupDate(e.target.value)}
-              className="w-full h-11 min-h-[44px] pl-9 pr-3 py-2 bg-white border border-zinc-200 rounded-md text-xs font-medium text-[#0A0A0A] focus:outline-none focus:border-[#0A192F] focus:ring-1 focus:ring-[#0A192F] transition-colors cursor-pointer appearance-none"
+              className="w-full h-10 min-h-[40px] pl-9 pr-3 py-1.5 bg-white border border-zinc-200 rounded-md text-xs font-medium text-[#0A0A0A] focus:outline-none focus:border-[#0A192F] focus:ring-1 focus:ring-[#0A192F] transition-colors cursor-pointer appearance-none"
             />
           </div>
         </div>
 
         {/* 2. Fecha de Devolución */}
-        <div className="sm:col-span-4 space-y-1.5">
-          <label className="block text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
+        <div className="sm:col-span-4 space-y-1">
+          <label className="block text-[10px] sm:text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
             Fecha de Devolución
           </label>
           <div className="relative flex items-center">
@@ -66,14 +66,14 @@ export function TransactionalSearchHero({
               type="date"
               value={returnDate}
               onChange={(e) => setReturnDate(e.target.value)}
-              className="w-full h-11 min-h-[44px] pl-9 pr-3 py-2 bg-white border border-zinc-200 rounded-md text-xs font-medium text-[#0A0A0A] focus:outline-none focus:border-[#0A192F] focus:ring-1 focus:ring-[#0A192F] transition-colors cursor-pointer appearance-none"
+              className="w-full h-10 min-h-[40px] pl-9 pr-3 py-1.5 bg-white border border-zinc-200 rounded-md text-xs font-medium text-[#0A0A0A] focus:outline-none focus:border-[#0A192F] focus:ring-1 focus:ring-[#0A192F] transition-colors cursor-pointer appearance-none"
             />
           </div>
         </div>
 
         {/* 3. Tipo de Vehículo */}
-        <div className="sm:col-span-4 space-y-1.5">
-          <label className="block text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
+        <div className="sm:col-span-4 space-y-1">
+          <label className="block text-[10px] sm:text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
             Tipo de Vehículo
           </label>
           <div className="relative flex items-center">
@@ -81,7 +81,7 @@ export function TransactionalSearchHero({
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full h-11 min-h-[44px] pl-9 pr-8 py-2 bg-white border border-zinc-200 rounded-md text-xs font-medium text-[#0A0A0A] focus:outline-none focus:border-[#0A192F] focus:ring-1 focus:ring-[#0A192F] transition-colors appearance-none cursor-pointer"
+              className="w-full h-10 min-h-[40px] pl-9 pr-8 py-1.5 bg-white border border-zinc-200 rounded-md text-xs font-medium text-[#0A0A0A] focus:outline-none focus:border-[#0A192F] focus:ring-1 focus:ring-[#0A192F] transition-colors appearance-none cursor-pointer"
             >
               <option value="all">Todos los vehículos</option>
               <option value="sedan">Sedán</option>
@@ -93,10 +93,10 @@ export function TransactionalSearchHero({
         </div>
 
         {/* Botón Principal Buscar */}
-        <div className="sm:col-span-12 pt-1">
+        <div className="sm:col-span-12 pt-0.5">
           <button
             type="submit"
-            className="w-full h-11 min-h-[44px] inline-flex items-center justify-center gap-2 px-6 rounded-md bg-[#0A192F] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#152e52] active:scale-[0.99] transition-all shadow-xs"
+            className="w-full h-10 min-h-[40px] inline-flex items-center justify-center gap-2 px-5 rounded-md bg-[#0A192F] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#152e52] active:scale-[0.99] transition-all shadow-xs"
           >
             <span>Buscar Disponibilidad</span>
             <ArrowRight className="w-3.5 h-3.5 stroke-[1.5]" />
