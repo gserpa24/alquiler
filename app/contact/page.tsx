@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { MapPin, Phone, Mail, Clock, MessageSquare } from 'lucide-react'
 import { ContactForm } from '@/components/contact/ContactForm'
 import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
-import { getSiteConfigFile } from '@/lib/site-config'
+import { getSiteConfigFile } from '@/lib/site-config-server'
 
 export const metadata: Metadata = {
   title: 'Contacto y Ubicación',

@@ -10,9 +10,11 @@ import {
   DEFAULT_SITE_CONFIG,
   SITE_CONFIG_COOKIE_NAME,
   serializeSiteConfig,
+} from '@/lib/site-config'
+import {
   writeSiteConfigFile,
   getSiteConfigFile,
-} from '@/lib/site-config'
+} from '@/lib/site-config-server'
 import { requireAdminSession } from '@/lib/auth/guard'
 
 export interface SiteConfigActionResult {

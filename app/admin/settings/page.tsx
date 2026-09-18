@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { ArrowLeft, Settings } from 'lucide-react'
 import { getAdminSession } from '@/lib/auth/guard'
-import { getSiteConfigFile } from '@/lib/site-config'
+import { getSiteConfigFile } from '@/lib/site-config-server'
 import { SiteConfigProvider } from '@/contexts/SiteConfigContext'
 import { AdminSettingsForm } from '@/components/admin/AdminSettingsForm'
 
