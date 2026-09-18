@@ -14,9 +14,9 @@ export default function ContactPage() {
   const waLink = buildGenericWhatsAppLink()
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-16">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 lg:pt-10 pb-0 -mb-10 sm:-mb-12 lg:-mb-14">
       {/* ── Header ─────────────────────────────────────────── */}
-      <header className="max-w-3xl mb-8 sm:mb-12">
+      <header className="max-w-3xl mb-6 sm:mb-8">
         <p className="text-[11px] font-semibold tracking-wider uppercase text-zinc-400 mb-1.5">
           Atención
         </p>
@@ -29,28 +29,37 @@ export default function ContactPage() {
         </p>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
         {/* ── Columna Formulario ────────────────────────────── */}
-        <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-lg border border-zinc-200">
-          <h2 className="text-base font-bold tracking-tight text-zinc-900 mb-6">
-            Envíanos un mensaje directo
-          </h2>
-          <ContactForm />
+        <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-lg border border-zinc-200 flex flex-col justify-between">
+          <div>
+            <h2 className="text-base font-bold tracking-tight text-zinc-900 mb-6">
+              Envíanos un mensaje directo
+            </h2>
+            <ContactForm />
+          </div>
         </div>
 
         {/* ── Columna Canales y Horarios ─────────────────────── */}
-        <div className="lg:col-span-5 space-y-5">
+        <div className="lg:col-span-5 flex flex-col justify-between gap-6">
           {/* Card WhatsApp directo */}
-          <div className="p-6 rounded-lg bg-white border border-zinc-200">
-            <div className="w-9 h-9 rounded bg-zinc-50 border border-zinc-200 flex items-center justify-center mb-4 text-[#0A192F]">
-              <MessageSquare className="w-4 h-4 stroke-[1.5]" />
+          <div className="p-6 sm:p-7 rounded-lg bg-white border border-zinc-200 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-9 h-9 rounded bg-zinc-50 border border-zinc-200 flex items-center justify-center text-[#0A192F] shrink-0">
+                  <MessageSquare className="w-4 h-4 stroke-[1.5]" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-zinc-900">
+                    Atención Inmediata por WhatsApp
+                  </h3>
+                  <p className="text-[11px] text-zinc-400">Respuesta rápida</p>
+                </div>
+              </div>
+              <p className="text-xs text-zinc-500 mb-5 leading-relaxed">
+                Nuestro equipo comercial responde consultas de disponibilidad y cotizaciones directamente por WhatsApp.
+              </p>
             </div>
-            <h3 className="text-sm font-bold text-zinc-900 mb-1.5">
-              Atención Inmediata por WhatsApp
-            </h3>
-            <p className="text-xs text-zinc-500 mb-5 leading-relaxed">
-              Nuestro equipo comercial responde consultas de disponibilidad y cotizaciones directamente por WhatsApp.
-            </p>
             <a
               href={waLink}
               target="_blank"
@@ -70,8 +79,8 @@ export default function ContactPage() {
           </div>
 
           {/* Información de contacto */}
-          <div className="p-6 rounded-lg bg-white border border-zinc-200 space-y-4">
-            <h3 className="text-sm font-bold text-zinc-900 mb-3">
+          <div className="p-6 sm:p-7 rounded-lg bg-white border border-zinc-200 space-y-4 flex-1 flex flex-col justify-center">
+            <h3 className="text-sm font-bold text-zinc-900 mb-2">
               Información de Contacto
             </h3>
 
@@ -106,15 +115,6 @@ export default function ContactPage() {
                 <strong className="block text-zinc-900 font-semibold mb-0.5">Correo Electrónico</strong>
                 contacto@premiumauto.ec
               </div>
-            </div>
-          </div>
-
-          {/* Mapa representativo */}
-          <div className="rounded-lg border border-zinc-200 overflow-hidden h-40 bg-zinc-50 relative flex items-center justify-center">
-            <div className="text-center p-4">
-              <MapPin className="w-5 h-5 text-[#0A192F] mx-auto mb-1.5 stroke-[1.5]" />
-              <p className="text-xs font-semibold text-zinc-900">Atención Central</p>
-              <p className="text-[11px] text-zinc-400 mt-0.5">Tarapoto, San Martín</p>
             </div>
           </div>
         </div>
