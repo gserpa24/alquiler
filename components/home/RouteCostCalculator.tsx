@@ -13,6 +13,9 @@ import {
 } from 'lucide-react'
 import { MOCK_VEHICLES } from '@/lib/mock-data'
 import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
+import { useSiteConfig } from '@/contexts/SiteConfigContext'
+import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 
 interface RoutePreset {
   id: string
@@ -74,6 +77,10 @@ const POPULAR_ROUTES: RoutePreset[] = [
 ]
 
 export function RouteCostCalculator() {
+  const { config } = useSiteConfig()
+  const cleanPhone = (config.whatsappNumber || '').replace(/\D/g, '')
+  const hasWhatsapp = Boolean(cleanPhone && cleanPhone.length >= 8)
+
   const [selectedRouteId, setSelectedRouteId] = useState<string>(POPULAR_ROUTES[0].id)
   const [selectedVehicleId, setSelectedVehicleId] = useState<string>(MOCK_VEHICLES[0].id)
   const [customDays, setCustomDays] = useState<number>(2)
@@ -118,7 +125,14 @@ export function RouteCostCalculator() {
 
 ¿Podrían confirmarme disponibilidad del vehículo y condiciones para estas fechas? ¡Gracias!`
 
-  const waLink = buildGenericWhatsAppLink(whatsAppMessage)
+  let waLink = '#'
+  if (hasWhatsapp) {
+    try {
+      waLink = buildGenericWhatsAppLink(whatsAppMessage, config.whatsappNumber)
+    } catch {
+      waLink = '#'
+    }
+  }
 
   return (
     <section id="panel-de-ruteo" className="py-16 sm:py-24 border-b border-zinc-100 bg-zinc-50/50">
@@ -370,10 +384,21 @@ export function RouteCostCalculator() {
             {/* CTA WhatsApp con datos de ruteo precargados */}
             <div className="pt-2">
               <a
-                href={waLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-md bg-[#0A192F] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#152e52] active:scale-[0.99] transition-all shadow-xs"
+                href={hasWhatsapp && waLink !== '#' ? waLink : '#'}
+                target={hasWhatsapp && waLink !== '#' ? '_blank' : undefined}
+                rel={hasWhatsapp && waLink !== '#' ? 'noopener noreferrer' : undefined}
+                onClick={(e) => {
+                  if (!hasWhatsapp || waLink === '#') {
+                    e.preventDefault()
+                    toast.info('Aún no hay un número configurado.')
+                  }
+                }}
+                className={cn(
+                  'w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-md text-xs font-semibold uppercase tracking-wider transition-all shadow-xs',
+                  hasWhatsapp && waLink !== '#'
+                    ? 'bg-[#0A192F] text-white hover:bg-[#152e52] active:scale-[0.99] cursor-pointer'
+                    : 'bg-zinc-200 text-zinc-400 border border-zinc-300 hover:bg-zinc-200 cursor-not-allowed'
+                )}
               >
                 <span>Consultar {currentVehicle.model} para esta ruta</span>
                 <ArrowRight className="w-3.5 h-3.5" />

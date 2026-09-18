@@ -10,6 +10,7 @@ import { Footer } from '@/components/layout/Footer'
 import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp'
 import { CurrencyProvider } from '@/contexts/CurrencyContext'
 import { SiteConfigProvider } from '@/contexts/SiteConfigContext'
+import { Toaster } from '@/components/ui/sonner'
 
 export function SiteLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -34,6 +35,7 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
         </main>
         <Footer />
         <FloatingWhatsApp />
+        <Toaster position="top-right" richColors />
       </CurrencyProvider>
     </SiteConfigProvider>
   )

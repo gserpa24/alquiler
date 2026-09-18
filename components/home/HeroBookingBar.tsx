@@ -6,6 +6,7 @@ import { Calendar, Car, ArrowRight, Clock } from 'lucide-react'
 import { MOCK_VEHICLES } from '@/lib/mock-data'
 import { buildVehicleWhatsAppLink } from '@/lib/whatsapp'
 import { useSiteConfig } from '@/contexts/SiteConfigContext'
+import { toast } from 'sonner'
 
 export function HeroBookingBar() {
   const router = useRouter()
@@ -29,7 +30,7 @@ export function HeroBookingBar() {
         
         const cleanPhone = (config.whatsappNumber || '').replace(/\D/g, '')
         if (!cleanPhone || cleanPhone.length < 8) {
-          router.push(`/catalog/${v.slug}`)
+          toast.info('Aún no hay un número configurado.')
           return
         }
 

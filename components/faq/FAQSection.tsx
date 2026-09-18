@@ -7,6 +7,7 @@ import { FAQ_ITEMS, FAQ_CATEGORIES } from '@/lib/faq-data'
 import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
 import { useSiteConfig } from '@/contexts/SiteConfigContext'
 import { cn } from '@/lib/utils'
+import { toast } from 'sonner'
 
 interface FAQSectionProps {
   showCategoryFilters?: boolean
@@ -153,25 +154,26 @@ export function FAQSection({
         <p className="text-xs text-zinc-500 mb-4">
           Nuestro equipo en Tarapoto responderá tus requerimientos de fechas, vehículos y rutas de inmediato.
         </p>
-        {hasWhatsapp && waLink !== '#' ? (
-          <a
-            href={waLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#25D366] hover:bg-[#1EBE5D] text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-xs"
-          >
-            <MessageCircle className="w-4 h-4" />
-            Consultar por WhatsApp
-          </a>
-        ) : (
-          <a
-            href="/contact"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#0A192F] hover:bg-[#112240] text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-xs"
-          >
-            <MessageCircle className="w-4 h-4" />
-            Contactar al equipo
-          </a>
-        )}
+        <a
+          href={hasWhatsapp && waLink !== '#' ? waLink : '#'}
+          target={hasWhatsapp && waLink !== '#' ? '_blank' : undefined}
+          rel={hasWhatsapp && waLink !== '#' ? 'noopener noreferrer' : undefined}
+          onClick={(e) => {
+            if (!hasWhatsapp || waLink === '#') {
+              e.preventDefault()
+              toast.info('Aún no hay un número configurado.')
+            }
+          }}
+          className={cn(
+            'inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors shadow-xs',
+            hasWhatsapp && waLink !== '#'
+              ? 'bg-[#25D366] hover:bg-[#1EBE5D] text-white cursor-pointer'
+              : 'bg-zinc-200 text-zinc-400 border border-zinc-300 hover:bg-zinc-200 cursor-not-allowed'
+          )}
+        >
+          <MessageCircle className="w-4 h-4" />
+          Consultar por WhatsApp
+        </a>
       </div>
     </div>
   )

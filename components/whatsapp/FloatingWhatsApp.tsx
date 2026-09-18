@@ -3,6 +3,8 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
+import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
 import { useSiteConfig } from '@/contexts/SiteConfigContext'
 
@@ -10,6 +12,7 @@ import { useSiteConfig } from '@/contexts/SiteConfigContext'
  * Botón flotante de WhatsApp visible únicamente en el sitio público.
  * Se oculta automáticamente en todas las rutas del panel administrativo (/admin/*).
  * Conectado dinámicamente al número configurado en el panel administrativo.
+ * Si no hay número configurado, permanece visible en estado deshabilitado (gris) y muestra un aviso al hacer clic.
  */
 export function FloatingWhatsApp() {
   const pathname = usePathname()
@@ -21,17 +24,23 @@ export function FloatingWhatsApp() {
     return null
   }
 
-  // Si no hay número configurado en el panel administrativo, no renderizar el botón
   const cleanPhone = (config.whatsappNumber || '').replace(/\D/g, '')
-  if (!cleanPhone || cleanPhone.length < 8) {
-    return null
-  }
+  const hasWhatsapp = Boolean(cleanPhone && cleanPhone.length >= 8)
 
   let waLink = '#'
-  try {
-    waLink = buildGenericWhatsAppLink(undefined, config.whatsappNumber)
-  } catch {
-    return null
+  if (hasWhatsapp) {
+    try {
+      waLink = buildGenericWhatsAppLink(undefined, config.whatsappNumber)
+    } catch {
+      waLink = '#'
+    }
+  }
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (!hasWhatsapp || waLink === '#') {
+      e.preventDefault()
+      toast.info('Aún no hay un número configurado.')
+    }
   }
 
   return (
@@ -51,30 +60,39 @@ export function FloatingWhatsApp() {
             role="tooltip"
           >
             <p className="text-xs font-medium text-zinc-800 whitespace-nowrap">
-              Atención inmediata por WhatsApp
+              {hasWhatsapp ? 'Atención inmediata por WhatsApp' : 'Aún no hay un número configurado'}
             </p>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Botón principal — Verde oficial de WhatsApp (#25D366) con pulso continuo */}
+      {/* Botón principal */}
       <div className="relative flex items-center justify-center">
-        {/* Onda de pulso sutil y elegante */}
-        <span className="absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-35 animate-ping duration-1000 pointer-events-none" />
-
-        {/* Segundo anillo concéntrico de resplandor */}
-        <span className="absolute -inset-1 rounded-full bg-[#25D366]/20 animate-pulse pointer-events-none" />
+        {hasWhatsapp && (
+          <>
+            {/* Onda de pulso sutil y elegante */}
+            <span className="absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-35 animate-ping duration-1000 pointer-events-none" />
+            {/* Segundo anillo concéntrico de resplandor */}
+            <span className="absolute -inset-1 rounded-full bg-[#25D366]/20 animate-pulse pointer-events-none" />
+          </>
+        )}
 
         <motion.a
-          href={waLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Abrir WhatsApp"
+          href={hasWhatsapp && waLink !== '#' ? waLink : '#'}
+          target={hasWhatsapp && waLink !== '#' ? '_blank' : undefined}
+          rel={hasWhatsapp && waLink !== '#' ? 'noopener noreferrer' : undefined}
+          onClick={handleClick}
+          aria-label={hasWhatsapp ? 'Abrir WhatsApp' : 'Aún no hay un número configurado'}
           onHoverStart={() => setHovered(true)}
           onHoverEnd={() => setHovered(false)}
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.94 }}
-          className="relative z-10 flex items-center justify-center w-[70px] h-[70px] rounded-full bg-[#25D366] text-white shadow-2xl hover:bg-[#20bd5a] transition-all duration-200 border-[2.5px] border-white"
+          className={cn(
+            'relative z-10 flex items-center justify-center w-[70px] h-[70px] rounded-full text-white shadow-2xl transition-all duration-200 border-[2.5px]',
+            hasWhatsapp
+              ? 'bg-[#25D366] hover:bg-[#20bd5a] border-white cursor-pointer'
+              : 'bg-zinc-400 hover:bg-zinc-500 border-zinc-200 cursor-pointer'
+          )}
         >
           <svg
             className="w-10 h-10 text-white drop-shadow-xs"

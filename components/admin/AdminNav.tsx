@@ -60,7 +60,6 @@ export function AdminNav() {
       ? [{ href: '/admin/messages', label: 'Mensajes', icon: MessageSquare, exact: false }]
       : []),
     { href: '/admin/modules', label: 'Módulos', icon: SlidersHorizontal, exact: false },
-    { href: '/admin/settings', label: 'Configuración', icon: Settings, exact: false },
   ]
 
   const showAddVehicle = isModuleEnabled('vehicles')
@@ -141,11 +140,11 @@ export function AdminNav() {
               href="/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border border-zinc-200 bg-white text-zinc-700 text-xs font-medium hover:bg-zinc-50 hover:text-zinc-900 transition-colors"
+              className="p-2 rounded-md border border-zinc-200 bg-white text-zinc-600 hover:text-zinc-950 hover:bg-zinc-50 transition-colors shadow-2xs"
               title="Abrir catálogo público en una nueva pestaña"
+              aria-label="Ver sitio público"
             >
-              <span>Sitio Público</span>
-              <ExternalLink className="w-3 h-3 text-zinc-400" />
+              <ExternalLink className="w-4 h-4" />
             </Link>
 
             <button
@@ -238,6 +237,16 @@ export function AdminNav() {
 
               {/* Separador */}
               <div className="pt-2 border-t border-zinc-100 flex flex-col gap-1.5">
+                {/* Configuración */}
+                <Link
+                  href="/admin/settings"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-md text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition-colors"
+                >
+                  <Settings className="w-4 h-4 text-zinc-400" />
+                  <span>Configuración</span>
+                </Link>
+
                 {/* Sitio Público */}
                 <Link
                   href="/"
