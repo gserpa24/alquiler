@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { MOCK_VEHICLES } from '@/lib/mock-data'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://premiumauto.ec'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://autoruta.pe'
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -55,11 +55,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  const vehicleRoutes: MetadataRoute.Sitemap = MOCK_VEHICLES.filter(
-    (v) => v.status !== 'sold'
-  ).map((v) => ({
+  let vehicles: Array<{ slug: string; updated_at?: string }> = []
+  try {
+    const { getVehicles } = await import('@/lib/supabase/queries')
+    const result = await getVehicles({ limit: 100 })
+    vehicles = result.vehicles
+  } catch {
+    vehicles = MOCK_VEHICLES.filter((v) => v.status !== 'sold')
+  }
+
+  const vehicleRoutes: MetadataRoute.Sitemap = vehicles.map((v) => ({
     url: `${baseUrl}/catalog/${v.slug}`,
-    lastModified: new Date(v.updated_at),
+    lastModified: v.updated_at ? new Date(v.updated_at) : new Date(),
     changeFrequency: 'daily',
     priority: 0.8,
   }))

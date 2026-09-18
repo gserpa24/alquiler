@@ -3,9 +3,11 @@
 
 import { Metadata } from 'next'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { getContactMessagesWithStatus } from '@/lib/supabase/messages'
 import { AdminMessagesInbox } from '@/components/admin/AdminMessagesInbox'
+import { getAdminSession } from '@/lib/auth/guard'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,6 +17,11 @@ export const metadata: Metadata = {
 }
 
 export default async function AdminMessagesPage() {
+  const session = await getAdminSession()
+  if (!session.authenticated) {
+    redirect('/admin/login')
+  }
+
   const { messages, isTableMissing } = await getContactMessagesWithStatus()
   const pendingCount = messages.filter((m) => m.status === 'pending').length
 

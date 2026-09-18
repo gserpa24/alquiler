@@ -48,7 +48,8 @@ export async function POST(request: NextRequest) {
     const uploadedUrls: string[] = []
     const isSupabaseConfigured = Boolean(
       (process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL) &&
-      (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+      (process.env.SUPABASE_SERVICE_ROLE_KEY ||
+        (process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY))
     )
 
     let supabaseAdmin: ReturnType<typeof createAdminClient> | null = null

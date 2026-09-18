@@ -2,13 +2,20 @@
 // Página de gestión de flota de vehículos para administradores.
 
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { Plus } from 'lucide-react'
 import { getAllAdminVehicles } from '@/lib/supabase/queries'
 import { AdminVehicleTable } from '@/components/admin/AdminVehicleTable'
+import { getAdminSession } from '@/lib/auth/guard'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminVehiclesPage() {
+  const session = await getAdminSession()
+  if (!session.authenticated) {
+    redirect('/admin/login')
+  }
+
   const vehicles = await getAllAdminVehicles()
 
   return (

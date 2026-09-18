@@ -11,13 +11,20 @@ import {
   ArrowRight,
   MessageSquare,
 } from 'lucide-react'
+import { redirect } from 'next/navigation'
 import { getAllAdminVehicles } from '@/lib/supabase/queries'
 import { getPendingMessagesCount } from '@/lib/supabase/messages'
 import { AdminVehicleTable } from '@/components/admin/AdminVehicleTable'
+import { getAdminSession } from '@/lib/auth/guard'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboardPage() {
+  const session = await getAdminSession()
+  if (!session.authenticated) {
+    redirect('/admin/login')
+  }
+
   const [vehicles, pendingMessages] = await Promise.all([
     getAllAdminVehicles(),
     getPendingMessagesCount(),

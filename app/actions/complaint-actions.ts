@@ -41,6 +41,25 @@ export async function submitComplaintAction(
       descripcion: validated.data.descripcionBien,
     })
 
+    // Persistencia en base de datos para trazabilidad y atención en bandeja administrativa
+    try {
+      const { saveContactMessage } = await import('@/lib/supabase/messages')
+      await saveContactMessage({
+        name: validated.data.nombreCompleto,
+        email: validated.data.email,
+        phone: validated.data.telefono,
+        subject: `[Libro de Reclamaciones - ${codigoReclamacion}] ${validated.data.tipoReclamacion.toUpperCase()}`,
+        message: `Documento: ${validated.data.tipoDocumento} ${validated.data.numeroDocumento}
+Domicilio: ${validated.data.domicilio}
+Bien/Servicio: ${validated.data.descripcionBien} (${validated.data.tipoBien})
+Monto Reclamado: ${validated.data.montoReclamado || 'No especificado'}
+Detalle de Hechos: ${validated.data.detalleHechos}
+Pedido Concreto: ${validated.data.pedidoConcreto}`,
+      })
+    } catch (saveErr) {
+      console.warn('[submitComplaintAction] Error al registrar en mensajes de administración:', saveErr)
+    }
+
     return {
       success: true,
       codigoReclamacion,

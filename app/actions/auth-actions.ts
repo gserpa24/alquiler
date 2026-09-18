@@ -26,12 +26,12 @@ export interface LoginResult {
  * Credenciales de administrador.
  * Configuradas de forma segura mediante variables de entorno (ADMIN_USERNAME y ADMIN_PASSWORD).
  */
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || process.env.ADMIN_EMAIL || (process.env.NODE_ENV !== 'production' ? 'admin' : '')
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || (process.env.NODE_ENV !== 'production' ? 'AdminDev2026!' : '')
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || process.env.ADMIN_EMAIL || ''
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || ''
 
 /**
  * Server Action: Iniciar sesión de administrador.
- * Valida usuario/contraseña maestra (percyman / Fortinet$1) y soporte opcional para Supabase Auth.
+ * Valida credenciales maestras configuradas en variables de entorno y soporte opcional para Supabase Auth.
  */
 export async function loginAdminAction(formData: unknown): Promise<LoginResult> {
   const validated = LoginSchema.safeParse(formData)

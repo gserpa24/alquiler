@@ -15,11 +15,15 @@ export function createAdminClient() {
     throw new Error('Supabase URL no está configurada')
   }
 
-  // Si hay service_role_key, usarla. Si no (ej. desarrollo sin service key), usar anon_key
-  const key = serviceRoleKey || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+  // En producción es estrictamente mandatorio contar con SUPABASE_SERVICE_ROLE_KEY para operaciones de administración
+  const key =
+    serviceRoleKey ||
+    (process.env.NODE_ENV !== 'production'
+      ? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+      : undefined)
 
   if (!key) {
-    throw new Error('Supabase Key (SERVICE_ROLE_KEY o ANON_KEY) no está configurada')
+    throw new Error('Seguridad crítica: SUPABASE_SERVICE_ROLE_KEY no está configurada para operaciones administrativas')
   }
 
   return createClient(supabaseUrl, key, {
