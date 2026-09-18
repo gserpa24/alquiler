@@ -303,20 +303,100 @@ export default function NosotrosPage() {
       </section>
 
       {/* ── 5. NUESTRO COMPROMISO ─────────────────────────────────────────── */}
-      <section className="py-14 sm:py-16 bg-[#0A192F] text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-400 block mb-2">
-            Nuestro Compromiso
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-4">
-            Transparencia y acompañamiento en cada kilómetro
-          </h2>
-          <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-2xl mx-auto mb-6 font-normal">
-            Creemos que la confianza no se impone con anuncios, se demuestra con hechos en cada alquiler. Por eso, nuestro compromiso es responder tus dudas con honestidad antes de que confirmes cualquier reserva, entregarte información veraz sobre la disponibilidad y estar a tu disposición durante todo el tiempo que utilices el vehículo.
-          </p>
-          <div className="inline-flex items-center gap-2 text-xs text-emerald-400 font-medium bg-white/5 border border-white/10 px-4 py-2 rounded-full">
-            <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
-            <span>Atención honesta, sin letra chica ni compromisos forzados</span>
+      <section className="py-16 sm:py-20 bg-gradient-to-b from-zinc-50/60 to-white border-b border-zinc-100">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#0A192F] block mb-2">
+              Nuestro Compromiso
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-950 mb-3">
+              Transparencia y acompañamiento en cada kilómetro
+            </h2>
+            <p className="text-sm text-zinc-600 leading-relaxed">
+              Creemos que la confianza no se impone con anuncios, se demuestra con hechos en cada alquiler. Nuestro compromiso contigo se resume en tres principios fundamentales:
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="p-6 rounded-xl bg-white border border-zinc-200 shadow-2xs flex flex-col justify-between">
+              <div>
+                <div className="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 mb-4">
+                  <ShieldCheck className="w-5 h-5" aria-hidden="true" />
+                </div>
+                <h3 className="text-sm font-bold text-zinc-950 mb-2">
+                  Claridad antes de reservar
+                </h3>
+                <p className="text-xs text-zinc-600 leading-relaxed">
+                  Información real sobre disponibilidad y tarifas definitivas antes de cualquier confirmación. Sin letra chica ni sorpresas al recoger el auto.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-zinc-100 flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700">
+                <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>Cero costos ocultos</span>
+              </div>
+            </div>
+
+            <div className="p-6 rounded-xl bg-white border border-zinc-200 shadow-2xs flex flex-col justify-between">
+              <div>
+                <div className="w-10 h-10 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-[#0A192F] mb-4">
+                  <Clock className="w-5 h-5" aria-hidden="true" />
+                </div>
+                <h3 className="text-sm font-bold text-zinc-950 mb-2">
+                  Puntualidad en la entrega
+                </h3>
+                <p className="text-xs text-zinc-600 leading-relaxed">
+                  Coordinamos con antelación la hora y lugar de recepción para que tu vehículo esté limpio, revisado y listo para rodar desde el primer minuto.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-zinc-100 flex items-center gap-1.5 text-[11px] font-semibold text-blue-800">
+                <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>Horarios respetados</span>
+              </div>
+            </div>
+
+            <div className="p-6 rounded-xl bg-white border border-zinc-200 shadow-2xs flex flex-col justify-between">
+              <div>
+                <div className="w-10 h-10 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 mb-4">
+                  <MessageCircle className="w-5 h-5" aria-hidden="true" />
+                </div>
+                <h3 className="text-sm font-bold text-zinc-950 mb-2">
+                  Canal directo en ruta
+                </h3>
+                <p className="text-xs text-zinc-600 leading-relaxed">
+                  Si necesitas extender días, ajustar el horario de devolución o consultar sobre una ruta en San Martín, siempre tienes a alguien disponible por WhatsApp.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-zinc-100 flex items-center gap-1.5 text-[11px] font-semibold text-amber-800">
+                <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>Soporte cercano en viaje</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Banner de garantía humana */}
+          <div className="p-5 sm:p-6 rounded-xl bg-white border border-zinc-200 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-emerald-500/15 text-emerald-700 flex items-center justify-center shrink-0">
+                <Sparkles className="w-4 h-4" aria-hidden="true" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-zinc-950">
+                  Compromiso de honestidad comercial
+                </p>
+                <p className="text-xs text-zinc-500">
+                  Si una unidad no está en condiciones óptimas para la ruta que planeas, te lo diremos con total franqueza.
+                </p>
+              </div>
+            </div>
+            <a
+              href={waUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[#0A192F] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#112240] transition-colors shrink-0"
+            >
+              <span>Consultar condiciones</span>
+              <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+            </a>
           </div>
         </div>
       </section>
