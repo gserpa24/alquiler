@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { Car, Phone, MapPin, Clock, Share2, Users } from 'lucide-react'
+import Image from 'next/image'
+import { Phone, MapPin, Clock, Share2, Users } from 'lucide-react'
 import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
 
 const FOOTER_LINKS = [
@@ -34,9 +35,15 @@ export function Footer() {
 
           {/* Columna — Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <Link href="/" className="flex items-center gap-2 mb-4 group w-fit" aria-label="Ir al inicio">
-              <div className="w-8 h-8 rounded-md bg-[#0A192F] flex items-center justify-center text-white">
-                <Car className="w-4 h-4 stroke-[1.75]" aria-hidden="true" />
+            <Link href="/" className="flex items-center gap-2.5 mb-4 group w-fit" aria-label="Ir al inicio">
+              <div className="relative w-10 h-7 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-200">
+                <Image
+                  src="/logo-car.png"
+                  alt="AutoRuta"
+                  width={40}
+                  height={26}
+                  className="object-contain w-full h-full"
+                />
               </div>
               <span className="text-base font-bold tracking-tight text-zinc-900">
                 AUTO<span className="text-[#0A192F] font-bold">RUTA</span>

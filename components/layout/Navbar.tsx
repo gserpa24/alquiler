@@ -1,10 +1,11 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Car } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { CurrencySwitcher } from '@/components/currency/CurrencySwitcher'
 
@@ -50,11 +51,18 @@ export function Navbar() {
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-2 shrink-0 group focus-visible:outline-none"
+          className="flex items-center gap-2.5 shrink-0 group focus-visible:outline-none"
           aria-label="Ir al inicio"
         >
-          <div className="w-8 h-8 rounded-md bg-[#0A192F] flex items-center justify-center text-white shrink-0 shadow-2xs">
-            <Car className="w-4 h-4 stroke-[1.75]" aria-hidden="true" />
+          <div className="relative w-10 h-7 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-200">
+            <Image
+              src="/logo-car.png"
+              alt="AutoRuta"
+              width={40}
+              height={26}
+              className="object-contain w-full h-full"
+              priority
+            />
           </div>
           <span className="text-base font-bold tracking-tight text-zinc-900 select-none">
             AUTO<span className="text-[#0A192F] font-bold">RUTA</span>
