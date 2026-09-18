@@ -28,6 +28,71 @@ interface VehiclePhotoUploaderProps {
   className?: string
 }
 
+// Función auxiliar para comprimir fotos en el navegador antes de enviarlas al servidor.
+// Evita el error de "Payload Too Large" en móviles y acelera la subida en redes lentas.
+async function compressImageFile(file: File): Promise<File> {
+  if (!file.type.startsWith('image/') || file.type === 'image/svg+xml' || file.type === 'image/gif') {
+    return file
+  }
+
+  return new Promise((resolve) => {
+    const reader = new FileReader()
+    reader.onload = (readerEvent) => {
+      const img = new window.Image()
+      img.onload = () => {
+        const MAX_DIM = 1600
+        let width = img.width
+        let height = img.height
+
+        if (width > height) {
+          if (width > MAX_DIM) {
+            height = Math.round((height * MAX_DIM) / width)
+            width = MAX_DIM
+          }
+        } else {
+          if (height > MAX_DIM) {
+            width = Math.round((width * MAX_DIM) / height)
+            height = MAX_DIM
+          }
+        }
+
+        const canvas = document.createElement('canvas')
+        canvas.width = width
+        canvas.height = height
+
+        const ctx = canvas.getContext('2d')
+        if (!ctx) {
+          resolve(file)
+          return
+        }
+
+        ctx.drawImage(img, 0, 0, width, height)
+
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              resolve(file)
+              return
+            }
+            const cleanName = file.name.replace(/\.[^/.]+$/, '').replace(/[^a-zA-Z0-9_-]/g, '_')
+            const compressed = new File([blob], `${cleanName || 'foto'}.jpg`, {
+              type: 'image/jpeg',
+              lastModified: Date.now(),
+            })
+            resolve(compressed)
+          },
+          'image/jpeg',
+          0.82
+        )
+      }
+      img.onerror = () => resolve(file)
+      img.src = readerEvent.target?.result as string
+    }
+    reader.onerror = () => resolve(file)
+    reader.readAsDataURL(file)
+  })
+}
+
 export function VehiclePhotoUploader({
   thumbnail,
   images,
@@ -48,7 +113,7 @@ export function VehiclePhotoUploader({
     new Set([thumbnail, ...images].filter(Boolean))
   )
 
-  // Subir archivos a la API local
+  // Subir archivos a la API local optimizando en cliente
   async function handleFilesUpload(fileList: FileList | null) {
     if (!fileList || fileList.length === 0) return
 
@@ -59,22 +124,35 @@ export function VehiclePhotoUploader({
     }
 
     setIsUploading(true)
-    const formData = new FormData()
-    filesArray.forEach((file) => {
-      formData.append('files', file)
-    })
+    const newUploadedUrls: string[] = []
+    let failedCount = 0
 
     try {
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      })
+      // Subir archivo por archivo comprimido en cliente
+      for (const file of filesArray) {
+        try {
+          const compressed = await compressImageFile(file)
+          const formData = new FormData()
+          formData.append('files', compressed)
 
-      const data = await res.json()
-      if (res.ok && data.urls && data.urls.length > 0) {
-        const newUploadedUrls: string[] = data.urls
+          const res = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+          })
 
-        // Si no había foto principal previa, la primera que sube pasa a ser thumbnail
+          const data = await res.json()
+          if (res.ok && data.urls && data.urls.length > 0) {
+            newUploadedUrls.push(...data.urls)
+          } else {
+            failedCount++
+          }
+        } catch {
+          failedCount++
+        }
+      }
+
+      if (newUploadedUrls.length > 0) {
+        // La primera foto subida pasa a ser la portada (thumbnail) si aún no existía una definida
         const currentThumb = thumbnail || newUploadedUrls[0]
         const updatedImages = Array.from(
           new Set([...allPhotos, ...newUploadedUrls])
@@ -85,11 +163,15 @@ export function VehiclePhotoUploader({
 
         toast.success(
           newUploadedUrls.length === 1
-            ? 'Foto cargada correctamente'
-            : `${newUploadedUrls.length} fotos cargadas correctamente`
+            ? 'Foto cargada correctamente como portada'
+            : `${newUploadedUrls.length} fotos cargadas correctamente (la primera asignada como portada)`
         )
-      } else {
-        toast.error(data.error ?? 'Error al procesar la subida de fotos')
+      }
+
+      if (failedCount > 0 && newUploadedUrls.length === 0) {
+        toast.error('No se pudieron subir las imágenes. Intenta nuevamente.')
+      } else if (failedCount > 0) {
+        toast.warning(`${failedCount} imagen(es) no pudieron procesarse`)
       }
     } catch (err) {
       console.error('[Upload Error]:', err)
@@ -172,7 +254,7 @@ export function VehiclePhotoUploader({
         ref={fileInputRef}
         type="file"
         multiple
-        accept="image/png, image/jpeg, image/webp, image/avif, image/jpg"
+        accept="image/*"
         className="hidden"
         onChange={(e) => handleFilesUpload(e.target.files)}
         disabled={isUploading}
@@ -181,7 +263,7 @@ export function VehiclePhotoUploader({
       <input
         ref={cameraInputRef}
         type="file"
-        accept="image/png, image/jpeg, image/webp, image/jpg"
+        accept="image/*"
         capture="environment"
         className="hidden"
         onChange={(e) => handleFilesUpload(e.target.files)}

@@ -51,11 +51,11 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
     transmission: initialVehicle?.transmission ?? 'automatic',
     fuel:         initialVehicle?.fuel ?? 'gasoline',
     seats:        initialVehicle?.seats ?? 5,
-    daily_rate:   initialVehicle?.daily_rate ?? 35,
+    daily_rate:   initialVehicle?.daily_rate ?? 120,
     sale_price:   initialVehicle?.sale_price ?? null,
     mileage:      initialVehicle?.mileage ?? 0,
     color:        initialVehicle?.color ?? 'Blanco',
-    thumbnail:    initialVehicle?.thumbnail ?? 'https://images.unsplash.com/photo-1590362891991-f776e747a588?w=800&q=80',
+    thumbnail:    initialVehicle?.thumbnail ?? '',
     images:       initialVehicle?.images ?? [],
     features:     initialVehicle?.features ?? ['Aire acondicionado', 'Bluetooth', 'Cámara de retroceso', 'Apple CarPlay'],
     description:  initialVehicle?.description ?? '',
@@ -78,6 +78,11 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+
+    if (!formData.thumbnail || formData.thumbnail.trim() === '') {
+      toast.error('Debes cargar al menos una foto para el vehículo (la 1ra será la portada)')
+      return
+    }
 
     // Parsear features
     const parsedFeatures = featuresText
@@ -266,20 +271,21 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
               <label className="block text-[11px] font-semibold text-zinc-600 uppercase tracking-wider mb-1">
-                Tarifa Diaria (USD / día) *
+                Tarifa Diaria (S/ / día) *
               </label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-zinc-400">
-                  $
+                  S/
                 </span>
                 <input
                   type="number"
                   required
                   min={1}
                   step="1"
+                  placeholder="Ej. 120"
                   value={formData.daily_rate ?? ''}
                   onChange={(e) => handleChange('daily_rate', e.target.value)}
-                  className="w-full pl-7 pr-3 py-2 min-h-[44px] bg-white border border-zinc-200 rounded-md text-xs font-bold text-zinc-950 focus:outline-none focus:border-zinc-900 tabular-nums"
+                  className="w-full pl-9 pr-3 py-2 min-h-[44px] bg-white border border-zinc-200 rounded-md text-xs font-bold text-zinc-950 focus:outline-none focus:border-zinc-900 tabular-nums"
                 />
               </div>
             </div>
@@ -342,7 +348,7 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
               <label className="block text-[11px] font-semibold text-zinc-600 uppercase tracking-wider mb-1">
                 Plazas (Pasajeros) *
@@ -354,20 +360,6 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
                 max={9}
                 value={formData.seats}
                 onChange={(e) => handleChange('seats', e.target.value)}
-                className={inputCls}
-              />
-            </div>
-
-            <div>
-              <label className="block text-[11px] font-semibold text-zinc-600 uppercase tracking-wider mb-1">
-                Odómetro (km) <span className="text-zinc-400 normal-case font-normal">(opcional)</span>
-              </label>
-              <input
-                type="number"
-                min={0}
-                placeholder="0 km"
-                value={formData.mileage ?? ''}
-                onChange={(e) => handleChange('mileage', e.target.value || undefined)}
                 className={inputCls}
               />
             </div>
@@ -444,20 +436,20 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
           <div className="p-4 pt-0 border-t border-zinc-100 bg-zinc-50/30">
             <div className="max-w-xs mt-3">
               <label className="block text-[11px] font-semibold text-zinc-600 uppercase tracking-wider mb-1">
-                Precio de Venta (USD)
+                Precio de Venta (S/)
               </label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-zinc-400">
-                  $
+                  S/
                 </span>
                 <input
                   type="number"
                   min={0}
                   step="100"
-                  placeholder="Ej. 18500"
+                  placeholder="Ej. 65000"
                   value={formData.sale_price ?? ''}
                   onChange={(e) => handleChange('sale_price', e.target.value ? Number(e.target.value) : null)}
-                  className="w-full pl-7 pr-3 py-2 min-h-[44px] bg-white border border-zinc-200 rounded-md text-xs font-medium text-zinc-900 focus:outline-none focus:border-zinc-900"
+                  className="w-full pl-9 pr-3 py-2 min-h-[44px] bg-white border border-zinc-200 rounded-md text-xs font-medium text-zinc-900 focus:outline-none focus:border-zinc-900"
                 />
               </div>
             </div>

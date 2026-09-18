@@ -40,14 +40,14 @@ const STATUSES = [
 ] as const
 
 /**
- * Filter boundary values are always stored in USD (matching the DB column).
- * Display labels are generated dynamically via usePriceRangeLabels().
+ * Los valores límite de filtro se gestionan en PEN (Soles, moneda base de la BD).
+ * Las etiquetas mostradas se generan dinámicamente con formatCurrencyPrice y convertPrice.
  */
-const PRICE_RANGES_USD = [
-  { min: undefined as number | undefined, max: 35 as number | undefined },
-  { min: 35,                              max: 50 as number | undefined },
-  { min: 50,                              max: 70 as number | undefined },
-  { min: 70 as number | undefined,        max: undefined as number | undefined },
+const PRICE_RANGES_PEN = [
+  { min: undefined as number | undefined, max: 120 as number | undefined },
+  { min: 120,                             max: 180 as number | undefined },
+  { min: 180,                             max: 250 as number | undefined },
+  { min: 250 as number | undefined,       max: undefined as number | undefined },
 ] as const
 
 // ── Sub-componentes ────────────────────────────────────────────────────────
@@ -131,11 +131,11 @@ export function VehicleFilters({ totalResults, className }: VehicleFiltersProps)
   const { filters, activeCount, setFilter, clearFilters } = useVehicleFilters()
   const [mobileOpen, setMobileOpen] = useState(false)
 
-  // Build display labels from live rates — filter values remain in USD
+  // Build display labels from live rates — filter values remain in PEN (Soles)
   const { currency, rates } = useCurrency()
-  const priceRanges = PRICE_RANGES_USD.map(({ min, max }) => {
-    const fmt = (usd: number) =>
-      formatCurrencyPrice(convertPrice(usd, currency, rates), currency)
+  const priceRanges = PRICE_RANGES_PEN.map(({ min, max }) => {
+    const fmt = (pen: number) =>
+      formatCurrencyPrice(convertPrice(pen, currency, rates), currency)
     let label: string
     if (min === undefined && max !== undefined) {
       label = `Hasta ${fmt(max)}/día`

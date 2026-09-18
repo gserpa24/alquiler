@@ -1,5 +1,6 @@
 // lib/currency.ts
 // Core currency logic: definitions, exchange-rate fetching (with cache), conversion, formatting.
+// La moneda base almacenada en el catálogo y base de datos es PEN (Soles).
 
 /** Supported currency codes */
 export type CurrencyCode = 'PEN' | 'USD' | 'EUR'
@@ -19,7 +20,7 @@ export const CURRENCIES: Record<CurrencyCode, CurrencyDef> = {
 
 // ── localStorage cache ─────────────────────────────────────────────────────
 
-const CACHE_KEY = 'autoruta_fx_rates'
+const CACHE_KEY = 'autoruta_fx_rates_pen_v1'
 const CACHE_TTL = 60 * 60 * 1_000 // 1 hour in ms
 
 interface RatesCache {
@@ -53,22 +54,22 @@ function writeCache(rates: Record<string, number>): void {
 // ── Exchange-rate fetch ────────────────────────────────────────────────────
 
 /**
- * Fetches live exchange rates with USD as the base currency.
- * Returns a map like `{ PEN: 3.72, USD: 1, EUR: 0.92 }`.
+ * Fetches live exchange rates with PEN (Soles) as the base currency.
+ * Returns a map like `{ PEN: 1, USD: 0.27, EUR: 0.25 }`.
  * Results are cached in localStorage for 1 hour.
  */
 export async function fetchExchangeRates(): Promise<Record<string, number>> {
   const cached = readCache()
   if (cached) return cached.rates
 
-  const res = await fetch('https://open.er-api.com/v6/latest/USD')
+  const res = await fetch('https://open.er-api.com/v6/latest/PEN')
   if (!res.ok) throw new Error(`ExchangeRate API error: ${res.status}`)
 
   const data = await res.json() as { rates: Record<string, number> }
   const rates: Record<string, number> = {
-    USD: 1,
-    PEN: data.rates['PEN'] ?? 3.72,
-    EUR: data.rates['EUR'] ?? 0.92,
+    PEN: 1,
+    USD: data.rates['USD'] ?? 0.27,
+    EUR: data.rates['EUR'] ?? 0.25,
   }
 
   writeCache(rates)
@@ -78,18 +79,19 @@ export async function fetchExchangeRates(): Promise<Record<string, number>> {
 // ── Conversion & formatting ────────────────────────────────────────────────
 
 /**
- * Converts an amount stored in USD to the target currency using live rates.
- * @param amountUSD  - Original price in USD
+ * Converts an amount stored in PEN (Soles) to the target currency using live rates.
+ * @param amountPEN  - Original price in PEN (Soles)
  * @param targetCode - Target currency code (PEN | USD | EUR)
  * @param rates      - Rate map as returned by fetchExchangeRates()
  */
 export function convertPrice(
-  amountUSD: number,
+  amountPEN: number,
   targetCode: string,
   rates: Record<string, number>,
 ): number {
+  if (targetCode === 'PEN') return amountPEN
   const rate = rates[targetCode] ?? 1
-  return amountUSD * rate
+  return amountPEN * rate
 }
 
 /**

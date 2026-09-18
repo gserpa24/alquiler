@@ -1,10 +1,10 @@
-// middleware.ts
-// Protección de rutas administrativas para el panel /admin
+// proxy.ts
+// Protección de rutas administrativas para el panel /admin (Convención Next.js 16 Proxy)
 
 import { NextResponse, type NextRequest } from 'next/server'
 import { verifySessionToken, SESSION_COOKIE_NAME } from '@/lib/auth/session'
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl
 
   // Solo interceptar rutas dentro de /admin

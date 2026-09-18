@@ -36,7 +36,7 @@ const DEFAULT_CURRENCY: CurrencyCode = 'PEN'
 
 export function CurrencyProvider({ children }: { children: ReactNode }) {
   const [currency, setCurrencyState] = useState<CurrencyCode>(DEFAULT_CURRENCY)
-  const [rates,    setRates]         = useState<Record<string, number>>({ USD: 1, PEN: 3.72, EUR: 0.92 })
+  const [rates,    setRates]         = useState<Record<string, number>>({ PEN: 1, USD: 0.27, EUR: 0.25 })
   const [isLoading, setIsLoading]    = useState(true)
 
   // Restore persisted selection on mount (client-only)
