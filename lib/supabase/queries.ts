@@ -38,6 +38,7 @@ function applyMockFilters(vehicles: Vehicle[], filters: Partial<VehicleFilter>):
     )
   }
 
+  result.sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
   return result
 }
 
