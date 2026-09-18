@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default async function ContactPage() {
   const config = await getSiteConfigFile()
-  const waLink = buildGenericWhatsAppLink()
+  const waLink = buildGenericWhatsAppLink(undefined, config.whatsappNumber)
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 lg:pt-10 pb-2 sm:pb-4">

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, HelpCircle, MessageCircle } from 'lucide-react'
 import { FAQ_ITEMS, FAQ_CATEGORIES } from '@/lib/faq-data'
 import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
+import { useSiteConfig } from '@/contexts/SiteConfigContext'
 import { cn } from '@/lib/utils'
 
 interface FAQSectionProps {
@@ -22,6 +23,7 @@ export function FAQSection({
   title = 'Preguntas Frecuentes',
   subtitle = 'Resolvemos tus principales dudas sobre requisitos, garantías, proceso de consulta y políticas de servicio en Perú.',
 }: FAQSectionProps) {
+  const { config } = useSiteConfig()
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [openId, setOpenId] = useState<string | null>(null)
 
@@ -34,9 +36,9 @@ export function FAQSection({
     setOpenId((prev) => (prev === id ? null : id))
   }
 
-  let waLink = 'https://wa.me/51997936599'
+  let waLink = `https://wa.me/${config.whatsappNumber || '51997936599'}`
   try {
-    waLink = buildGenericWhatsAppLink('¡Hola! Tengo una consulta sobre las condiciones de alquiler.')
+    waLink = buildGenericWhatsAppLink('¡Hola! Tengo una consulta sobre las condiciones de alquiler.', config.whatsappNumber)
   } catch {
     // fallback
   }

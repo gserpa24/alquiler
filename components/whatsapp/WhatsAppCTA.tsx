@@ -7,6 +7,7 @@ import { motion } from 'framer-motion'
 import { ExternalLink } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { buildVehicleWhatsAppLink } from '@/lib/whatsapp'
+import { useSiteConfig } from '@/contexts/SiteConfigContext'
 
 interface WhatsAppCTAProps {
   brand:      string
@@ -35,9 +36,16 @@ export function WhatsAppCTA({
   className,
   label = 'Consultar por WhatsApp',
 }: WhatsAppCTAProps) {
+  const { config } = useSiteConfig()
   let href = '#'
   try {
-    href = buildVehicleWhatsAppLink({ brand, model, year, color })
+    href = buildVehicleWhatsAppLink({
+      brand,
+      model,
+      year,
+      color,
+      phone: config.whatsappNumber,
+    })
   } catch {
     // Si WA_NUMBER no está configurado, el botón queda deshabilitado
     href = '#'

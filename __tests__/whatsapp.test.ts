@@ -85,6 +85,11 @@ describe('buildGenericWhatsAppLink', () => {
     const url = buildGenericWhatsAppLink('Consulta de prueba')
     expect(url).toContain(encodeURIComponent('Consulta de prueba'))
   })
+
+  it('permite override dinámico del teléfono (SiteConfig)', () => {
+    const url = buildGenericWhatsAppLink('Hola', '51987654321')
+    expect(url).toMatch(/^https:\/\/wa\.me\/51987654321\?text=/)
+  })
 })
 
 // __tests__/validations.test.ts

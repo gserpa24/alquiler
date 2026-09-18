@@ -5,9 +5,11 @@ import { useRouter } from 'next/navigation'
 import { Calendar, Car, ArrowRight, Clock } from 'lucide-react'
 import { MOCK_VEHICLES } from '@/lib/mock-data'
 import { buildVehicleWhatsAppLink } from '@/lib/whatsapp'
+import { useSiteConfig } from '@/contexts/SiteConfigContext'
 
 export function HeroBookingBar() {
   const router = useRouter()
+  const { config } = useSiteConfig()
   const [pickupDate, setPickupDate] = useState('')
   const [returnDate, setReturnDate] = useState('')
   const [selectedVehicle, setSelectedVehicle] = useState('')
@@ -31,6 +33,7 @@ export function HeroBookingBar() {
             model: v.model,
             year: v.year,
             color: v.color,
+            phone: config.whatsappNumber,
           })
           
           if (dateNote) {

@@ -4,21 +4,24 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
-
-const WA_LINK = buildGenericWhatsAppLink()
+import { useSiteConfig } from '@/contexts/SiteConfigContext'
 
 /**
  * Botón flotante de WhatsApp visible únicamente en el sitio público.
  * Se oculta automáticamente en todas las rutas del panel administrativo (/admin/*).
+ * Conectado dinámicamente al número configurado en el panel administrativo.
  */
 export function FloatingWhatsApp() {
   const pathname = usePathname()
+  const { config } = useSiteConfig()
   const [hovered, setHovered] = useState(false)
 
   // Ocultar en todas las rutas del panel administrativo
   if (pathname?.startsWith('/admin')) {
     return null
   }
+
+  const waLink = buildGenericWhatsAppLink(undefined, config.whatsappNumber)
 
   return (
     <div
@@ -52,7 +55,7 @@ export function FloatingWhatsApp() {
         <span className="absolute -inset-1 rounded-full bg-[#25D366]/20 animate-pulse pointer-events-none" />
 
         <motion.a
-          href={WA_LINK}
+          href={waLink}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Abrir WhatsApp"

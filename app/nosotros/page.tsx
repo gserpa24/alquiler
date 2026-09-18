@@ -15,6 +15,7 @@ import {
   Luggage,
 } from 'lucide-react'
 import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
+import { getSiteConfigFile } from '@/lib/site-config-server'
 
 export const metadata: Metadata = {
   title: 'Nosotros | Alquiler de Autos, SUV y Camionetas en Tarapoto',
@@ -29,11 +30,13 @@ export const metadata: Metadata = {
   },
 }
 
-export default function NosotrosPage() {
-  let waUrl = 'https://wa.me/51997936599'
+export default async function NosotrosPage() {
+  const config = await getSiteConfigFile()
+  let waUrl = `https://wa.me/${config.whatsappNumber || '51997936599'}`
   try {
     waUrl = buildGenericWhatsAppLink(
-      '¡Hola! Estuve viendo su página web y me gustaría consultar disponibilidad y condiciones de alquiler en Tarapoto.'
+      '¡Hola! Estuve viendo su página web y me gustaría consultar disponibilidad y condiciones de alquiler en Tarapoto.',
+      config.whatsappNumber
     )
   } catch {
     // Fallback silencioso

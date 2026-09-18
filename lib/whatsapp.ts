@@ -64,9 +64,11 @@ export function buildVehicleWhatsAppLink(params: VehicleWhatsAppParams): string 
 /**
  * Link genérico de WhatsApp sin vehículo específico.
  * Usado por el botón flotante global visible en todas las páginas.
+ * Permite especificar un número telefónico dinámico proveniente del panel de configuración.
  */
-export function buildGenericWhatsAppLink(customMessage?: string): string {
-  const cleanPhone = WA_NUMBER.replace(/\D/g, '')
+export function buildGenericWhatsAppLink(customMessage?: string, phoneOverride?: string): string {
+  const rawPhone = phoneOverride || WA_NUMBER
+  const cleanPhone = rawPhone.replace(/\D/g, '')
   if (!cleanPhone) throw new Error('NEXT_PUBLIC_WHATSAPP_NUMBER no configurado')
 
   const message = customMessage

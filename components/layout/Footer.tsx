@@ -28,7 +28,7 @@ export function Footer() {
 
   let waLink = `https://wa.me/${config.whatsappNumber || '51997936599'}`
   try {
-    waLink = buildGenericWhatsAppLink()
+    waLink = buildGenericWhatsAppLink(undefined, config.whatsappNumber)
   } catch {
     // fallback
   }

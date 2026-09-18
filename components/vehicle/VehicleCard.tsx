@@ -7,6 +7,7 @@ import { Users, Fuel, Settings2, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { convertPrice, formatCurrencyPrice } from '@/lib/currency'
 import { useCurrency } from '@/contexts/CurrencyContext'
+import { useSiteConfig } from '@/contexts/SiteConfigContext'
 import { type VehicleCard as VehicleCardType, CATEGORY_LABELS, FUEL_LABELS } from '@/types/vehicle'
 import { buildVehicleWhatsAppLink } from '@/lib/whatsapp'
 import { StatusBadge } from '@/components/vehicle/StatusBadge'
@@ -23,6 +24,7 @@ export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
   ({ vehicle, variant = 'default', priority = false, pickupDate, returnDate, className, ...props }, ref) => {
     // Currency context for price conversion
     const { currency, rates, isLoading: ratesLoading } = useCurrency()
+    const { config } = useSiteConfig()
 
     // Generar enlace directo a WhatsApp para "Reservar" (incluyendo rango de fechas si se especificaron)
     let waUrl = '#'
@@ -32,6 +34,7 @@ export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
         model: vehicle.model,
         year: vehicle.year,
         color: vehicle.color,
+        phone: config.whatsappNumber,
       })
 
       if (pickupDate && returnDate) {
@@ -43,7 +46,8 @@ export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
         waUrl = baseWaUrl
       }
     } catch {
-      waUrl = `https://wa.me/?text=Hola%2C%20deseo%20reservar%20el%20${encodeURIComponent(vehicle.brand + ' ' + vehicle.model)}`
+      const clean = (config.whatsappNumber || '51997936599').replace(/\D/g, '')
+      waUrl = `https://wa.me/${clean}?text=Hola%2C%20deseo%20reservar%20el%20${encodeURIComponent(vehicle.brand + ' ' + vehicle.model)}`
     }
 
     const transmissionLabel =
