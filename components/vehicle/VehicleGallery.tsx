@@ -43,8 +43,8 @@ export function VehicleGallery({ images, alt, className }: VehicleGalleryProps) 
 
   return (
     <div className={cn('flex flex-col gap-2.5', className)}>
-      {/* ── Imagen principal ──────────────────────────────────── */}
-      <div className="relative aspect-[16/10] rounded-lg overflow-hidden bg-zinc-100 border border-zinc-200 group">
+      {/* ── Imagen principal adaptativa a la altura de pantalla ── */}
+      <div className="relative aspect-[16/10] max-h-[50vh] sm:max-h-[54vh] rounded-lg overflow-hidden bg-zinc-100 border border-zinc-200 group">
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.div
             key={current}

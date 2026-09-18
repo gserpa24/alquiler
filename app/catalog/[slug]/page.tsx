@@ -69,22 +69,22 @@ export default async function VehicleDetailPage({
   const vehicleName = `${vehicle.brand} ${vehicle.model} ${vehicle.year}`
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-7 lg:py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-5 lg:py-6">
 
-      {/* ── Breadcrumb ─────────────────────────────────────────── */}
-      <nav aria-label="Ruta de navegación" className="flex items-center gap-2 text-xs text-zinc-400 mb-4 sm:mb-5">
+      {/* ── Breadcrumb compacto ─────────────────────────────────── */}
+      <nav aria-label="Ruta de navegación" className="flex items-center gap-2 text-xs text-zinc-400 mb-3 sm:mb-4">
         <Link href="/" className="hover:text-zinc-900 transition-colors">Inicio</Link>
-        <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
+        <ChevronRight className="w-3 h-3" aria-hidden="true" />
         <Link href="/catalog" className="hover:text-zinc-900 transition-colors">Catálogo</Link>
-        <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
-        <span className="text-zinc-900 font-medium" aria-current="page">{vehicleName}</span>
+        <ChevronRight className="w-3 h-3" aria-hidden="true" />
+        <span className="text-zinc-900 font-medium truncate max-w-[200px] sm:max-w-none" aria-current="page">{vehicleName}</span>
       </nav>
 
-      {/* ── Contenido principal ────────────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_360px] gap-6 lg:gap-8 xl:gap-10 items-start">
+      {/* ── Contenido principal adaptativo ─────────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_360px] gap-5 lg:gap-8 items-start">
 
         {/* Columna izquierda: galería + descripción */}
-        <div className="space-y-6">
+        <div className="space-y-5">
 
           {/* Header mobile */}
           <div className="lg:hidden">
@@ -109,7 +109,7 @@ export default async function VehicleDetailPage({
             <section aria-labelledby="desc-heading" className="pt-1">
               <h2
                 id="desc-heading"
-                className="text-xs font-bold uppercase tracking-wider text-zinc-900 mb-2"
+                className="text-xs font-bold uppercase tracking-wider text-zinc-900 mb-1.5"
               >
                 Descripción
               </h2>
@@ -125,8 +125,8 @@ export default async function VehicleDetailPage({
           </div>
         </div>
 
-        {/* Columna derecha: info + CTA (sticky compacto adaptativo) */}
-        <aside className="lg:sticky lg:top-20 space-y-3.5 sm:space-y-4">
+        {/* Columna derecha: info + CTA adaptativo a la altura de pantalla */}
+        <aside className="lg:sticky lg:top-18 space-y-3">
 
           {/* Header desktop */}
           <div className="hidden lg:block">
@@ -134,7 +134,7 @@ export default async function VehicleDetailPage({
           </div>
 
           {/* Precios */}
-          <div className="p-3.5 sm:p-4 rounded-lg bg-white border border-zinc-200 space-y-2.5 shadow-2xs">
+          <div className="p-3 sm:p-3.5 rounded-lg bg-white border border-zinc-200 space-y-2 shadow-2xs">
             {vehicle.daily_rate && (
               <div className="flex items-baseline justify-between">
                 <span className="text-zinc-500 text-xs font-medium">Tarifa de alquiler</span>
@@ -147,7 +147,7 @@ export default async function VehicleDetailPage({
               </div>
             )}
             {vehicle.sale_price && (
-              <div className="flex items-baseline justify-between pt-2 border-t border-zinc-100">
+              <div className="flex items-baseline justify-between pt-1.5 border-t border-zinc-100">
                 <span className="text-zinc-500 text-xs font-medium">Precio de venta</span>
                 <span className="text-lg sm:text-xl font-bold text-[#0A192F]">
                   {formatPrice(vehicle.sale_price)}
@@ -171,7 +171,7 @@ export default async function VehicleDetailPage({
           />
 
           {/* Nota informativa */}
-          <p className="text-[10px] sm:text-[11px] text-zinc-400 text-center leading-relaxed px-1">
+          <p className="text-[10px] text-zinc-400 text-center leading-tight px-1">
             La disponibilidad y condiciones finales se confirman directamente
             por WhatsApp con nuestro equipo.
           </p>
@@ -185,11 +185,11 @@ export default async function VehicleDetailPage({
 
       {/* ── Vehículos similares ────────────────────────────────── */}
       {similar.length > 0 && (
-        <section className="mt-20 pt-12 border-t border-zinc-100" aria-labelledby="similar-heading">
-          <div className="flex items-center justify-between mb-8">
+        <section className="mt-14 pt-10 border-t border-zinc-100" aria-labelledby="similar-heading">
+          <div className="flex items-center justify-between mb-6">
             <h2
               id="similar-heading"
-              className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-950"
+              className="text-lg sm:text-xl font-bold tracking-tight text-zinc-950"
             >
               También te puede interesar
             </h2>
@@ -222,19 +222,19 @@ function VehicleHeader({
   if (!vehicle) return null
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center gap-2 flex-wrap">
+    <div className="space-y-1.5">
+      <div className="flex items-center gap-1.5 flex-wrap">
         <StatusBadge status={vehicle.status} />
-        <span className="inline-flex items-center text-xs sm:text-[13px] text-zinc-800 bg-zinc-100 px-3 py-1 rounded-md border border-zinc-300 font-semibold tracking-tight shadow-2xs">
+        <span className="inline-flex items-center text-xs text-zinc-800 bg-zinc-100 px-2.5 py-0.5 rounded-md border border-zinc-200 font-semibold tracking-tight shadow-2xs">
           {CATEGORY_LABELS[vehicle.category]}
         </span>
       </div>
-      <p className="text-[11px] font-semibold tracking-wider uppercase text-zinc-400">
+      <p className="text-[10px] font-semibold tracking-wider uppercase text-zinc-400 pt-0.5">
         {vehicle.brand}
       </p>
-      <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-950 leading-tight">
+      <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-950 leading-tight">
         {vehicle.model}{' '}
-        <span className="text-zinc-400 font-normal text-2xl">{vehicle.year}</span>
+        <span className="text-zinc-400 font-normal text-xl">{vehicle.year}</span>
       </h1>
       {vehicle.color && (
         <p className="text-xs text-zinc-500 font-medium">{vehicle.color}</p>
