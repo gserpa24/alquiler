@@ -9,9 +9,10 @@ import { cn } from '@/lib/utils'
 import { CurrencySwitcher } from '@/components/currency/CurrencySwitcher'
 
 const NAV_LINKS = [
-  { href: '/',        label: 'Inicio' },
-  { href: '/catalog', label: 'Flota' },
-  { href: '/contact', label: 'Contacto' },
+  { href: '/',         label: 'Inicio' },
+  { href: '/catalog',  label: 'Flota' },
+  { href: '/nosotros', label: 'Nosotros' },
+  { href: '/contact',  label: 'Contacto' },
 ] as const
 
 export function Navbar() {

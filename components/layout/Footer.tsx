@@ -4,10 +4,10 @@ import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
 
 const FOOTER_LINKS = [
   { section: 'Explora', links: [
-    { label: 'Inicio',            href: '/' },
-    { label: 'Autos y Flota',     href: '/catalog' },
-    { label: 'Sedanes',           href: '/catalog?category=sedan' },
-    { label: 'SUVs',              href: '/catalog?category=suv' },
+    { label: 'Inicio',               href: '/' },
+    { label: 'Autos y Flota',        href: '/catalog' },
+    { label: 'Nosotros',             href: '/nosotros' },
+    { label: 'Contacto',             href: '/contact' },
     { label: 'Preguntas Frecuentes', href: '/faq' },
   ]},
   { section: 'Información Legal', links: [
