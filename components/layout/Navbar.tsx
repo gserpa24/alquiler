@@ -26,7 +26,11 @@ export function Navbar() {
   }, [])
 
   // Cerrar menú en cambio de ruta
-  useEffect(() => { setOpen(false) }, [pathname])
+  const [prevPathname, setPrevPathname] = useState(pathname)
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname)
+    setOpen(false)
+  }
 
   // Ocultar Navbar por completo en rutas administrativas
   if (pathname?.startsWith('/admin')) return null

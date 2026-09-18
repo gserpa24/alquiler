@@ -1,5 +1,5 @@
 // __tests__/whatsapp.test.ts
-import { describe, it, expect, beforeAll } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { buildVehicleWhatsAppLink, buildGenericWhatsAppLink } from '@/lib/whatsapp'
 
 const BASE_PARAMS = {
@@ -27,8 +27,9 @@ describe('buildVehicleWhatsAppLink', () => {
   })
 
   it('funciona sin color (campo opcional)', () => {
-    const { color: _color, ...noColor } = BASE_PARAMS
-    expect(() => buildVehicleWhatsAppLink(noColor)).not.toThrow()
+    const noColor = { ...BASE_PARAMS } as Record<string, unknown>
+    delete noColor.color
+    expect(() => buildVehicleWhatsAppLink(noColor as unknown as typeof BASE_PARAMS)).not.toThrow()
   })
 
   it('sanitiza el número eliminando caracteres no numéricos', () => {
@@ -70,6 +71,19 @@ describe('Encoding de mensajes genéricos — buildGenericWhatsAppLink logic', (
     const url  = `https://wa.me/51997936599?text=${encodeURIComponent(msg)}`
     const back = decodeURIComponent(url.split('?text=')[1])
     expect(back).toBe(msg)
+  })
+})
+
+describe('buildGenericWhatsAppLink', () => {
+  it('genera enlace genérico de WhatsApp', () => {
+    const url = buildGenericWhatsAppLink()
+    expect(url).toMatch(/^https:\/\/wa\.me\//)
+    expect(url).toContain('text=')
+  })
+
+  it('permite mensaje personalizado', () => {
+    const url = buildGenericWhatsAppLink('Consulta de prueba')
+    expect(url).toContain(encodeURIComponent('Consulta de prueba'))
   })
 })
 

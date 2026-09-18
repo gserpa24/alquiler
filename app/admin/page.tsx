@@ -9,7 +9,6 @@ import {
   Wrench,
   PlusCircle,
   ArrowRight,
-  ExternalLink,
   MessageSquare,
 } from 'lucide-react'
 import { getAllAdminVehicles } from '@/lib/supabase/queries'

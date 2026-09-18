@@ -88,7 +88,7 @@ export default async function VehicleDetailPage({
 
           {/* Header mobile */}
           <div className="lg:hidden">
-            <VehicleHeader vehicle={vehicle} vehicleName={vehicleName} />
+            <VehicleHeader vehicle={vehicle} />
           </div>
 
           {/* Galería con carrete completo de fotos subidas */}
@@ -130,7 +130,7 @@ export default async function VehicleDetailPage({
 
           {/* Header desktop */}
           <div className="hidden lg:block">
-            <VehicleHeader vehicle={vehicle} vehicleName={vehicleName} />
+            <VehicleHeader vehicle={vehicle} />
           </div>
 
           {/* Precios */}
@@ -216,10 +216,8 @@ export default async function VehicleDetailPage({
 
 function VehicleHeader({
   vehicle,
-  vehicleName,
 }: {
-  vehicle:     Awaited<ReturnType<typeof getVehicleBySlug>>
-  vehicleName: string
+  vehicle: Awaited<ReturnType<typeof getVehicleBySlug>>
 }) {
   if (!vehicle) return null
 

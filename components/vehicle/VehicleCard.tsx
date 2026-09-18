@@ -14,12 +14,10 @@ import { StatusBadge } from '@/components/vehicle/StatusBadge'
 interface VehicleCardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   vehicle: VehicleCardType
   variant?: 'default' | 'featured'
-  pickupDate?: string
-  returnDate?: string
 }
 
 export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
-  ({ vehicle, variant, pickupDate, returnDate, className, ...props }, ref) => {
+  ({ vehicle, variant = 'default', className, ...props }, ref) => {
     // Currency context for price conversion
     const { currency, rates, isLoading: ratesLoading } = useCurrency()
 
@@ -46,7 +44,8 @@ export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
       <div
         ref={ref}
         className={cn(
-          'group relative flex flex-col justify-between bg-white border border-zinc-200 rounded-lg overflow-hidden transition-colors duration-150 hover:border-zinc-400',
+          'group relative flex flex-col justify-between bg-white border rounded-lg overflow-hidden transition-colors duration-150',
+          variant === 'featured' ? 'border-amber-400/50 shadow-sm' : 'border-zinc-200 hover:border-zinc-400',
           className
         )}
         {...props}

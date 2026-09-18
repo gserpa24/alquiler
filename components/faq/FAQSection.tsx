@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, HelpCircle, MessageCircle } from 'lucide-react'
-import { FAQ_ITEMS, FAQ_CATEGORIES, type FAQItem } from '@/lib/faq-data'
+import { FAQ_ITEMS, FAQ_CATEGORIES } from '@/lib/faq-data'
 import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
 import { cn } from '@/lib/utils'
 

@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from 'react'
 import Image from 'next/image'
-import { Filter, SlidersHorizontal, Check } from 'lucide-react'
 import { type VehicleCard as VehicleCardType } from '@/types/vehicle'
 import { VehicleCard } from '@/components/vehicle/VehicleCard'
 import { TransactionalSearchHero } from '@/components/home/TransactionalSearchHero'
@@ -142,8 +141,6 @@ export function TransactionalVehicleCatalog({ vehicles }: TransactionalVehicleCa
                 <VehicleCard
                   key={vehicle.id}
                   vehicle={vehicle}
-                  pickupDate={pickupDate}
-                  returnDate={returnDate}
                 />
               ))}
             </div>

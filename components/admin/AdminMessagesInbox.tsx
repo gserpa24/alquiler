@@ -4,7 +4,7 @@
 // Bandeja de entrada de mensajes de contacto para el Panel Administrativo.
 // Incluye botón de recarga sin recargar la página completa, sincronización permanente y acciones directas.
 
-import { useState, useTransition, useEffect, useId } from 'react'
+import { useState, useTransition } from 'react'
 import {
   Mail,
   Phone,
@@ -128,14 +128,6 @@ export function AdminMessagesInbox({
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [copiedSql, setCopiedSql] = useState(false)
   const [isPending, startTransition] = useTransition()
-
-  // Filtrar eliminados locales al montar
-  useEffect(() => {
-    const deleted = getLocalDeletedIds()
-    if (deleted.length > 0) {
-      setMessages((prev) => prev.filter((m) => !deleted.includes(m.id)))
-    }
-  }, [])
 
   // Recarga instantánea sin recargar la página completa
   async function handleRefresh() {

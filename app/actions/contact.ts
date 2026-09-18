@@ -1,7 +1,7 @@
 // app/actions/contact.ts
 'use server'
 
-import { ContactFormSchema, type ContactForm } from '@/lib/validations'
+import { ContactFormSchema } from '@/lib/validations'
 
 export interface ContactActionResult {
   success: boolean

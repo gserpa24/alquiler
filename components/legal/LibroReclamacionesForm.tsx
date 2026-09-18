@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   Clock,
   Printer,
-  ShieldCheck,
   Loader2,
 } from 'lucide-react'
 import { submitComplaintAction, type ComplaintResult } from '@/app/actions/complaint-actions'

@@ -3,7 +3,7 @@
 // components/admin/AdminNav.tsx
 // Barra de navegación del Panel Administrativo — 100% responsiva para móvil y escritorio.
 
-import { useState, useEffect, useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -31,9 +31,11 @@ export function AdminNav() {
   const [isPending, startTransition] = useTransition()
 
   // Cerrar menú al cambiar de ruta
-  useEffect(() => {
+  const [prevPath, setPrevPath] = useState(pathname)
+  if (prevPath !== pathname) {
+    setPrevPath(pathname)
     setOpen(false)
-  }, [pathname])
+  }
 
   // En la página de login no mostramos la barra administrativa
   if (pathname === '/admin/login') {

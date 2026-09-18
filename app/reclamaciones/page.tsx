@@ -3,7 +3,7 @@
 
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { BookOpen, ShieldCheck, ArrowLeft, MapPin, Phone } from 'lucide-react'
+import { BookOpen, ArrowLeft, MapPin, Phone } from 'lucide-react'
 import { LibroReclamacionesForm } from '@/components/legal/LibroReclamacionesForm'
 
 export const metadata: Metadata = {

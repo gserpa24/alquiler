@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { HelpCircle, ArrowLeft } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { FAQSection } from '@/components/faq/FAQSection'
 
 export const metadata: Metadata = {

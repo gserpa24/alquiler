@@ -1,5 +1,5 @@
 // __tests__/admin-vehicles.test.ts
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { AdminVehicleSchema } from '@/lib/validations'
 import {
   createVehicleAction,
@@ -48,7 +48,9 @@ describe('AdminVehicleSchema', () => {
   })
 
   it('aplica valores por defecto de plazas si se omiten', () => {
-    const { seats: _, status: ___, ...withoutDefaults } = validVehicle
+    const withoutDefaults = { ...validVehicle } as Record<string, unknown>
+    delete withoutDefaults.seats
+    delete withoutDefaults.status
     const result = AdminVehicleSchema.safeParse(withoutDefaults)
     expect(result.success).toBe(true)
     if (result.success) {
