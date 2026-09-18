@@ -170,7 +170,7 @@ export function TransactionalVehicleCatalog({ vehicles }: TransactionalVehicleCa
       </section>
 
       {/* ── Sección de Preguntas Frecuentes Integrada ───────────── */}
-      <section id="faq-heading" className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-white border-t border-zinc-200">
+      <section id="faq-heading" className="pt-10 sm:pt-14 pb-6 sm:pb-8 px-4 sm:px-6 lg:px-8 bg-white border-t border-zinc-200">
         <div className="max-w-4xl mx-auto">
           <FAQSection
             showCategoryFilters={true}

@@ -40,7 +40,7 @@ export default function NosotrosPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900 pb-8 sm:pb-10">
+    <div className="min-h-screen bg-white text-zinc-900 pb-2 sm:pb-4">
       {/* ── 1. HERO ──────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden bg-gradient-to-b from-zinc-50 via-white to-white border-b border-zinc-100 pt-7 pb-9 sm:pt-9 sm:pb-12">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

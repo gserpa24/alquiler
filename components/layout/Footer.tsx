@@ -29,7 +29,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="bg-zinc-50 border-t border-zinc-200 mt-20" role="contentinfo">
+    <footer className="bg-zinc-50 border-t border-zinc-200 mt-8 sm:mt-10 lg:mt-12" role="contentinfo">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
 

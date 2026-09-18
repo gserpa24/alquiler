@@ -14,7 +14,7 @@ export default function ContactPage() {
   const waLink = buildGenericWhatsAppLink()
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 lg:pt-10 pb-0 -mb-10 sm:-mb-12 lg:-mb-14">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 lg:pt-10 pb-2 sm:pb-4">
       {/* ── Header ─────────────────────────────────────────── */}
       <header className="max-w-3xl mb-6 sm:mb-8">
         <p className="text-[11px] font-semibold tracking-wider uppercase text-zinc-400 mb-1.5">

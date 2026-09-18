@@ -34,7 +34,7 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
   const { vehicles, total, page, pages } = await getVehicles(filters)
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 lg:pt-10 pb-4 sm:pb-6 lg:pb-8">
 
       {/* ── Header ──────────────────────────────────────────────── */}
       <header className="mb-6 lg:mb-8">
