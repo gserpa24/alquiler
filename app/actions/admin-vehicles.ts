@@ -11,7 +11,9 @@ import {
   updateVehicle,
   deleteVehicle,
   updateVehicleStatus,
+  getVehicleById,
 } from '@/lib/supabase/queries'
+import { deleteStorageFiles } from '@/lib/supabase/storage'
 import { type Vehicle, type VehicleStatus } from '@/types/vehicle'
 
 export interface ActionResult<T = unknown> {
@@ -128,9 +130,20 @@ export async function updateVehicleAction(
       sort_order: data.sort_order,
     }
 
+    const oldVehicle = await getVehicleById(id)
     const updated = await updateVehicle(id, updates)
     if (!updated) {
       return { success: false, error: 'Vehículo no encontrado para actualizar' }
+    }
+
+    // Limpiar de Supabase Storage las fotos que hayan sido retiradas en la edición
+    if (oldVehicle) {
+      const oldPhotos = new Set([oldVehicle.thumbnail, ...(oldVehicle.images || [])].filter(Boolean))
+      const newPhotos = new Set([updated.thumbnail, ...(updated.images || [])].filter(Boolean))
+      const removedPhotos = Array.from(oldPhotos).filter((photo) => !newPhotos.has(photo))
+      if (removedPhotos.length > 0) {
+        await deleteStorageFiles(removedPhotos)
+      }
     }
 
     revalidatePath('/')
@@ -179,13 +192,27 @@ export async function updateVehicleStatusAction(
 }
 
 /**
- * Server Action: Elimina un vehículo por su ID.
+ * Server Action: Elimina un vehículo por su ID y limpia todas sus fotos asociadas en Supabase Storage (S3).
  */
 export async function deleteVehicleAction(id: string): Promise<ActionResult<{ id: string }>> {
   try {
+    // 1. Obtener la información del vehículo para identificar sus fotos
+    const vehicle = await getVehicleById(id)
+
+    // 2. Eliminar el registro en la base de datos
     const ok = await deleteVehicle(id)
     if (!ok) {
       return { success: false, error: 'No se pudo eliminar el vehículo' }
+    }
+
+    // 3. Eliminar fotos asociadas del bucket de Supabase Storage (S3)
+    if (vehicle) {
+      const photosToDelete = Array.from(
+        new Set([vehicle.thumbnail, ...(vehicle.images || [])].filter(Boolean))
+      )
+      if (photosToDelete.length > 0) {
+        await deleteStorageFiles(photosToDelete)
+      }
     }
 
     revalidatePath('/')
@@ -200,5 +227,19 @@ export async function deleteVehicleAction(id: string): Promise<ActionResult<{ id
       success: false,
       error: err instanceof Error ? err.message : 'Error inesperado al eliminar el vehículo',
     }
+  }
+}
+
+/**
+ * Server Action: Elimina un archivo individual de Supabase Storage si se retira del carrete de fotos.
+ */
+export async function deleteStorageFileAction(url: string): Promise<ActionResult<{ url: string }>> {
+  try {
+    if (!url) return { success: true }
+    await deleteStorageFiles([url])
+    return { success: true, data: { url } }
+  } catch (err) {
+    console.error('[deleteStorageFileAction Error]:', err)
+    return { success: false, error: 'Error al eliminar la foto' }
   }
 }

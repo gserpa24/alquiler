@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
+import { deleteStorageFileAction } from '@/app/actions/admin-vehicles'
 
 interface VehiclePhotoUploaderProps {
   thumbnail: string
@@ -213,7 +214,7 @@ export function VehiclePhotoUploader({
     toast.success('Foto seleccionada como portada principal')
   }
 
-  // Eliminar foto del carrete
+  // Eliminar foto del carrete y de Supabase Storage
   function handleRemovePhoto(urlToRemove: string) {
     const remaining = allPhotos.filter((url) => url !== urlToRemove)
     onImagesChange(remaining)
@@ -223,6 +224,9 @@ export function VehiclePhotoUploader({
       onThumbnailChange(remaining[0] ?? '')
     }
     toast.info('Foto retirada del carrete')
+
+    // Eliminar del almacenamiento si es un archivo de Supabase o local
+    deleteStorageFileAction(urlToRemove).catch(() => {})
   }
 
   // Agregar foto vía URL externa directa
