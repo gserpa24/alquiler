@@ -58,17 +58,16 @@ export function WhatsAppCTA({
       className={cn(
         // Base
         'relative inline-flex items-center justify-center gap-1.5 sm:gap-2 rounded-md text-[11px] sm:text-xs font-semibold uppercase tracking-wider transition-colors duration-150 text-center',
-        'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#0A192F]',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366]',
         'w-full max-w-full min-w-0 py-2.5 sm:py-3 px-3 sm:px-4 min-h-[44px]',
         // Variantes
         variant === 'primary' && [
-          'bg-[#0A192F] text-white',
-          'hover:bg-[#112240]',
+          'bg-[#25D366] text-white hover:bg-[#20bd5a] shadow-xs',
           isDisabled && 'opacity-50 cursor-not-allowed',
         ],
         variant === 'outline' && [
-          'border border-zinc-200 text-zinc-800 bg-white',
-          'hover:border-[#0A192F] hover:text-[#0A192F]',
+          'border border-[#25D366]/40 text-[#128C7E] bg-white',
+          'hover:border-[#25D366] hover:bg-[#25D366]/5',
           isDisabled && 'opacity-50 cursor-not-allowed',
         ],
         className,

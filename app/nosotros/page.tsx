@@ -71,9 +71,9 @@ export default function NosotrosPage() {
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-white border border-zinc-300 text-zinc-800 text-xs font-semibold uppercase tracking-wider hover:border-zinc-400 hover:bg-zinc-50 transition-colors shadow-2xs"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#25D366] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#20bd5a] transition-colors shadow-xs"
             >
-              <MessageCircle className="w-4 h-4 text-emerald-600" aria-hidden="true" />
+              <MessageCircle className="w-4 h-4 text-white" aria-hidden="true" />
               <span>Consultar por WhatsApp</span>
             </a>
           </div>
@@ -392,8 +392,9 @@ export default function NosotrosPage() {
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[#0A192F] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#112240] transition-colors shrink-0"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[#25D366] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#20bd5a] transition-colors shrink-0 shadow-xs"
             >
+              <MessageCircle className="w-3.5 h-3.5 text-white" aria-hidden="true" />
               <span>Consultar condiciones</span>
               <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
             </a>
@@ -533,7 +534,7 @@ export default function NosotrosPage() {
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold uppercase tracking-wider transition-colors shadow-xs"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#25D366] hover:bg-[#20bd5a] text-white text-xs font-semibold uppercase tracking-wider transition-colors shadow-xs"
             >
               <MessageCircle className="w-4 h-4" aria-hidden="true" />
               <span>Consultar disponibilidad en WhatsApp</span>

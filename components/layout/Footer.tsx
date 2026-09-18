@@ -42,7 +42,8 @@ export function Footer() {
                   alt="AutoRuta"
                   width={40}
                   height={26}
-                  className="object-contain w-full h-full"
+                  className="object-contain w-auto h-6"
+                  unoptimized
                 />
               </div>
               <span className="text-base font-bold tracking-tight text-zinc-900">

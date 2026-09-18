@@ -432,7 +432,7 @@ export function AdminMessagesInbox({
                             handleStatusChange(msg.id, 'replied')
                           }
                         }}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700 transition-colors shadow-xs"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#25D366] text-white text-xs font-semibold hover:bg-[#20bd5a] transition-colors shadow-xs"
                         title="Abrir chat en WhatsApp con mensaje preparado"
                       >
                         <MessageCircle className="w-3.5 h-3.5" />

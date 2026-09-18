@@ -44,11 +44,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/icon.png', sizes: '512x512', type: 'image/png' },
-      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.png?v=4', sizes: '512x512', type: 'image/png' },
+      { url: '/favicon.ico?v=4', sizes: 'any' },
     ],
     apple: [
-      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/apple-icon.png?v=4', sizes: '180x180', type: 'image/png' },
     ],
   },
   robots: {
