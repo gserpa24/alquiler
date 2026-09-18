@@ -11,7 +11,7 @@ import { getVehicles }        from '@/lib/supabase/queries'
 import { VehicleFilterSchema } from '@/lib/validations'
 
 export const metadata: Metadata = {
-  title: 'Flota de Vehículos Cotidianos y Road Trips',
+  title: 'Catálogo de Vehículos | AutoRuta Tarapoto',
   description:
     'Explora nuestra flota de sedanes confiables, compactos urbanos y SUVs familiares accesibles para ruteo diario y viajes por carretera. Consulta disponibilidad por WhatsApp.',
   alternates: { canonical: '/catalog' },
@@ -39,7 +39,7 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
       {/* ── Header ──────────────────────────────────────────────── */}
       <header className="mb-6 lg:mb-8">
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-950">
-          Alquiler de Vehículos
+          Catálogo de Vehículos
         </h1>
       </header>
 
