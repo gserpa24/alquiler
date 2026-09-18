@@ -30,7 +30,7 @@ export default async function AdminLayout({
           {children}
         </main>
         <footer className="border-t border-zinc-200 bg-white py-4 px-4 text-center text-xs text-zinc-400">
-          AUTORUTA — Panel de Administración de Flota • Arquitectura Modular
+          AutoRuta - Panel Administrativo
         </footer>
         <Toaster position="bottom-right" richColors />
       </div>
