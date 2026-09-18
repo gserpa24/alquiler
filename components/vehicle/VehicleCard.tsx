@@ -63,10 +63,10 @@ export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
         {...props}
       >
         <div>
-          {/* ── Fotografía lateral limpia sobre fondo gris ultra claro ── */}
+          {/* ── Fotografía de portada estándar uniforme 16:10 ── */}
           <Link
             href={`/catalog/${vehicle.slug}`}
-            className="block relative aspect-[16/10] bg-[#F8FAFC] p-4 border-b border-zinc-100 overflow-hidden"
+            className="block relative aspect-[16/10] w-full bg-zinc-100 border-b border-zinc-100 overflow-hidden"
             aria-label={`Ver detalles de ${vehicle.brand} ${vehicle.model}`}
           >
             <Image
@@ -74,7 +74,7 @@ export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
               alt={`${vehicle.brand} ${vehicle.model} ${vehicle.year}`}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="object-contain p-2 transition-transform duration-200 group-hover:scale-[1.02]"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
               priority={priority}
             />
 

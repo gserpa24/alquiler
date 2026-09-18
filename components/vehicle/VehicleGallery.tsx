@@ -15,9 +15,10 @@ interface VehicleGalleryProps {
 }
 
 export function VehicleGallery({ images, alt, className }: VehicleGalleryProps) {
-  const [current,    setCurrent]    = useState(0)
-  const [direction,  setDirection]  = useState(1)
-  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [current,        setCurrent]        = useState(0)
+  const [direction,      setDirection]      = useState(1)
+  const [lightboxOpen,   setLightboxOpen]   = useState(false)
+  const [verticalImages, setVerticalImages] = useState<Record<string, boolean>>({})
 
   const safeImages = images.length > 0 ? images : ['/placeholder-car.jpg']
   const total      = safeImages.length
@@ -41,10 +42,12 @@ export function VehicleGallery({ images, alt, className }: VehicleGalleryProps) 
     exit:   (dir: number) => ({ x: dir > 0 ? '-4%' : '4%', opacity: 0, transition: { duration: 0.25, ease: 'easeIn' as const } }),
   }
 
+  const isCurrentVertical = Boolean(verticalImages[safeImages[current]])
+
   return (
     <div className={cn('flex flex-col gap-2.5 min-w-0 w-full max-w-full', className)}>
-      {/* ── Imagen principal adaptativa a la altura de pantalla ── */}
-      <div className="relative w-full aspect-[16/10] max-h-[50vh] sm:max-h-[54vh] rounded-lg overflow-hidden bg-zinc-100 border border-zinc-200 group">
+      {/* ── Imagen principal con altura fija estándar (referencia Great Wall Poer) ── */}
+      <div className="relative w-full h-[280px] sm:h-[360px] md:h-[420px] lg:h-[460px] rounded-lg overflow-hidden bg-zinc-950 border border-zinc-200 group">
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.div
             key={current}
@@ -53,14 +56,38 @@ export function VehicleGallery({ images, alt, className }: VehicleGalleryProps) 
             initial="enter"
             animate="center"
             exit="exit"
-            className="absolute inset-0"
+            className="absolute inset-0 flex items-center justify-center overflow-hidden"
           >
+            {/* Si la foto es vertical, fondo difuminado suave para no cortar el vehículo */}
+            {isCurrentVertical && (
+              <Image
+                src={safeImages[current]}
+                alt=""
+                fill
+                sizes="60vw"
+                className="object-cover blur-xl opacity-40 scale-110 pointer-events-none"
+                aria-hidden="true"
+              />
+            )}
+
             <Image
               src={safeImages[current]}
               alt={`${alt} — imagen ${current + 1} de ${total}`}
               fill
               sizes="(max-width: 768px) 100vw, 60vw"
-              className="object-cover"
+              className={cn(
+                'transition-all duration-200',
+                isCurrentVertical ? 'object-contain z-10' : 'object-cover',
+              )}
+              onLoad={(e) => {
+                const img = e.currentTarget
+                if (img.naturalHeight > img.naturalWidth * 1.05) {
+                  setVerticalImages((prev) => ({
+                    ...prev,
+                    [safeImages[current]]: true,
+                  }))
+                }
+              }}
               priority={current === 0}
             />
           </motion.div>
