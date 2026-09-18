@@ -1,5 +1,5 @@
 // __tests__/contact-messages.test.ts
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { ContactFormSchema } from '@/lib/validations'
 import {
   saveContactMessage,
@@ -7,6 +7,23 @@ import {
   updateContactMessageStatus,
   deleteContactMessage,
 } from '@/lib/supabase/messages'
+import {
+  getContactMessagesAction,
+  updateMessageStatusAction,
+  deleteMessageAction,
+} from '@/app/actions/admin-messages'
+
+// Mock de next/cache
+vi.mock('next/cache', () => ({
+  revalidatePath: vi.fn(),
+}))
+
+// Mock de guard de sesión de administrador
+const mockRequireAdminSession = vi.fn()
+vi.mock('@/lib/auth/guard', () => ({
+  requireAdminSession: () => mockRequireAdminSession(),
+  getAdminSession: () => mockRequireAdminSession(),
+}))
 
 describe('ContactFormSchema & Messages Inbox', () => {
   it('valida formulario de contacto con datos completos', () => {
@@ -83,5 +100,54 @@ describe('ContactFormSchema & Messages Inbox', () => {
     const messages = await getContactMessages()
     const found = messages.find((m) => m.id === testMsg.id)
     expect(found).toBeUndefined()
+  })
+})
+
+describe('Server Actions de Mensajes — Control de Acceso', () => {
+  it('retorna lista vacía si getContactMessagesAction no tiene sesión de administrador', async () => {
+    mockRequireAdminSession.mockRejectedValueOnce(
+      new Error('No autorizado: se requiere sesión de administrador.')
+    )
+
+    const res = await getContactMessagesAction()
+    expect(res.messages).toEqual([])
+  })
+
+  it('rechaza updateMessageStatusAction si no hay sesión de administrador', async () => {
+    mockRequireAdminSession.mockRejectedValueOnce(
+      new Error('No autorizado: se requiere sesión de administrador.')
+    )
+
+    const res = await updateMessageStatusAction('msg-123', 'read')
+    expect(res.success).toBe(false)
+    expect(res.error).toContain('No se pudo actualizar')
+  })
+
+  it('rechaza deleteMessageAction si no hay sesión de administrador', async () => {
+    mockRequireAdminSession.mockRejectedValueOnce(
+      new Error('No autorizado: se requiere sesión de administrador.')
+    )
+
+    const res = await deleteMessageAction('msg-123')
+    expect(res.success).toBe(false)
+    expect(res.error).toContain('No se pudo eliminar')
+  })
+
+  it('permite updateMessageStatusAction cuando hay sesión válida de administrador', async () => {
+    mockRequireAdminSession.mockResolvedValueOnce({
+      id: 'admin-1',
+      username: 'admin',
+      role: 'admin',
+    })
+
+    const testMsg = await saveContactMessage({
+      name: 'Auth Admin Test',
+      email: 'auth@test.com',
+      subject: 'rental',
+      message: 'Mensaje para probar autorización de acción de admin.',
+    })
+
+    const res = await updateMessageStatusAction(testMsg.id, 'read')
+    expect(res.success).toBe(true)
   })
 })
