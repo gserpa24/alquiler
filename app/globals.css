@@ -82,6 +82,15 @@
     border-radius: 4px;
   }
 
+  /* Reset nativo para iOS Safari / WebKit en inputs de fecha */
+  input[type="date"] {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  input[type="date"]::-webkit-date-and-time-value {
+    text-align: left;
+  }
+
   /* Scrollbar ultra-sutil */
   ::-webkit-scrollbar { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track { background: #FAFAFA; }
