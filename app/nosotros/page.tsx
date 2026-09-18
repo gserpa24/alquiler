@@ -40,28 +40,28 @@ export default function NosotrosPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900 pb-20">
+    <div className="min-h-screen bg-white text-zinc-900 pb-8 sm:pb-10">
       {/* ── 1. HERO ──────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-zinc-50 via-white to-white border-b border-zinc-100 pt-10 pb-16 sm:pt-14 sm:pb-20">
+      <section className="relative overflow-hidden bg-gradient-to-b from-zinc-50 via-white to-white border-b border-zinc-100 pt-7 pb-9 sm:pt-9 sm:pb-12">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           {/* Badge local */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 border border-zinc-200 text-xs font-semibold text-zinc-800 mb-6 shadow-2xs">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 border border-zinc-200 text-xs font-semibold text-zinc-800 mb-3.5 shadow-2xs">
             <MapPin className="w-3.5 h-3.5 text-[#0A192F]" aria-hidden="true" />
             <span>Tarapoto • San Martín, Perú</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-zinc-950 leading-[1.15] mb-5 max-w-4xl mx-auto">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight text-zinc-950 leading-[1.15] mb-3.5 max-w-4xl mx-auto">
             Tu movilidad en Tarapoto, con la confianza y claridad que necesitas.
           </h1>
 
-          <p className="text-base sm:text-lg text-zinc-600 leading-relaxed max-w-2xl mx-auto mb-8">
+          <p className="text-sm sm:text-base md:text-lg text-zinc-600 leading-relaxed max-w-2xl mx-auto mb-6">
             Ponemos a tu disposición autos, camionetas y SUV listos para acompañarte en tus traslados urbanos, viajes de trabajo o recorridos por la región San Martín.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
             <Link
               href="/catalog"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-[#0A192F] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#112240] transition-colors shadow-xs"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#0A192F] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#112240] transition-colors shadow-xs"
             >
               <span>Explorar vehículos disponibles</span>
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -71,7 +71,7 @@ export default function NosotrosPage() {
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-white border border-zinc-300 text-zinc-800 text-xs font-semibold uppercase tracking-wider hover:border-zinc-400 hover:bg-zinc-50 transition-colors shadow-2xs"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-white border border-zinc-300 text-zinc-800 text-xs font-semibold uppercase tracking-wider hover:border-zinc-400 hover:bg-zinc-50 transition-colors shadow-2xs"
             >
               <MessageCircle className="w-4 h-4 text-emerald-600" aria-hidden="true" />
               <span>Consultar por WhatsApp</span>
@@ -79,7 +79,7 @@ export default function NosotrosPage() {
           </div>
 
           {/* Microcopy de confianza */}
-          <div className="mt-10 pt-8 border-t border-zinc-200/60 flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs text-zinc-500 font-medium">
+          <div className="mt-6 pt-5 border-t border-zinc-200/60 flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs text-zinc-500 font-medium">
             <span className="flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" aria-hidden="true" />
               Trato directo y sin intermediarios
@@ -97,19 +97,19 @@ export default function NosotrosPage() {
       </section>
 
       {/* ── 2. QUIÉNES SOMOS ─────────────────────────────────────────────── */}
-      <section className="py-16 sm:py-20 border-b border-zinc-100">
+      <section className="py-8 sm:py-10 border-b border-zinc-100">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
             <div className="lg:col-span-5">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#0A192F] block mb-2">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#0A192F] block mb-1.5">
                 Quiénes Somos
               </span>
-              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-950 leading-tight">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-zinc-950 leading-tight">
                 Facilitamos tu manera de moverte por Tarapoto y sus alrededores.
               </h2>
             </div>
 
-            <div className="lg:col-span-7 space-y-4 text-sm sm:text-base text-zinc-600 leading-relaxed">
+            <div className="lg:col-span-7 space-y-3 text-sm text-zinc-600 leading-relaxed">
               <p>
                 En AutoRuta entendemos que alquilar un vehículo no se trata solo de recibir una llave: se trata de contar con la seguridad de que tu viaje saldrá exactamente como lo planeaste.
               </p>
@@ -123,7 +123,7 @@ export default function NosotrosPage() {
           </div>
 
           {/* Tarjetas de público objetivo atendido */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12 pt-8 border-t border-zinc-100">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mt-6 pt-5 border-t border-zinc-100">
             <div className="p-5 rounded-lg bg-zinc-50 border border-zinc-200">
               <div className="w-8 h-8 rounded bg-white border border-zinc-200 flex items-center justify-center text-[#0A192F] mb-3">
                 <Compass className="w-4 h-4" aria-hidden="true" />
@@ -164,13 +164,13 @@ export default function NosotrosPage() {
       </section>
 
       {/* ── 3. NUESTRA PROPUESTA DE VALOR ────────────────────────────────── */}
-      <section className="py-16 sm:py-20 bg-zinc-50/70 border-b border-zinc-100">
+      <section className="py-8 sm:py-10 bg-zinc-50/70 border-b border-zinc-100">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#0A192F] block mb-2">
+          <div className="text-center max-w-2xl mx-auto mb-6">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#0A192F] block mb-1.5">
               Nuestra Propuesta
             </span>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-950 mb-3">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-950 mb-2">
               Lo que guía nuestro servicio en cada viaje
             </h2>
             <p className="text-sm text-zinc-600">
@@ -178,12 +178,12 @@ export default function NosotrosPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div className="p-6 rounded-lg bg-white border border-zinc-200 shadow-2xs">
-              <div className="w-9 h-9 rounded-md bg-[#0A192F] flex items-center justify-center text-white mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="p-5 rounded-lg bg-white border border-zinc-200 shadow-2xs">
+              <div className="w-8 h-8 rounded-md bg-[#0A192F] flex items-center justify-center text-white mb-3">
                 <ShieldCheck className="w-4 h-4" aria-hidden="true" />
               </div>
-              <h3 className="text-sm font-bold text-zinc-950 mb-2">
+              <h3 className="text-sm font-bold text-zinc-950 mb-1.5">
                 Claridad en las condiciones
               </h3>
               <p className="text-xs text-zinc-600 leading-relaxed">
@@ -191,11 +191,11 @@ export default function NosotrosPage() {
               </p>
             </div>
 
-            <div className="p-6 rounded-lg bg-white border border-zinc-200 shadow-2xs">
-              <div className="w-9 h-9 rounded-md bg-[#0A192F] flex items-center justify-center text-white mb-4">
+            <div className="p-5 rounded-lg bg-white border border-zinc-200 shadow-2xs">
+              <div className="w-8 h-8 rounded-md bg-[#0A192F] flex items-center justify-center text-white mb-3">
                 <MessageCircle className="w-4 h-4" aria-hidden="true" />
               </div>
-              <h3 className="text-sm font-bold text-zinc-950 mb-2">
+              <h3 className="text-sm font-bold text-zinc-950 mb-1.5">
                 Atención directa y cercana
               </h3>
               <p className="text-xs text-zinc-600 leading-relaxed">
@@ -203,11 +203,11 @@ export default function NosotrosPage() {
               </p>
             </div>
 
-            <div className="p-6 rounded-lg bg-white border border-zinc-200 shadow-2xs">
-              <div className="w-9 h-9 rounded-md bg-[#0A192F] flex items-center justify-center text-white mb-4">
+            <div className="p-5 rounded-lg bg-white border border-zinc-200 shadow-2xs">
+              <div className="w-8 h-8 rounded-md bg-[#0A192F] flex items-center justify-center text-white mb-3">
                 <Car className="w-4 h-4" aria-hidden="true" />
               </div>
-              <h3 className="text-sm font-bold text-zinc-950 mb-2">
+              <h3 className="text-sm font-bold text-zinc-950 mb-1.5">
                 Vehículos preparados para su uso
               </h3>
               <p className="text-xs text-zinc-600 leading-relaxed">
@@ -215,11 +215,11 @@ export default function NosotrosPage() {
               </p>
             </div>
 
-            <div className="p-6 rounded-lg bg-white border border-zinc-200 shadow-2xs">
-              <div className="w-9 h-9 rounded-md bg-[#0A192F] flex items-center justify-center text-white mb-4">
+            <div className="p-5 rounded-lg bg-white border border-zinc-200 shadow-2xs">
+              <div className="w-8 h-8 rounded-md bg-[#0A192F] flex items-center justify-center text-white mb-3">
                 <Clock className="w-4 h-4" aria-hidden="true" />
               </div>
-              <h3 className="text-sm font-bold text-zinc-950 mb-2">
+              <h3 className="text-sm font-bold text-zinc-950 mb-1.5">
                 Flexibilidad según tus planes
               </h3>
               <p className="text-xs text-zinc-600 leading-relaxed">
@@ -231,10 +231,10 @@ export default function NosotrosPage() {
       </section>
 
       {/* ── 4. ¿POR QUÉ ELEGIRNOS? ────────────────────────────────────────── */}
-      <section className="py-16 sm:py-20 border-b border-zinc-100">
+      <section className="py-8 sm:py-10 border-b border-zinc-100">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mb-10">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#0A192F] block mb-2">
+          <div className="max-w-2xl mb-5">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#0A192F] block mb-1.5">
               Confianza Comprobada
             </span>
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-950">
@@ -242,8 +242,8 @@ export default function NosotrosPage() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex gap-4 items-start p-4 rounded-lg border border-zinc-200 bg-white">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            <div className="flex gap-4 items-start p-3.5 sm:p-4 rounded-lg border border-zinc-200 bg-white">
               <div className="w-8 h-8 rounded bg-zinc-100 flex items-center justify-center text-[#0A192F] shrink-0 font-bold text-xs">
                 01
               </div>
@@ -257,7 +257,7 @@ export default function NosotrosPage() {
               </div>
             </div>
 
-            <div className="flex gap-4 items-start p-4 rounded-lg border border-zinc-200 bg-white">
+            <div className="flex gap-4 items-start p-3.5 sm:p-4 rounded-lg border border-zinc-200 bg-white">
               <div className="w-8 h-8 rounded bg-zinc-100 flex items-center justify-center text-[#0A192F] shrink-0 font-bold text-xs">
                 02
               </div>
@@ -271,7 +271,7 @@ export default function NosotrosPage() {
               </div>
             </div>
 
-            <div className="flex gap-4 items-start p-4 rounded-lg border border-zinc-200 bg-white">
+            <div className="flex gap-4 items-start p-3.5 sm:p-4 rounded-lg border border-zinc-200 bg-white">
               <div className="w-8 h-8 rounded bg-zinc-100 flex items-center justify-center text-[#0A192F] shrink-0 font-bold text-xs">
                 03
               </div>
@@ -285,7 +285,7 @@ export default function NosotrosPage() {
               </div>
             </div>
 
-            <div className="flex gap-4 items-start p-4 rounded-lg border border-zinc-200 bg-white">
+            <div className="flex gap-4 items-start p-3.5 sm:p-4 rounded-lg border border-zinc-200 bg-white">
               <div className="w-8 h-8 rounded bg-zinc-100 flex items-center justify-center text-[#0A192F] shrink-0 font-bold text-xs">
                 04
               </div>
@@ -303,13 +303,13 @@ export default function NosotrosPage() {
       </section>
 
       {/* ── 5. NUESTRO COMPROMISO ─────────────────────────────────────────── */}
-      <section className="py-16 sm:py-20 bg-gradient-to-b from-zinc-50/60 to-white border-b border-zinc-100">
+      <section className="py-8 sm:py-10 bg-gradient-to-b from-zinc-50/60 to-white border-b border-zinc-100">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#0A192F] block mb-2">
+          <div className="text-center max-w-2xl mx-auto mb-6">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#0A192F] block mb-1.5">
               Nuestro Compromiso
             </span>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-950 mb-3">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-950 mb-2">
               Transparencia y acompañamiento en cada kilómetro
             </h2>
             <p className="text-sm text-zinc-600 leading-relaxed">
@@ -317,56 +317,56 @@ export default function NosotrosPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="p-6 rounded-xl bg-white border border-zinc-200 shadow-2xs flex flex-col justify-between">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+            <div className="p-5 rounded-xl bg-white border border-zinc-200 shadow-2xs flex flex-col justify-between">
               <div>
-                <div className="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 mb-4">
-                  <ShieldCheck className="w-5 h-5" aria-hidden="true" />
+                <div className="w-9 h-9 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 mb-3">
+                  <ShieldCheck className="w-4 h-4" aria-hidden="true" />
                 </div>
-                <h3 className="text-sm font-bold text-zinc-950 mb-2">
+                <h3 className="text-sm font-bold text-zinc-950 mb-1.5">
                   Claridad antes de reservar
                 </h3>
                 <p className="text-xs text-zinc-600 leading-relaxed">
                   Información real sobre disponibilidad y tarifas definitivas antes de cualquier confirmación. Sin letra chica ni sorpresas al recoger el auto.
                 </p>
               </div>
-              <div className="pt-4 mt-4 border-t border-zinc-100 flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700">
+              <div className="pt-3 mt-3 border-t border-zinc-100 flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700">
                 <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Cero costos ocultos</span>
               </div>
             </div>
 
-            <div className="p-6 rounded-xl bg-white border border-zinc-200 shadow-2xs flex flex-col justify-between">
+            <div className="p-5 rounded-xl bg-white border border-zinc-200 shadow-2xs flex flex-col justify-between">
               <div>
-                <div className="w-10 h-10 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-[#0A192F] mb-4">
-                  <Clock className="w-5 h-5" aria-hidden="true" />
+                <div className="w-9 h-9 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-[#0A192F] mb-3">
+                  <Clock className="w-4 h-4" aria-hidden="true" />
                 </div>
-                <h3 className="text-sm font-bold text-zinc-950 mb-2">
+                <h3 className="text-sm font-bold text-zinc-950 mb-1.5">
                   Puntualidad en la entrega
                 </h3>
                 <p className="text-xs text-zinc-600 leading-relaxed">
                   Coordinamos con antelación la hora y lugar de recepción para que tu vehículo esté limpio, revisado y listo para rodar desde el primer minuto.
                 </p>
               </div>
-              <div className="pt-4 mt-4 border-t border-zinc-100 flex items-center gap-1.5 text-[11px] font-semibold text-blue-800">
+              <div className="pt-3 mt-3 border-t border-zinc-100 flex items-center gap-1.5 text-[11px] font-semibold text-blue-800">
                 <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Horarios respetados</span>
               </div>
             </div>
 
-            <div className="p-6 rounded-xl bg-white border border-zinc-200 shadow-2xs flex flex-col justify-between">
+            <div className="p-5 rounded-xl bg-white border border-zinc-200 shadow-2xs flex flex-col justify-between">
               <div>
-                <div className="w-10 h-10 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 mb-4">
-                  <MessageCircle className="w-5 h-5" aria-hidden="true" />
+                <div className="w-9 h-9 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 mb-3">
+                  <MessageCircle className="w-4 h-4" aria-hidden="true" />
                 </div>
-                <h3 className="text-sm font-bold text-zinc-950 mb-2">
+                <h3 className="text-sm font-bold text-zinc-950 mb-1.5">
                   Canal directo en ruta
                 </h3>
                 <p className="text-xs text-zinc-600 leading-relaxed">
                   Si necesitas extender días, ajustar el horario de devolución o consultar sobre una ruta en San Martín, siempre tienes a alguien disponible por WhatsApp.
                 </p>
               </div>
-              <div className="pt-4 mt-4 border-t border-zinc-100 flex items-center gap-1.5 text-[11px] font-semibold text-amber-800">
+              <div className="pt-3 mt-3 border-t border-zinc-100 flex items-center gap-1.5 text-[11px] font-semibold text-amber-800">
                 <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Soporte cercano en viaje</span>
               </div>
@@ -374,9 +374,9 @@ export default function NosotrosPage() {
           </div>
 
           {/* Banner de garantía humana */}
-          <div className="p-5 sm:p-6 rounded-xl bg-white border border-zinc-200 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+          <div className="p-4 sm:p-5 rounded-xl bg-white border border-zinc-200 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-emerald-500/15 text-emerald-700 flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-full bg-emerald-500/15 text-emerald-700 flex items-center justify-center shrink-0">
                 <Sparkles className="w-4 h-4" aria-hidden="true" />
               </div>
               <div>
@@ -402,9 +402,9 @@ export default function NosotrosPage() {
       </section>
 
       {/* ── 6. VEHÍCULOS SEGÚN TU NECESIDAD ───────────────────────────────── */}
-      <section className="py-16 sm:py-20 border-b border-zinc-100">
+      <section className="py-8 sm:py-10 border-b border-zinc-100">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-5 gap-3">
             <div>
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#0A192F] block mb-1">
                 Flota para Cada Trayecto
@@ -422,17 +422,17 @@ export default function NosotrosPage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Autos */}
-            <div className="p-6 rounded-lg bg-zinc-50 border border-zinc-200 flex flex-col justify-between">
+            <div className="p-5 rounded-lg bg-zinc-50 border border-zinc-200 flex flex-col justify-between">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block mb-1">
                   Económico y ágil
                 </span>
-                <h3 className="text-base font-bold text-zinc-950 mb-3">
+                <h3 className="text-base font-bold text-zinc-950 mb-2">
                   Autos (Sedanes y Compactos)
                 </h3>
-                <p className="text-xs text-zinc-600 leading-relaxed mb-4">
+                <p className="text-xs text-zinc-600 leading-relaxed mb-3">
                   Ideal para movilizarse con economía y facilidad en el casco urbano de Tarapoto, gestiones de trabajo o salidas cotidianas sobre pistas pavimentadas.
                 </p>
               </div>
@@ -446,15 +446,15 @@ export default function NosotrosPage() {
             </div>
 
             {/* SUV */}
-            <div className="p-6 rounded-lg bg-zinc-50 border border-zinc-200 flex flex-col justify-between">
+            <div className="p-5 rounded-lg bg-zinc-50 border border-zinc-200 flex flex-col justify-between">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block mb-1">
                   Confort y espacio
                 </span>
-                <h3 className="text-base font-bold text-zinc-950 mb-3">
+                <h3 className="text-base font-bold text-zinc-950 mb-2">
                   SUVs Familiares
                 </h3>
-                <p className="text-xs text-zinc-600 leading-relaxed mb-4">
+                <p className="text-xs text-zinc-600 leading-relaxed mb-3">
                   Excelente para parejas y familias que priorizan la comodidad interior, maletero amplio para equipaje y una posición de manejo cómoda en ciudad y carretera.
                 </p>
               </div>
@@ -468,15 +468,15 @@ export default function NosotrosPage() {
             </div>
 
             {/* Camionetas */}
-            <div className="p-6 rounded-lg bg-zinc-50 border border-zinc-200 flex flex-col justify-between">
+            <div className="p-5 rounded-lg bg-zinc-50 border border-zinc-200 flex flex-col justify-between">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block mb-1">
                   Resistencia y despeje
                 </span>
-                <h3 className="text-base font-bold text-zinc-950 mb-3">
+                <h3 className="text-base font-bold text-zinc-950 mb-2">
                   Camionetas y Pick-ups
                 </h3>
-                <p className="text-xs text-zinc-600 leading-relaxed mb-4">
+                <p className="text-xs text-zinc-600 leading-relaxed mb-3">
                   Recomendadas para rutas de mayor exigencia, proyectos técnicos o viajes con mayor carga que demandan solidez, altura al suelo y tracción confiable.
                 </p>
               </div>
@@ -493,17 +493,17 @@ export default function NosotrosPage() {
       </section>
 
       {/* ── 7. TARAPOTO Y MOVILIDAD ──────────────────────────────────────── */}
-      <section className="py-16 sm:py-20 border-b border-zinc-100">
+      <section className="py-8 sm:py-10 border-b border-zinc-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="p-8 sm:p-10 rounded-2xl bg-gradient-to-br from-zinc-50 to-zinc-100 border border-zinc-200 shadow-2xs">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0A192F] mb-3">
+          <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-zinc-50 to-zinc-100 border border-zinc-200 shadow-2xs">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0A192F] mb-2">
               <Compass className="w-4 h-4" aria-hidden="true" />
               <span>Experiencia en la Región</span>
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-950 mb-4">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-950 mb-3">
               Descubre Tarapoto con la libertad de manejar tus propios tiempos
             </h2>
-            <div className="space-y-3 text-xs sm:text-sm text-zinc-600 leading-relaxed">
+            <div className="space-y-2.5 text-xs sm:text-sm text-zinc-600 leading-relaxed">
               <p>
                 La región San Martín ofrece paisajes cautivadores, centros turísticos naturales y una dinámica urbana particular. Recorrerla en un vehículo privado te otorga una ventaja invaluable: la autonomía de decidir a qué hora salir, cuánto tiempo permanecer en cada lugar y qué caminos explorar con tus acompañantes.
               </p>
@@ -516,24 +516,24 @@ export default function NosotrosPage() {
       </section>
 
       {/* ── 8. CTA FINAL ─────────────────────────────────────────────────── */}
-      <section className="pt-16 sm:pt-20">
+      <section className="pt-8 sm:pt-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-[#0A192F] block mb-2">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-[#0A192F] block mb-1.5">
             Comienza tu Coordinación
           </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-zinc-950 mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-zinc-950 mb-2.5">
             ¿Planeando tu próximo recorrido en Tarapoto?
           </h2>
-          <p className="text-sm sm:text-base text-zinc-600 max-w-xl mx-auto mb-8">
+          <p className="text-sm sm:text-base text-zinc-600 max-w-xl mx-auto mb-5">
             Revisa los vehículos que tenemos disponibles para tus fechas o escríbenos directamente por WhatsApp para asesorarte con gusto y sin compromiso.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto mb-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto mb-4">
             <a
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold uppercase tracking-wider transition-colors shadow-xs"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold uppercase tracking-wider transition-colors shadow-xs"
             >
               <MessageCircle className="w-4 h-4" aria-hidden="true" />
               <span>Consultar disponibilidad en WhatsApp</span>
@@ -541,7 +541,7 @@ export default function NosotrosPage() {
 
             <Link
               href="/catalog"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-white border border-zinc-300 text-zinc-800 text-xs font-semibold uppercase tracking-wider hover:border-zinc-400 hover:bg-zinc-50 transition-colors shadow-2xs"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-white border border-zinc-300 text-zinc-800 text-xs font-semibold uppercase tracking-wider hover:border-zinc-400 hover:bg-zinc-50 transition-colors shadow-2xs"
             >
               <span>Ver catálogo de vehículos</span>
             </Link>
