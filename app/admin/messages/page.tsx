@@ -1,13 +1,16 @@
 // app/admin/messages/page.tsx
-// Módulo de Bandeja de Mensajes de Contacto en el Panel Administrativo.
+// Módulo de Bandeja de Mensajes de Contacto en el Panel Administrativo (Módulo: messages).
 
 import { Metadata } from 'next'
 import Link from 'next/link'
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { getContactMessagesWithStatus } from '@/lib/supabase/messages'
 import { AdminMessagesInbox } from '@/components/admin/AdminMessagesInbox'
 import { getAdminSession } from '@/lib/auth/guard'
+import { MODULE_COOKIE_NAME, parseModuleFlags } from '@/lib/admin-modules'
+import { DisabledModuleCard } from '@/components/admin/DisabledModuleCard'
 
 export const dynamic = 'force-dynamic'
 
@@ -20,6 +23,14 @@ export default async function AdminMessagesPage() {
   const session = await getAdminSession()
   if (!session.authenticated) {
     redirect('/admin/login')
+  }
+
+  const cookieStore = await cookies()
+  const flags = parseModuleFlags(cookieStore.get(MODULE_COOKIE_NAME)?.value)
+
+  // Si el módulo de mensajes está desactivado:
+  if (!flags.messages) {
+    return <DisabledModuleCard moduleId="messages" />
   }
 
   const { messages, isTableMissing } = await getContactMessagesWithStatus()

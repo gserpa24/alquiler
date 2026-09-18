@@ -1,7 +1,7 @@
 'use client'
 
 // components/admin/AdminNav.tsx
-// Barra de navegación del Panel Administrativo — 100% responsiva para móvil y escritorio.
+// Barra de navegación del Panel Administrativo con filtrado dinámico según Feature Flags de módulos.
 
 import { useState, useTransition } from 'react'
 import Link from 'next/link'
@@ -9,26 +9,25 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard,
+  Car,
   PlusCircle,
   ExternalLink,
   ShieldCheck,
   LogOut,
   MessageSquare,
+  SlidersHorizontal,
   Menu,
   X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { logoutAdminAction } from '@/app/actions/auth-actions'
-
-const ADMIN_LINKS = [
-  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/messages', label: 'Mensajes', icon: MessageSquare },
-]
+import { useAdminModules } from '@/contexts/AdminModulesContext'
 
 export function AdminNav() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
+  const { isModuleEnabled } = useAdminModules()
 
   // Cerrar menú al cambiar de ruta
   const [prevPath, setPrevPath] = useState(pathname)
@@ -47,6 +46,22 @@ export function AdminNav() {
       await logoutAdminAction()
     })
   }
+
+  // Enlaces activos según Feature Flags
+  const activeLinks = [
+    ...(isModuleEnabled('dashboard')
+      ? [{ href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true }]
+      : []),
+    ...(isModuleEnabled('vehicles')
+      ? [{ href: '/admin/vehicles', label: 'Flota', icon: Car, exact: false }]
+      : []),
+    ...(isModuleEnabled('messages')
+      ? [{ href: '/admin/messages', label: 'Mensajes', icon: MessageSquare, exact: false }]
+      : []),
+    { href: '/admin/modules', label: 'Módulos', icon: SlidersHorizontal, exact: false },
+  ]
+
+  const showAddVehicle = isModuleEnabled('vehicles')
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-zinc-200">
@@ -73,11 +88,10 @@ export function AdminNav() {
 
             {/* Desktop Navigation Links (>= md) */}
             <nav className="hidden md:flex items-center gap-1" aria-label="Navegación administrativa">
-              {ADMIN_LINKS.map(({ href, label, icon: Icon }) => {
-                const isActive =
-                  href === '/admin'
-                    ? pathname === '/admin'
-                    : pathname.startsWith(href)
+              {activeLinks.map(({ href, label, icon: Icon, exact }) => {
+                const isActive = exact
+                  ? pathname === href
+                  : pathname.startsWith(href)
 
                 return (
                   <Link
@@ -100,13 +114,15 @@ export function AdminNav() {
 
           {/* Desktop Right Actions (>= md) */}
           <div className="hidden md:flex items-center gap-3">
-            <Link
-              href="/admin/vehicles/new"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-md bg-[#0A192F] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#152e52] transition-colors shadow-xs"
-            >
-              <PlusCircle className="w-3.5 h-3.5" />
-              <span>Agregar Auto</span>
-            </Link>
+            {showAddVehicle && (
+              <Link
+                href="/admin/vehicles/new"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-md bg-[#0A192F] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#152e52] transition-colors shadow-xs"
+              >
+                <PlusCircle className="w-3.5 h-3.5" />
+                <span>Agregar Auto</span>
+              </Link>
+            )}
 
             <Link
               href="/"
@@ -171,12 +187,11 @@ export function AdminNav() {
             className="md:hidden overflow-hidden bg-white border-t border-zinc-200 shadow-lg"
           >
             <div className="px-4 py-3 space-y-1.5">
-              {/* Enlaces Principales */}
-              {ADMIN_LINKS.map(({ href, label, icon: Icon }) => {
-                const isActive =
-                  href === '/admin'
-                    ? pathname === '/admin'
-                    : pathname.startsWith(href)
+              {/* Enlaces Principales Filtrados */}
+              {activeLinks.map(({ href, label, icon: Icon, exact }) => {
+                const isActive = exact
+                  ? pathname === href
+                  : pathname.startsWith(href)
 
                 return (
                   <Link
@@ -196,15 +211,17 @@ export function AdminNav() {
                 )
               })}
 
-              {/* Agregar Auto */}
-              <Link
-                href="/admin/vehicles/new"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 transition-colors"
-              >
-                <PlusCircle className="w-4 h-4 text-emerald-700" />
-                <span>+ Agregar Nuevo Auto</span>
-              </Link>
+              {/* Agregar Auto (si módulo flota activo) */}
+              {showAddVehicle && (
+                <Link
+                  href="/admin/vehicles/new"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 transition-colors"
+                >
+                  <PlusCircle className="w-4 h-4 text-emerald-700" />
+                  <span>+ Agregar Nuevo Auto</span>
+                </Link>
+              )}
 
               {/* Separador */}
               <div className="pt-2 border-t border-zinc-100 flex flex-col gap-1.5">
