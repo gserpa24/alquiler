@@ -211,122 +211,128 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* ── Bloque Analítico Principal (2 Columnas) ───────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      {/* ── Bloque Analítico Principal (2 Columnas Simétricas 50/50 y Misma Altura) ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
         {/* Columna Izquierda: Análisis de Flota */}
-        <div className="lg:col-span-7 space-y-6">
-          {/* Card: Distribución de Disponibilidad */}
-          <div className="p-6 rounded-xl bg-white border border-zinc-200 shadow-2xs">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2.5">
-                <Gauge className="w-4 h-4 text-[#0A192F]" />
-                <h2 className="text-sm font-bold text-zinc-950 uppercase tracking-wider">
-                  Estado Operativo de Flota
-                </h2>
-              </div>
-              <span className="text-xs text-zinc-400 font-mono">
-                {totalVehicles} unidades registradas
-              </span>
-            </div>
-
-            {/* Barra segmentada visual */}
-            <div className="w-full h-3 rounded-full bg-zinc-100 overflow-hidden flex mb-4">
-              {availablePct > 0 && (
-                <div
-                  style={{ width: `${availablePct}%` }}
-                  className="bg-emerald-500 h-full transition-all duration-300"
-                  title={`Disponibles: ${availableVehicles} (${availablePct}%)`}
-                />
-              )}
-              {rentedPct > 0 && (
-                <div
-                  style={{ width: `${rentedPct}%` }}
-                  className="bg-amber-500 h-full transition-all duration-300"
-                  title={`En Alquiler: ${rentedVehicles} (${rentedPct}%)`}
-                />
-              )}
-              {maintenancePct > 0 && (
-                <div
-                  style={{ width: `${maintenancePct}%` }}
-                  className="bg-red-500 h-full transition-all duration-300"
-                  title={`En Mantenimiento: ${maintenanceVehicles} (${maintenancePct}%)`}
-                />
-              )}
-            </div>
-
-            {/* Leyenda de Estados */}
-            <div className="grid grid-cols-3 gap-3 text-xs">
-              <div className="p-3 rounded-lg bg-emerald-50/50 border border-emerald-100 flex flex-col">
-                <span className="text-[10px] font-semibold text-emerald-800 uppercase tracking-wider">
-                  Disponibles
-                </span>
-                <span className="text-lg font-bold text-emerald-950 mt-0.5">
-                  {availableVehicles}{' '}
-                  <span className="text-xs font-normal text-emerald-700">({availablePct}%)</span>
-                </span>
-              </div>
-
-              <div className="p-3 rounded-lg bg-amber-50/50 border border-amber-100 flex flex-col">
-                <span className="text-[10px] font-semibold text-amber-800 uppercase tracking-wider">
-                  En Alquiler
-                </span>
-                <span className="text-lg font-bold text-amber-950 mt-0.5">
-                  {rentedVehicles}{' '}
-                  <span className="text-xs font-normal text-amber-700">({rentedPct}%)</span>
-                </span>
-              </div>
-
-              <div className="p-3 rounded-lg bg-red-50/50 border border-red-100 flex flex-col">
-                <span className="text-[10px] font-semibold text-red-800 uppercase tracking-wider">
-                  En Taller
-                </span>
-                <span className="text-lg font-bold text-red-950 mt-0.5">
-                  {maintenanceVehicles}{' '}
-                  <span className="text-xs font-normal text-red-700">({maintenancePct}%)</span>
-                </span>
-              </div>
-            </div>
-
-            {/* Desglose por Categoría y Transmisión */}
-            <div className="pt-6 mt-6 border-t border-zinc-100 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2.5">
-                  Por Tipo de Carrocería
-                </h3>
-                <div className="space-y-1.5 text-xs text-zinc-600">
-                  <div className="flex justify-between py-1 border-b border-zinc-50">
-                    <span>SUVs / Familiares</span>
-                    <strong className="text-zinc-900 font-semibold">{suvCount}</strong>
+        <div className="h-full">
+          <div className="p-6 sm:p-7 rounded-xl bg-white border border-zinc-200 shadow-2xs h-full flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center text-[#0A192F]">
+                    <Gauge className="w-4 h-4 stroke-[1.75]" />
                   </div>
-                  <div className="flex justify-between py-1 border-b border-zinc-50">
-                    <span>Sedanes Cotidianos</span>
-                    <strong className="text-zinc-900 font-semibold">{sedanCount}</strong>
+                  <div>
+                    <h2 className="text-sm font-bold text-zinc-950 uppercase tracking-wider">
+                      Estado Operativo de Flota
+                    </h2>
+                    <p className="text-[11px] text-zinc-400">Disponibilidad en tiempo real</p>
                   </div>
-                  <div className="flex justify-between py-1 border-b border-zinc-50">
-                    <span>Pickups y Camionetas 4x4</span>
-                    <strong className="text-zinc-900 font-semibold">{pickupCount}</strong>
-                  </div>
-                  {sportCount > 0 && (
-                    <div className="flex justify-between py-1 border-b border-zinc-50">
-                      <span>Sport / Otros</span>
-                      <strong className="text-zinc-900 font-semibold">{sportCount}</strong>
-                    </div>
-                  )}
+                </div>
+                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-zinc-100 text-zinc-700 font-mono">
+                  {totalVehicles} unidades
+                </span>
+              </div>
+
+              {/* Barra segmentada visual */}
+              <div className="w-full h-3 rounded-full bg-zinc-100 overflow-hidden flex mb-4">
+                {availablePct > 0 && (
+                  <div
+                    style={{ width: `${availablePct}%` }}
+                    className="bg-emerald-500 h-full transition-all duration-300"
+                    title={`Disponibles: ${availableVehicles} (${availablePct}%)`}
+                  />
+                )}
+                {rentedPct > 0 && (
+                  <div
+                    style={{ width: `${rentedPct}%` }}
+                    className="bg-amber-500 h-full transition-all duration-300"
+                    title={`En Alquiler: ${rentedVehicles} (${rentedPct}%)`}
+                  />
+                )}
+                {maintenancePct > 0 && (
+                  <div
+                    style={{ width: `${maintenancePct}%` }}
+                    className="bg-red-500 h-full transition-all duration-300"
+                    title={`En Mantenimiento: ${maintenanceVehicles} (${maintenancePct}%)`}
+                  />
+                )}
+              </div>
+
+              {/* Leyenda de Estados */}
+              <div className="grid grid-cols-3 gap-2.5 text-xs mb-6">
+                <div className="p-3 rounded-lg bg-emerald-50/60 border border-emerald-100 flex flex-col">
+                  <span className="text-[10px] font-semibold text-emerald-800 uppercase tracking-wider">
+                    Disponibles
+                  </span>
+                  <span className="text-lg font-bold text-emerald-950 mt-0.5">
+                    {availableVehicles}{' '}
+                    <span className="text-[11px] font-normal text-emerald-700">({availablePct}%)</span>
+                  </span>
+                </div>
+
+                <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100 flex flex-col">
+                  <span className="text-[10px] font-semibold text-amber-800 uppercase tracking-wider">
+                    En Alquiler
+                  </span>
+                  <span className="text-lg font-bold text-amber-950 mt-0.5">
+                    {rentedVehicles}{' '}
+                    <span className="text-[11px] font-normal text-amber-700">({rentedPct}%)</span>
+                  </span>
+                </div>
+
+                <div className="p-3 rounded-lg bg-red-50/60 border border-red-100 flex flex-col">
+                  <span className="text-[10px] font-semibold text-red-800 uppercase tracking-wider">
+                    En Taller
+                  </span>
+                  <span className="text-lg font-bold text-red-950 mt-0.5">
+                    {maintenanceVehicles}{' '}
+                    <span className="text-[11px] font-normal text-red-700">({maintenancePct}%)</span>
+                  </span>
                 </div>
               </div>
 
-              <div>
-                <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2.5">
-                  Por Transmisión
-                </h3>
-                <div className="space-y-1.5 text-xs text-zinc-600">
-                  <div className="flex justify-between py-1 border-b border-zinc-50">
-                    <span>Automático / CVT</span>
-                    <strong className="text-zinc-900 font-semibold">{autoCount}</strong>
+              {/* Desglose por Categoría y Transmisión */}
+              <div className="pt-4 border-t border-zinc-100 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <h3 className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider mb-2">
+                    Por Tipo de Carrocería
+                  </h3>
+                  <div className="space-y-1.5 text-xs text-zinc-600">
+                    <div className="flex justify-between py-1 border-b border-zinc-50">
+                      <span>SUVs / Familiares</span>
+                      <strong className="text-zinc-900 font-semibold">{suvCount}</strong>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-zinc-50">
+                      <span>Sedanes Cotidianos</span>
+                      <strong className="text-zinc-900 font-semibold">{sedanCount}</strong>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-zinc-50">
+                      <span>Pickups 4x4</span>
+                      <strong className="text-zinc-900 font-semibold">{pickupCount}</strong>
+                    </div>
+                    {sportCount > 0 && (
+                      <div className="flex justify-between py-1 border-b border-zinc-50">
+                        <span>Sport / Otros</span>
+                        <strong className="text-zinc-900 font-semibold">{sportCount}</strong>
+                      </div>
+                    )}
                   </div>
-                  <div className="flex justify-between py-1 border-b border-zinc-50">
-                    <span>Mecánico / Manual</span>
-                    <strong className="text-zinc-900 font-semibold">{manualCount}</strong>
+                </div>
+
+                <div>
+                  <h3 className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider mb-2">
+                    Por Transmisión
+                  </h3>
+                  <div className="space-y-1.5 text-xs text-zinc-600">
+                    <div className="flex justify-between py-1 border-b border-zinc-50">
+                      <span>Automático / CVT</span>
+                      <strong className="text-zinc-900 font-semibold">{autoCount}</strong>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-zinc-50">
+                      <span>Mecánico / Manual</span>
+                      <strong className="text-zinc-900 font-semibold">{manualCount}</strong>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -334,15 +340,15 @@ export default async function AdminDashboardPage() {
 
             {/* Acceso a la Pestaña Flota para gestión */}
             {flags.vehicles && (
-              <div className="mt-6 pt-4 border-t border-zinc-100 flex items-center justify-between">
-                <span className="text-xs text-zinc-500">
-                  Para modificar inventario, precios o fotos:
+              <div className="mt-6 pt-4 border-t border-zinc-100 flex items-center justify-between text-xs">
+                <span className="text-zinc-500">
+                  Para editar unidades, fotos y disponibilidad:
                 </span>
                 <Link
                   href="/admin/vehicles"
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0A192F] hover:underline"
+                  className="inline-flex items-center gap-1.5 font-bold text-[#0A192F] hover:underline"
                 >
-                  <span>Abrir Gestión de Flota</span>
+                  <span>Ir a Gestión de Flota</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
@@ -351,103 +357,138 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Columna Derecha: Demanda y Mensajes */}
-        <div className="lg:col-span-5 space-y-6">
-          {/* Card: Estado de Consultas y Eficiencia */}
-          <div className="p-6 rounded-xl bg-white border border-zinc-200 shadow-2xs">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2.5">
-                <MessageSquare className="w-4 h-4 text-[#0A192F]" />
-                <h2 className="text-sm font-bold text-zinc-950 uppercase tracking-wider">
-                  Atención de Consultas
-                </h2>
-              </div>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-zinc-100 text-zinc-700">
-                {attentionRate}% resueltas
-              </span>
-            </div>
-
-            {/* Barra de progreso de atención */}
-            <div className="w-full h-2 rounded-full bg-zinc-100 overflow-hidden mb-4">
-              <div
-                style={{ width: `${attentionRate}%` }}
-                className="bg-[#0A192F] h-full transition-all duration-300"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 text-xs mb-6">
-              <div className="p-3 rounded-lg bg-zinc-50 border border-zinc-100">
-                <span className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider">
-                  Respondidos / Cerrados
+        <div className="h-full">
+          <div className="p-6 sm:p-7 rounded-xl bg-white border border-zinc-200 shadow-2xs h-full flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center text-[#0A192F]">
+                    <MessageSquare className="w-4 h-4 stroke-[1.75]" />
+                  </div>
+                  <div>
+                    <h2 className="text-sm font-bold text-zinc-950 uppercase tracking-wider">
+                      Atención de Consultas
+                    </h2>
+                    <p className="text-[11px] text-zinc-400">Canal de entrada web y WhatsApp</p>
+                  </div>
+                </div>
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  {attentionRate}% atendidas
                 </span>
-                <p className="text-lg font-bold text-zinc-900 mt-0.5">
-                  {resolvedMessages}
-                </p>
               </div>
 
-              <div className="p-3 rounded-lg bg-amber-50/50 border border-amber-100">
-                <span className="text-[10px] font-semibold text-amber-800 uppercase tracking-wider">
-                  Por Atender
-                </span>
-                <p className="text-lg font-bold text-amber-900 mt-0.5">
-                  {pendingMessages}
-                </p>
+              {/* Barra de progreso de atención */}
+              <div className="w-full h-3 rounded-full bg-zinc-100 overflow-hidden mb-4">
+                <div
+                  style={{ width: `${attentionRate}%` }}
+                  className="bg-[#0A192F] h-full transition-all duration-300"
+                />
               </div>
-            </div>
 
-            {/* Consultas Recientes Informativas (Sin CRUD) */}
-            <div className="border-t border-zinc-100 pt-4">
-              <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">
-                Actividad Reciente
-              </h3>
+              {/* Leyenda de Estados de Mensajes */}
+              <div className="grid grid-cols-3 gap-2.5 text-xs mb-6">
+                <div className="p-3 rounded-lg bg-zinc-50 border border-zinc-100 flex flex-col">
+                  <span className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider">
+                    Total
+                  </span>
+                  <p className="text-lg font-bold text-zinc-900 mt-0.5">
+                    {totalMessages}
+                  </p>
+                </div>
 
-              {recentMessages.length > 0 ? (
-                <div className="space-y-2.5">
-                  {recentMessages.map((msg) => (
-                    <div
-                      key={msg.id}
-                      className="p-2.5 rounded-lg border border-zinc-100 bg-zinc-50/60 flex items-center justify-between gap-3 text-xs"
-                    >
-                      <div className="min-w-0">
-                        <p className="font-semibold text-zinc-900 truncate">
-                          {msg.name}
-                        </p>
-                        <p className="text-[11px] text-zinc-400 truncate">
-                          {SUBJECT_LABELS[msg.subject] ?? msg.subject}
-                        </p>
-                      </div>
+                <div className="p-3 rounded-lg bg-emerald-50/60 border border-emerald-100 flex flex-col">
+                  <span className="text-[10px] font-semibold text-emerald-800 uppercase tracking-wider">
+                    Resueltos
+                  </span>
+                  <p className="text-lg font-bold text-emerald-950 mt-0.5">
+                    {resolvedMessages}
+                  </p>
+                </div>
 
-                      <span
-                        className={`text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0 ${
-                          msg.status === 'pending'
-                            ? 'bg-amber-100 text-amber-800'
-                            : msg.status === 'replied'
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : 'bg-zinc-200 text-zinc-700'
-                        }`}
-                      >
-                        {MESSAGE_STATUS_LABELS[msg.status] ?? msg.status}
-                      </span>
+                <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100 flex flex-col">
+                  <span className="text-[10px] font-semibold text-amber-800 uppercase tracking-wider">
+                    Por Atender
+                  </span>
+                  <p className="text-lg font-bold text-amber-900 mt-0.5">
+                    {pendingMessages}
+                  </p>
+                </div>
+              </div>
+
+              {/* Desglose por Motivo y Actividad Reciente */}
+              <div className="pt-4 border-t border-zinc-100 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <h3 className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider mb-2">
+                    Por Motivo de Consulta
+                  </h3>
+                  <div className="space-y-1.5 text-xs text-zinc-600">
+                    <div className="flex justify-between py-1 border-b border-zinc-50">
+                      <span>Alquiler de Vehículos</span>
+                      <strong className="text-zinc-900 font-semibold">{rentalInquiries}</strong>
                     </div>
-                  ))}
+                    <div className="flex justify-between py-1 border-b border-zinc-50">
+                      <span>Compra / Venta</span>
+                      <strong className="text-zinc-900 font-semibold">{purchaseInquiries}</strong>
+                    </div>
+                    <div className="flex justify-between py-1 border-b border-zinc-50">
+                      <span>Otras Consultas</span>
+                      <strong className="text-zinc-900 font-semibold">{otherInquiries}</strong>
+                    </div>
+                  </div>
                 </div>
-              ) : (
-                <p className="text-xs text-zinc-400 italic py-2">
-                  No hay mensajes registrados recientemente.
-                </p>
-              )}
 
-              {flags.messages && (
-                <div className="mt-4 pt-3 border-t border-zinc-100 text-right">
-                  <Link
-                    href="/admin/messages"
-                    className="inline-flex items-center gap-1 text-xs font-bold text-[#0A192F] hover:underline"
-                  >
-                    <span>Ver todas las consultas</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
+                <div>
+                  <h3 className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider mb-2">
+                    Últimas Entradas
+                  </h3>
+                  {recentMessages.length > 0 ? (
+                    <div className="space-y-1.5">
+                      {recentMessages.slice(0, 3).map((msg) => (
+                        <div
+                          key={msg.id}
+                          className="p-1.5 px-2 rounded-md bg-zinc-50 border border-zinc-100 flex items-center justify-between gap-2 text-xs"
+                        >
+                          <span className="font-medium text-zinc-900 truncate max-w-[110px]">
+                            {msg.name}
+                          </span>
+                          <span
+                            className={`text-[9px] font-bold px-1.5 py-0.2 rounded-full shrink-0 uppercase tracking-wider ${
+                              msg.status === 'pending'
+                                ? 'bg-amber-100 text-amber-800'
+                                : msg.status === 'replied'
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : 'bg-zinc-200 text-zinc-700'
+                            }`}
+                          >
+                            {MESSAGE_STATUS_LABELS[msg.status] ?? msg.status}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-[11px] text-zinc-400 italic py-2">
+                      Sin consultas recientes.
+                    </p>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
+
+            {/* Acceso a la Bandeja de Mensajes */}
+            {flags.messages && (
+              <div className="mt-6 pt-4 border-t border-zinc-100 flex items-center justify-between text-xs">
+                <span className="text-zinc-500">
+                  Para responder clientes vía WhatsApp:
+                </span>
+                <Link
+                  href="/admin/messages"
+                  className="inline-flex items-center gap-1.5 font-bold text-[#0A192F] hover:underline"
+                >
+                  <span>Abrir Bandeja de Mensajes</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
