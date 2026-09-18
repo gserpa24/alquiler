@@ -14,6 +14,13 @@ vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),
 }))
 
+// Mock de guard de sesión de administrador
+const mockRequireAdminSession = vi.fn()
+vi.mock('@/lib/auth/guard', () => ({
+  requireAdminSession: () => mockRequireAdminSession(),
+  getAdminSession: () => mockRequireAdminSession(),
+}))
+
 describe('AdminVehicleSchema', () => {
   const validVehicle = {
     brand: 'Nissan',
@@ -75,8 +82,53 @@ describe('AdminVehicleSchema', () => {
   })
 })
 
+describe('Seguridad y Control de Acceso (Broken Access Control)', () => {
+  it('rechaza createVehicleAction si no hay sesión de administrador', async () => {
+    mockRequireAdminSession.mockRejectedValueOnce(
+      new Error('No autorizado: se requiere sesión de administrador.')
+    )
+
+    const res = await createVehicleAction({
+      brand: 'Kia',
+      model: 'Rio 5 Test',
+      year: 2024,
+      category: 'sport',
+      transmission: 'automatic',
+      fuel: 'gasoline',
+      seats: 5,
+      daily_rate: 32,
+      color: 'Azul Marino',
+      thumbnail: 'https://images.unsplash.com/photo-example',
+      status: 'available',
+      is_featured: true,
+      features: [],
+      sort_order: 1,
+      images: [],
+      sale_price: null,
+      mileage: 0,
+    })
+
+    expect(res.success).toBe(false)
+    expect(res.error).toContain('No autorizado')
+  })
+
+  it('rechaza deleteVehicleAction si no hay sesión de administrador', async () => {
+    mockRequireAdminSession.mockRejectedValueOnce(
+      new Error('No autorizado: se requiere sesión de administrador.')
+    )
+
+    const res = await deleteVehicleAction('some-id')
+    expect(res.success).toBe(false)
+    expect(res.error).toContain('No autorizado')
+  })
+})
+
 describe('CRUD Server Actions de Vehículos', () => {
   let createdVehicleId: string
+
+  beforeEach(() => {
+    mockRequireAdminSession.mockResolvedValue({ authenticated: true })
+  })
 
   it('createVehicleAction crea un nuevo auto y genera slug correcto', async () => {
     const res = await createVehicleAction({

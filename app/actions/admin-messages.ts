@@ -10,6 +10,7 @@ import {
   deleteContactMessage,
   type MessagesQueryResult,
 } from '@/lib/supabase/messages'
+import { requireAdminSession } from '@/lib/auth/guard'
 import { type MessageStatus } from '@/types/message'
 
 /**
@@ -17,6 +18,7 @@ import { type MessageStatus } from '@/types/message'
  */
 export async function getContactMessagesAction(): Promise<MessagesQueryResult> {
   try {
+    await requireAdminSession()
     return await getContactMessagesWithStatus()
   } catch (err) {
     console.error('[getContactMessagesAction Error]:', err)
@@ -26,6 +28,7 @@ export async function getContactMessagesAction(): Promise<MessagesQueryResult> {
 
 export async function updateMessageStatusAction(id: string, status: MessageStatus) {
   try {
+    await requireAdminSession()
     await updateContactMessageStatus(id, status)
     revalidatePath('/admin/messages')
     revalidatePath('/admin')
@@ -38,6 +41,7 @@ export async function updateMessageStatusAction(id: string, status: MessageStatu
 
 export async function deleteMessageAction(id: string) {
   try {
+    await requireAdminSession()
     await deleteContactMessage(id)
     revalidatePath('/admin/messages')
     revalidatePath('/admin')

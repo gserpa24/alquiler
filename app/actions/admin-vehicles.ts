@@ -14,6 +14,7 @@ import {
   getVehicleById,
 } from '@/lib/supabase/queries'
 import { deleteStorageFiles } from '@/lib/supabase/storage'
+import { requireAdminSession } from '@/lib/auth/guard'
 import { type Vehicle, type VehicleStatus } from '@/types/vehicle'
 
 export interface ActionResult<T = unknown> {
@@ -41,6 +42,8 @@ export async function createVehicleAction(
   rawData: AdminVehicleInput
 ): Promise<ActionResult<Vehicle>> {
   try {
+    await requireAdminSession()
+
     const validated = AdminVehicleSchema.safeParse(rawData)
     if (!validated.success) {
       const issue = validated.error.issues[0]?.message ?? 'Datos inválidos'
@@ -102,6 +105,8 @@ export async function updateVehicleAction(
   rawData: AdminVehicleInput
 ): Promise<ActionResult<Vehicle>> {
   try {
+    await requireAdminSession()
+
     const validated = AdminVehicleSchema.safeParse(rawData)
     if (!validated.success) {
       const issue = validated.error.issues[0]?.message ?? 'Datos inválidos'
@@ -170,6 +175,8 @@ export async function updateVehicleStatusAction(
   status: VehicleStatus
 ): Promise<ActionResult<{ id: string; status: VehicleStatus }>> {
   try {
+    await requireAdminSession()
+
     const updated = await updateVehicleStatus(id, status)
     if (!updated) {
       return { success: false, error: 'Vehículo no encontrado' }
@@ -196,6 +203,8 @@ export async function updateVehicleStatusAction(
  */
 export async function deleteVehicleAction(id: string): Promise<ActionResult<{ id: string }>> {
   try {
+    await requireAdminSession()
+
     // 1. Obtener la información del vehículo para identificar sus fotos
     const vehicle = await getVehicleById(id)
 
@@ -235,6 +244,8 @@ export async function deleteVehicleAction(id: string): Promise<ActionResult<{ id
  */
 export async function deleteStorageFileAction(url: string): Promise<ActionResult<{ url: string }>> {
   try {
+    await requireAdminSession()
+
     if (!url) return { success: true }
     await deleteStorageFiles([url])
     return { success: true, data: { url } }

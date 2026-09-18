@@ -4,15 +4,33 @@
 const SESSION_COOKIE_NAME = 'autoruta_admin_session'
 const SESSION_MAX_AGE = 60 * 60 * 24 * 7 // 7 días en segundos
 
-// Secreto para firmar tokens. Si no está definido en variables de entorno,
-// se deriva de forma determinista pero segura de otras claves del proyecto.
+/**
+ * Secreto para firmar y validar tokens de sesión HMAC.
+ * Requiere estrictamente variables de entorno seguras de servidor.
+ */
 function getSecretKey(): string {
-  return (
-    process.env.ADMIN_SESSION_SECRET ||
-    process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-    'autoruta-fallback-secret-key-2026'
-  )
+  const secret = process.env.ADMIN_SESSION_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!secret) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error(
+        'Seguridad crítica: ADMIN_SESSION_SECRET o SUPABASE_SERVICE_ROLE_KEY deben estar definidos en producción.'
+      )
+    }
+    return 'autoruta-dev-only-secret-do-not-use-in-production'
+  }
+  return secret
+}
+
+/**
+ * Comparación en tiempo constante para mitigar ataques de temporización (timing attacks).
+ */
+function constantTimeCompare(a: string, b: string): boolean {
+  if (a.length !== b.length) return false
+  let mismatch = 0
+  for (let i = 0; i < a.length; i++) {
+    mismatch |= a.charCodeAt(i) ^ b.charCodeAt(i)
+  }
+  return mismatch === 0
 }
 
 /**
@@ -56,7 +74,7 @@ export async function verifySessionToken(token: string | undefined | null): Prom
   const [base64Payload, signature] = parts
   const expectedSignature = await generateSignature(base64Payload, getSecretKey())
 
-  if (signature !== expectedSignature) {
+  if (!constantTimeCompare(signature, expectedSignature)) {
     return { valid: false }
   }
 

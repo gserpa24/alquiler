@@ -23,11 +23,11 @@ export interface LoginResult {
 }
 
 /**
- * Credenciales de administrador solicitadas.
- * Se pueden sobrescribir también en las variables de entorno (.env.local o Vercel).
+ * Credenciales de administrador.
+ * Configuradas de forma segura mediante variables de entorno (ADMIN_USERNAME y ADMIN_PASSWORD).
  */
-const DEFAULT_ADMIN_USERNAME = process.env.ADMIN_USERNAME || process.env.ADMIN_EMAIL || 'percyman'
-const DEFAULT_ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Fortinet$1'
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || process.env.ADMIN_EMAIL || (process.env.NODE_ENV !== 'production' ? 'admin' : '')
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || (process.env.NODE_ENV !== 'production' ? 'AdminDev2026!' : '')
 
 /**
  * Server Action: Iniciar sesión de administrador.
@@ -45,11 +45,12 @@ export async function loginAdminAction(formData: unknown): Promise<LoginResult> 
   const { username, password } = validated.data
   const normalizedUser = username.toLowerCase().trim()
 
-  // 1. Verificación por credenciales maestras de administrador (percyman / Fortinet$1)
+  // 1. Verificación por credenciales maestras de administrador configuradas
   const isMasterMatch =
-    (normalizedUser === DEFAULT_ADMIN_USERNAME.toLowerCase() ||
-      normalizedUser === `${DEFAULT_ADMIN_USERNAME.toLowerCase()}@autoruta.pe`) &&
-    password === DEFAULT_ADMIN_PASSWORD
+    Boolean(ADMIN_USERNAME && ADMIN_PASSWORD) &&
+    (normalizedUser === ADMIN_USERNAME.toLowerCase() ||
+      normalizedUser === `${ADMIN_USERNAME.toLowerCase()}@autoruta.pe`) &&
+    password === ADMIN_PASSWORD
 
   if (isMasterMatch) {
     const token = await createSessionToken(normalizedUser)

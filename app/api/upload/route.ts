@@ -2,16 +2,36 @@ import { NextRequest, NextResponse } from 'next/server'
 import { writeFile, mkdir } from 'fs/promises'
 import path from 'path'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { verifySessionToken, SESSION_COOKIE_NAME } from '@/lib/auth/session'
 
 export const dynamic = 'force-dynamic'
 
+const ALLOWED_MIME_TYPES = new Set([
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/avif',
+])
+
+const ALLOWED_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.avif'])
+const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB
+
 export async function POST(request: NextRequest) {
   try {
+    // 1. Validar autenticación de administrador (Broken Access Control prevention)
+    const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value
+    const { valid } = await verifySessionToken(sessionCookie)
+    if (!valid) {
+      return NextResponse.json(
+        { error: 'No autorizado: se requiere sesión de administrador' },
+        { status: 401 }
+      )
+    }
+
     const formData = await request.formData()
     const files = formData.getAll('files') as File[]
 
     if (!files || files.length === 0) {
-      // Probar si enviaron un solo archivo con nombre 'file'
       const singleFile = formData.get('file') as File | null
       if (singleFile) {
         files.push(singleFile)
@@ -41,16 +61,27 @@ export async function POST(request: NextRequest) {
     }
 
     for (const file of files) {
-      // Validar tipo de archivo
-      if (!file.type.startsWith('image/')) {
-        continue
+      // 2. Validar tamaño máximo permitido
+      if (file.size > MAX_FILE_SIZE) {
+        return NextResponse.json(
+          { error: `El archivo supera el tamaño máximo permitido de 5MB` },
+          { status: 400 }
+        )
+      }
+
+      // 3. Validar tipo MIME y extensión de archivo permitida
+      const ext = path.extname(file.name).toLowerCase() || '.jpg'
+      if (!ALLOWED_MIME_TYPES.has(file.type) || !ALLOWED_EXTENSIONS.has(ext)) {
+        return NextResponse.json(
+          { error: `Tipo de archivo no permitido. Solo se admiten JPG, PNG, WEBP y AVIF.` },
+          { status: 400 }
+        )
       }
 
       const bytes = await file.arrayBuffer()
       const buffer = Buffer.from(bytes)
 
-      // Extensión y nombre único seguro
-      const ext = path.extname(file.name) || '.jpg'
+      // Sanitizar nombre base del archivo contra Path Traversal
       const sanitizedBase = path
         .basename(file.name, ext)
         .toLowerCase()
