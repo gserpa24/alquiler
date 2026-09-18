@@ -69,10 +69,10 @@ export default async function VehicleDetailPage({
   const vehicleName = `${vehicle.brand} ${vehicle.model} ${vehicle.year}`
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-7 lg:py-8">
 
       {/* ── Breadcrumb ─────────────────────────────────────────── */}
-      <nav aria-label="Ruta de navegación" className="flex items-center gap-2 text-xs text-zinc-400 mb-8">
+      <nav aria-label="Ruta de navegación" className="flex items-center gap-2 text-xs text-zinc-400 mb-4 sm:mb-5">
         <Link href="/" className="hover:text-zinc-900 transition-colors">Inicio</Link>
         <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
         <Link href="/catalog" className="hover:text-zinc-900 transition-colors">Catálogo</Link>
@@ -81,10 +81,10 @@ export default async function VehicleDetailPage({
       </nav>
 
       {/* ── Contenido principal ────────────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10 lg:gap-14">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_360px] gap-6 lg:gap-8 xl:gap-10 items-start">
 
         {/* Columna izquierda: galería + descripción */}
-        <div className="space-y-8">
+        <div className="space-y-6">
 
           {/* Header mobile */}
           <div className="lg:hidden">
@@ -106,10 +106,10 @@ export default async function VehicleDetailPage({
 
           {/* Descripción */}
           {vehicle.description && (
-            <section aria-labelledby="desc-heading" className="pt-2">
+            <section aria-labelledby="desc-heading" className="pt-1">
               <h2
                 id="desc-heading"
-                className="text-xs font-bold uppercase tracking-wider text-zinc-900 mb-2.5"
+                className="text-xs font-bold uppercase tracking-wider text-zinc-900 mb-2"
               >
                 Descripción
               </h2>
@@ -120,13 +120,13 @@ export default async function VehicleDetailPage({
           )}
 
           {/* Specs — desktop (aparece bajo galería) */}
-          <div className="hidden lg:block pt-4 border-t border-zinc-100">
+          <div className="hidden lg:block pt-3 border-t border-zinc-100">
             <VehicleSpecs vehicle={vehicle} />
           </div>
         </div>
 
-        {/* Columna derecha: info + CTA (sticky en desktop) */}
-        <aside className="lg:sticky lg:top-24 lg:self-start space-y-5">
+        {/* Columna derecha: info + CTA (sticky compacto adaptativo) */}
+        <aside className="lg:sticky lg:top-20 space-y-3.5 sm:space-y-4">
 
           {/* Header desktop */}
           <div className="hidden lg:block">
@@ -134,12 +134,12 @@ export default async function VehicleDetailPage({
           </div>
 
           {/* Precios */}
-          <div className="p-5 rounded-lg bg-white border border-zinc-200 space-y-3">
+          <div className="p-3.5 sm:p-4 rounded-lg bg-white border border-zinc-200 space-y-2.5 shadow-2xs">
             {vehicle.daily_rate && (
               <div className="flex items-baseline justify-between">
                 <span className="text-zinc-500 text-xs font-medium">Tarifa de alquiler</span>
                 <div className="text-right">
-                  <span className="text-2xl font-bold tracking-tight text-zinc-900">
+                  <span className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900">
                     {formatPrice(vehicle.daily_rate)}
                   </span>
                   <span className="text-zinc-400 text-xs ml-1 font-normal">/día</span>
@@ -147,16 +147,16 @@ export default async function VehicleDetailPage({
               </div>
             )}
             {vehicle.sale_price && (
-              <div className="flex items-baseline justify-between pt-2.5 border-t border-zinc-100">
+              <div className="flex items-baseline justify-between pt-2 border-t border-zinc-100">
                 <span className="text-zinc-500 text-xs font-medium">Precio de venta</span>
-                <span className="text-xl font-bold text-[#0A192F]">
+                <span className="text-lg sm:text-xl font-bold text-[#0A192F]">
                   {formatPrice(vehicle.sale_price)}
                 </span>
               </div>
             )}
 
             {/* Kilometraje */}
-            <div className="flex items-center justify-between text-xs text-zinc-500 pt-2 border-t border-zinc-100">
+            <div className="flex items-center justify-between text-xs text-zinc-500 pt-1.5 border-t border-zinc-100">
               <span>Kilometraje actual</span>
               <span className="font-semibold text-zinc-800">{formatMileage(vehicle.mileage)}</span>
             </div>
@@ -171,7 +171,7 @@ export default async function VehicleDetailPage({
           />
 
           {/* Nota informativa */}
-          <p className="text-[11px] text-zinc-400 text-center leading-relaxed">
+          <p className="text-[10px] sm:text-[11px] text-zinc-400 text-center leading-relaxed px-1">
             La disponibilidad y condiciones finales se confirman directamente
             por WhatsApp con nuestro equipo.
           </p>

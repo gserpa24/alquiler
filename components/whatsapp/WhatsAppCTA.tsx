@@ -57,9 +57,9 @@ export function WhatsAppCTA({
       onClick={isDisabled ? (e) => e.preventDefault() : undefined}
       className={cn(
         // Base
-        'relative inline-flex items-center justify-center gap-2.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-colors duration-150',
+        'relative inline-flex items-center justify-center gap-2 rounded-md text-xs font-semibold uppercase tracking-wider transition-colors duration-150',
         'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#0A192F]',
-        'w-full py-3.5 px-6',
+        'w-full py-2.5 sm:py-3 px-4 sm:px-5 min-h-[44px]',
         // Variantes
         variant === 'primary' && [
           'bg-[#0A192F] text-white',
