@@ -1,6 +1,9 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
 import { Phone, MapPin, Clock, Share2, Users } from 'lucide-react'
+import { useSiteConfig } from '@/contexts/SiteConfigContext'
 import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
 
 const FOOTER_LINKS = [
@@ -20,8 +23,10 @@ const FOOTER_LINKS = [
 ]
 
 export function Footer() {
+  const { config } = useSiteConfig()
   const year = new Date().getFullYear()
-  let waLink = 'https://wa.me/51997936599'
+
+  let waLink = `https://wa.me/${config.whatsappNumber || '51997936599'}`
   try {
     waLink = buildGenericWhatsAppLink()
   } catch {
@@ -39,7 +44,7 @@ export function Footer() {
               <div className="relative w-10 h-7 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-200">
                 <Image
                   src="/logo-car.png"
-                  alt="AutoRuta"
+                  alt={config.brandName || 'AutoRuta'}
                   width={40}
                   height={26}
                   className="object-contain w-auto h-6"
@@ -47,33 +52,44 @@ export function Footer() {
                 />
               </div>
               <span className="text-base font-bold tracking-tight text-zinc-900">
-                AUTO<span className="text-[#0A192F] font-bold">RUTA</span>
+                {config.brandName.length > 4 ? (
+                  <>
+                    {config.brandName.slice(0, 4)}
+                    <span className="text-[#0A192F] font-bold">{config.brandName.slice(4)}</span>
+                  </>
+                ) : (
+                  config.brandName
+                )}
               </span>
             </Link>
             <p className="text-zinc-500 text-xs leading-relaxed max-w-xs font-normal">
-              Servicio de alquiler de autos cotidianos, viajes por carretera (road trips) y ruteo diario con total transparencia.
+              {config.slogan}
             </p>
 
             {/* Redes y canales */}
             <div className="flex items-center gap-2 mt-6">
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-                className="w-8 h-8 flex items-center justify-center rounded-md bg-white border border-zinc-200 hover:border-[#0A192F] hover:text-[#0A192F] text-zinc-500 transition-colors"
-              >
-                <Share2 className="w-3.5 h-3.5 stroke-[1.5]" aria-hidden="true" />
-              </a>
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook"
-                className="w-8 h-8 flex items-center justify-center rounded-md bg-white border border-zinc-200 hover:border-[#0A192F] hover:text-[#0A192F] text-zinc-500 transition-colors"
-              >
-                <Users className="w-3.5 h-3.5 stroke-[1.5]" aria-hidden="true" />
-              </a>
+              {config.instagramUrl && (
+                <a
+                  href={config.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  className="w-8 h-8 flex items-center justify-center rounded-md bg-white border border-zinc-200 hover:border-[#0A192F] hover:text-[#0A192F] text-zinc-500 transition-colors"
+                >
+                  <Share2 className="w-3.5 h-3.5 stroke-[1.5]" aria-hidden="true" />
+                </a>
+              )}
+              {config.facebookUrl && (
+                <a
+                  href={config.facebookUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook"
+                  className="w-8 h-8 flex items-center justify-center rounded-md bg-white border border-zinc-200 hover:border-[#0A192F] hover:text-[#0A192F] text-zinc-500 transition-colors"
+                >
+                  <Users className="w-3.5 h-3.5 stroke-[1.5]" aria-hidden="true" />
+                </a>
+              )}
             </div>
           </div>
 
@@ -106,16 +122,20 @@ export function Footer() {
             <ul className="space-y-3 text-xs" role="list">
               <li className="flex items-start gap-2.5 text-zinc-500">
                 <Clock className="w-4 h-4 mt-0.5 shrink-0 text-[#0A192F] stroke-[1.5]" aria-hidden="true" />
-                <span>Lunes — Viernes: 8:00 – 19:00<br />Sábados: 9:00 – 17:00</span>
+                <span>
+                  {config.scheduleWeekdays}
+                  <br />
+                  {config.scheduleWeekends}
+                </span>
               </li>
               <li className="flex items-start gap-2.5 text-zinc-500">
                 <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-[#0A192F] stroke-[1.5]" aria-hidden="true" />
-                <span>Tarapoto, San Martín</span>
+                <span>{config.location}</span>
               </li>
               <li className="flex items-start gap-2.5 text-zinc-500">
                 <Phone className="w-4 h-4 mt-0.5 shrink-0 text-[#0A192F] stroke-[1.5]" aria-hidden="true" />
                 <a href={waLink} className="hover:text-zinc-900 font-medium transition-colors">
-                  +51 997 936 599
+                  {config.phone}
                 </a>
               </li>
             </ul>
@@ -126,7 +146,7 @@ export function Footer() {
         <div className="h-px bg-zinc-200 my-10" aria-hidden="true" />
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-400">
-          <p>© {year} AUTORUTA. Todos los derechos reservados.</p>
+          <p>© {year} {config.brandName || 'AUTORUTA'}. Todos los derechos reservados.</p>
           <div className="flex items-center gap-4">
             <Link href="/admin" className="hover:text-zinc-900 transition-colors underline-offset-4 hover:underline">
               Panel Administrativo

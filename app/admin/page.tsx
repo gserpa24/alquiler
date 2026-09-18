@@ -13,6 +13,7 @@ import {
   TrendingUp,
   Gauge,
   Inbox,
+  Settings,
 } from 'lucide-react'
 import { getAllAdminVehicles } from '@/lib/supabase/queries'
 import { getContactMessagesWithStatus } from '@/lib/supabase/messages'
@@ -100,6 +101,15 @@ export default async function AdminDashboardPage() {
         </div>
 
         <div className="flex items-center gap-2.5 flex-wrap">
+          <Link
+            href="/admin/settings"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-md border border-zinc-200 bg-white text-zinc-700 text-xs font-semibold hover:bg-zinc-50 hover:text-zinc-950 transition-colors shadow-2xs"
+            title="Editar nombre, lema, horarios, ubicación y redes del pie de página"
+          >
+            <Settings className="w-3.5 h-3.5 text-zinc-400" />
+            <span>Configuración</span>
+          </Link>
+
           {flags.messages && (
             <Link
               href="/admin/messages"

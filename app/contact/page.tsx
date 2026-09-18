@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { MapPin, Phone, Mail, Clock, MessageSquare } from 'lucide-react'
 import { ContactForm } from '@/components/contact/ContactForm'
 import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
+import { getSiteConfigFile } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: 'Contacto y Ubicación',
@@ -10,7 +11,8 @@ export const metadata: Metadata = {
   alternates: { canonical: '/contact' },
 }
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const config = await getSiteConfigFile()
   const waLink = buildGenericWhatsAppLink()
 
   return (
@@ -88,7 +90,7 @@ export default function ContactPage() {
               <MapPin className="w-4 h-4 text-[#0A192F] shrink-0 mt-0.5 stroke-[1.5]" />
               <div>
                 <strong className="block text-zinc-900 font-semibold mb-0.5">Dirección</strong>
-                Tarapoto, San Martín
+                {config.location}
               </div>
             </div>
 
@@ -96,8 +98,8 @@ export default function ContactPage() {
               <Clock className="w-4 h-4 text-[#0A192F] shrink-0 mt-0.5 stroke-[1.5]" />
               <div>
                 <strong className="block text-zinc-900 font-semibold mb-0.5">Horarios de Atención</strong>
-                Lunes a Viernes: 08:00 – 19:00<br />
-                Sábados: 09:00 – 17:00
+                {config.scheduleWeekdays}<br />
+                {config.scheduleWeekends}
               </div>
             </div>
 
@@ -105,7 +107,7 @@ export default function ContactPage() {
               <Phone className="w-4 h-4 text-[#0A192F] shrink-0 mt-0.5 stroke-[1.5]" />
               <div>
                 <strong className="block text-zinc-900 font-semibold mb-0.5">Teléfono / WhatsApp</strong>
-                +51 997 936 599
+                {config.phone}
               </div>
             </div>
 

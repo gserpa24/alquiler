@@ -16,6 +16,7 @@ import {
   LogOut,
   MessageSquare,
   SlidersHorizontal,
+  Settings,
   Menu,
   X,
 } from 'lucide-react'
@@ -59,6 +60,7 @@ export function AdminNav() {
       ? [{ href: '/admin/messages', label: 'Mensajes', icon: MessageSquare, exact: false }]
       : []),
     { href: '/admin/modules', label: 'Módulos', icon: SlidersHorizontal, exact: false },
+    { href: '/admin/settings', label: 'Configuración', icon: Settings, exact: false },
   ]
 
   const showAddVehicle = isModuleEnabled('vehicles')
@@ -123,6 +125,17 @@ export function AdminNav() {
                 <span>Agregar Auto</span>
               </Link>
             )}
+
+            <Link
+              href="/admin/settings"
+              className={cn(
+                'p-2 rounded-md border border-zinc-200 bg-white text-zinc-600 hover:text-zinc-950 hover:bg-zinc-50 transition-colors shadow-2xs',
+                pathname === '/admin/settings' && 'bg-zinc-100 text-zinc-950 border-zinc-300'
+              )}
+              title="Configuración de Marca, Redes y Atención"
+            >
+              <Settings className="w-4 h-4" />
+            </Link>
 
             <Link
               href="/"

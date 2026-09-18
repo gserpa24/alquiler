@@ -9,6 +9,7 @@ import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { FloatingWhatsApp } from '@/components/whatsapp/FloatingWhatsApp'
 import { CurrencyProvider } from '@/contexts/CurrencyContext'
+import { SiteConfigProvider } from '@/contexts/SiteConfigContext'
 
 export function SiteLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -25,13 +26,15 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <CurrencyProvider>
-      <Navbar />
-      <main className="flex-1 pt-16" id="main-content">
-        {children}
-      </main>
-      <Footer />
-      <FloatingWhatsApp />
-    </CurrencyProvider>
+    <SiteConfigProvider>
+      <CurrencyProvider>
+        <Navbar />
+        <main className="flex-1 pt-16" id="main-content">
+          {children}
+        </main>
+        <Footer />
+        <FloatingWhatsApp />
+      </CurrencyProvider>
+    </SiteConfigProvider>
   )
 }
