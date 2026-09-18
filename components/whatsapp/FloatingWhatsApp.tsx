@@ -21,7 +21,18 @@ export function FloatingWhatsApp() {
     return null
   }
 
-  const waLink = buildGenericWhatsAppLink(undefined, config.whatsappNumber)
+  // Si no hay número configurado en el panel administrativo, no renderizar el botón
+  const cleanPhone = (config.whatsappNumber || '').replace(/\D/g, '')
+  if (!cleanPhone || cleanPhone.length < 8) {
+    return null
+  }
+
+  let waLink = '#'
+  try {
+    waLink = buildGenericWhatsAppLink(undefined, config.whatsappNumber)
+  } catch {
+    return null
+  }
 
   return (
     <div

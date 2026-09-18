@@ -39,7 +39,7 @@ describe('buildVehicleWhatsAppLink', () => {
 
   it('lanza error si el número está vacío', () => {
     expect(() => buildVehicleWhatsAppLink({ ...BASE_PARAMS, phone: '' }))
-      .toThrow('NEXT_PUBLIC_WHATSAPP_NUMBER no está configurado')
+      .toThrow('No hay número de WhatsApp configurado.')
   })
 
   it('lanza error si el número tiene menos de 8 dígitos', () => {
@@ -68,27 +68,21 @@ describe('Encoding de mensajes genéricos — buildGenericWhatsAppLink logic', (
 
   it('el mensaje decodificado conserva emojis y acentos', () => {
     const msg  = '¡Hola! Quiero info. 🚗'
-    const url  = `https://wa.me/51997936599?text=${encodeURIComponent(msg)}`
+    const url  = `https://wa.me/51987654321?text=${encodeURIComponent(msg)}`
     const back = decodeURIComponent(url.split('?text=')[1])
     expect(back).toBe(msg)
   })
 })
 
 describe('buildGenericWhatsAppLink', () => {
-  it('genera enlace genérico de WhatsApp', () => {
-    const url = buildGenericWhatsAppLink()
-    expect(url).toMatch(/^https:\/\/wa\.me\//)
-    expect(url).toContain('text=')
+  it('lanza error si no hay número configurado y no se pasa override', () => {
+    expect(() => buildGenericWhatsAppLink()).toThrow('No hay número de WhatsApp configurado.')
   })
 
-  it('permite mensaje personalizado', () => {
-    const url = buildGenericWhatsAppLink('Consulta de prueba')
-    expect(url).toContain(encodeURIComponent('Consulta de prueba'))
-  })
-
-  it('permite override dinámico del teléfono (SiteConfig)', () => {
-    const url = buildGenericWhatsAppLink('Hola', '51987654321')
+  it('genera enlace genérico cuando se provee el número', () => {
+    const url = buildGenericWhatsAppLink('Consulta de prueba', '51987654321')
     expect(url).toMatch(/^https:\/\/wa\.me\/51987654321\?text=/)
+    expect(url).toContain(encodeURIComponent('Consulta de prueba'))
   })
 })
 

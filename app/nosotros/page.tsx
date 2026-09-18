@@ -32,14 +32,18 @@ export const metadata: Metadata = {
 
 export default async function NosotrosPage() {
   const config = await getSiteConfigFile()
-  let waUrl = `https://wa.me/${config.whatsappNumber || '51997936599'}`
-  try {
-    waUrl = buildGenericWhatsAppLink(
-      '¡Hola! Estuve viendo su página web y me gustaría consultar disponibilidad y condiciones de alquiler en Tarapoto.',
-      config.whatsappNumber
-    )
-  } catch {
-    // Fallback silencioso
+  const cleanWa = (config.whatsappNumber || '').replace(/\D/g, '')
+  const hasWhatsapp = Boolean(cleanWa && cleanWa.length >= 8)
+  let waUrl = '#'
+  if (hasWhatsapp) {
+    try {
+      waUrl = buildGenericWhatsAppLink(
+        '¡Hola! Estuve viendo su página web y me gustaría consultar disponibilidad y condiciones de alquiler en Tarapoto.',
+        config.whatsappNumber
+      )
+    } catch {
+      waUrl = '#'
+    }
   }
 
   return (
@@ -70,15 +74,17 @@ export default async function NosotrosPage() {
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </Link>
 
-            <a
-              href={waUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#25D366] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#20bd5a] transition-colors shadow-xs"
-            >
-              <MessageCircle className="w-4 h-4 text-white" aria-hidden="true" />
-              <span>Consultar por WhatsApp</span>
-            </a>
+            {hasWhatsapp && waUrl !== '#' && (
+              <a
+                href={waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#25D366] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#20bd5a] transition-colors shadow-xs"
+              >
+                <MessageCircle className="w-4 h-4 text-white" aria-hidden="true" />
+                <span>Consultar por WhatsApp</span>
+              </a>
+            )}
           </div>
 
           {/* Microcopy de confianza */}
@@ -391,16 +397,26 @@ export default async function NosotrosPage() {
                 </p>
               </div>
             </div>
-            <a
-              href={waUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[#25D366] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#20bd5a] transition-colors shrink-0 shadow-xs"
-            >
-              <MessageCircle className="w-3.5 h-3.5 text-white" aria-hidden="true" />
-              <span>Consultar condiciones</span>
-              <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-            </a>
+            {hasWhatsapp && waUrl !== '#' ? (
+              <a
+                href={waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[#25D366] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#20bd5a] transition-colors shrink-0 shadow-xs"
+              >
+                <MessageCircle className="w-3.5 h-3.5 text-white" aria-hidden="true" />
+                <span>Consultar condiciones</span>
+                <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+              </a>
+            ) : (
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[#0A192F] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#112240] transition-colors shrink-0 shadow-xs"
+              >
+                <span>Contactar equipo</span>
+                <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+              </Link>
+            )}
           </div>
         </div>
       </section>
@@ -533,15 +549,24 @@ export default async function NosotrosPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto mb-4">
-            <a
-              href={waUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#25D366] hover:bg-[#20bd5a] text-white text-xs font-semibold uppercase tracking-wider transition-colors shadow-xs"
-            >
-              <MessageCircle className="w-4 h-4" aria-hidden="true" />
-              <span>Consultar disponibilidad en WhatsApp</span>
-            </a>
+            {hasWhatsapp && waUrl !== '#' ? (
+              <a
+                href={waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#25D366] hover:bg-[#20bd5a] text-white text-xs font-semibold uppercase tracking-wider transition-colors shadow-xs"
+              >
+                <MessageCircle className="w-4 h-4" aria-hidden="true" />
+                <span>Consultar disponibilidad en WhatsApp</span>
+              </a>
+            ) : (
+              <Link
+                href="/contact"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#0A192F] hover:bg-[#112240] text-white text-xs font-semibold uppercase tracking-wider transition-colors shadow-xs"
+              >
+                <span>Contactar con el equipo</span>
+              </Link>
+            )}
 
             <Link
               href="/catalog"

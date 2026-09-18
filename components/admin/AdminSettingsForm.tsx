@@ -327,10 +327,9 @@ export function AdminSettingsForm() {
                 id="phone"
                 name="phone"
                 type="text"
-                required
                 value={formData.phone}
                 onChange={handleChange}
-                placeholder="+51 997 936 599"
+                placeholder="Ej: +51 900 000 000 (opcional)"
                 className="w-full px-3 py-2 text-xs rounded-lg border border-zinc-300 focus:outline-none focus:border-[#0A192F] focus:ring-1 focus:ring-[#0A192F] bg-white text-zinc-900 font-mono"
               />
             </div>
@@ -348,14 +347,13 @@ export function AdminSettingsForm() {
                 id="whatsappNumber"
                 name="whatsappNumber"
                 type="text"
-                required
                 value={formData.whatsappNumber}
                 onChange={handleChange}
-                placeholder="51997936599"
+                placeholder="Ej: 51900000000 (opcional)"
                 className="w-full px-3 py-2 text-xs rounded-lg border border-zinc-300 focus:outline-none focus:border-[#0A192F] focus:ring-1 focus:ring-[#0A192F] bg-white text-zinc-900 font-mono"
               />
               <p className="text-[11px] text-zinc-400 mt-1">
-                Utilizado para generar el enlace oficial wa.me para consultas y reservas.
+                Utilizado para generar los enlaces oficiales wa.me. Si se deja en blanco, los botones redirigirán al formulario de contacto.
               </p>
             </div>
 
@@ -383,7 +381,15 @@ export function AdminSettingsForm() {
                   </li>
                   <li className="flex items-start gap-2">
                     <Phone className="w-3.5 h-3.5 mt-0.5 shrink-0 text-[#0A192F] stroke-[1.5]" />
-                    <span className="font-medium text-zinc-900">{formData.phone}</span>
+                    <span className="font-medium text-zinc-900">
+                      {formData.phone ? (
+                        formData.phone
+                      ) : formData.whatsappNumber ? (
+                        `WA: ${formData.whatsappNumber}`
+                      ) : (
+                        <span className="text-zinc-400 italic">Sin teléfono (en blanco)</span>
+                      )}
+                    </span>
                   </li>
                 </ul>
               </div>

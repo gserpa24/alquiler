@@ -27,6 +27,12 @@ export function HeroBookingBar() {
           ? ` del ${pickupDate} al ${returnDate}` 
           : ''
         
+        const cleanPhone = (config.whatsappNumber || '').replace(/\D/g, '')
+        if (!cleanPhone || cleanPhone.length < 8) {
+          router.push(`/catalog/${v.slug}`)
+          return
+        }
+
         try {
           const waUrl = buildVehicleWhatsAppLink({
             brand: v.brand,

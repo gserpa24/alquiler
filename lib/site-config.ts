@@ -23,8 +23,8 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
   scheduleWeekdays: 'Lunes — Viernes: 8:00 – 19:00',
   scheduleWeekends: 'Sábados: 9:00 – 17:00',
   location: 'Tarapoto, San Martín',
-  phone: '+51 997 936 599',
-  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '51997936599',
+  phone: '',
+  whatsappNumber: '',
 }
 
 export const SITE_CONFIG_COOKIE_NAME = 'autoruta_site_config'

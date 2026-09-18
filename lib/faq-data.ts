@@ -83,7 +83,7 @@ export const FAQ_ITEMS: FAQItem[] = [
     category: 'conduccion',
     question: '¿Qué coberturas incluyen los vehículos y qué hacer ante un siniestro?',
     answer:
-      'Todos los vehículos de nuestra flota cuentan con SOAT vigente y póliza de seguro vehicular. Ante cualquier incidente, avería o choque, es obligatorio comunicarse de inmediato con nuestra línea de atención (+51 997 936 599) y con la aseguradora correspondiente, absteniéndose de abandonar el lugar del suceso o llegar a acuerdos particulares sin asistencia de la compañía.',
+      'Todos los vehículos de nuestra flota cuentan con SOAT vigente y póliza de seguro vehicular. Ante cualquier incidente, avería o choque, es obligatorio comunicarse de inmediato con nuestra línea de atención telefónica y con la aseguradora correspondiente, absteniéndose de abandonar el lugar del suceso o llegar a acuerdos particulares sin asistencia de la compañía.',
   },
   {
     id: 'devolucion-limpieza-mascotas',

@@ -26,11 +26,14 @@ export function Footer() {
   const { config } = useSiteConfig()
   const year = new Date().getFullYear()
 
-  let waLink = `https://wa.me/${config.whatsappNumber || '51997936599'}`
-  try {
-    waLink = buildGenericWhatsAppLink(undefined, config.whatsappNumber)
-  } catch {
-    // fallback
+  let waLink = '#'
+  const cleanPhone = (config.whatsappNumber || '').replace(/\D/g, '')
+  if (cleanPhone && cleanPhone.length >= 8) {
+    try {
+      waLink = buildGenericWhatsAppLink(undefined, config.whatsappNumber)
+    } catch {
+      waLink = '#'
+    }
   }
 
   return (
@@ -132,12 +135,18 @@ export function Footer() {
                 <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-[#0A192F] stroke-[1.5]" aria-hidden="true" />
                 <span>{config.location}</span>
               </li>
-              <li className="flex items-start gap-2.5 text-zinc-500">
-                <Phone className="w-4 h-4 mt-0.5 shrink-0 text-[#0A192F] stroke-[1.5]" aria-hidden="true" />
-                <a href={waLink} className="hover:text-zinc-900 font-medium transition-colors">
-                  {config.phone}
-                </a>
-              </li>
+              {config.phone ? (
+                <li className="flex items-start gap-2.5 text-zinc-500">
+                  <Phone className="w-4 h-4 mt-0.5 shrink-0 text-[#0A192F] stroke-[1.5]" aria-hidden="true" />
+                  {waLink !== '#' ? (
+                    <a href={waLink} target="_blank" rel="noopener noreferrer" className="hover:text-zinc-900 font-medium transition-colors">
+                      {config.phone}
+                    </a>
+                  ) : (
+                    <span className="font-medium">{config.phone}</span>
+                  )}
+                </li>
+              ) : null}
             </ul>
           </div>
         </div>

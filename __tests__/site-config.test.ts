@@ -15,8 +15,8 @@ describe('Site Config Logic & Persistence', () => {
     expect(DEFAULT_SITE_CONFIG.scheduleWeekdays).toBe('Lunes — Viernes: 8:00 – 19:00')
     expect(DEFAULT_SITE_CONFIG.scheduleWeekends).toBe('Sábados: 9:00 – 17:00')
     expect(DEFAULT_SITE_CONFIG.location).toBe('Tarapoto, San Martín')
-    expect(DEFAULT_SITE_CONFIG.phone).toBe('+51 997 936 599')
-    expect(DEFAULT_SITE_CONFIG.whatsappNumber).toBe('51997936599')
+    expect(DEFAULT_SITE_CONFIG.phone).toBe('')
+    expect(DEFAULT_SITE_CONFIG.whatsappNumber).toBe('')
   })
 
   it('parsea correctamente una cadena serializada y preserva valores modificados', () => {

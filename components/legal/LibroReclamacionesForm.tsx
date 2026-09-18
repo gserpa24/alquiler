@@ -211,7 +211,7 @@ export function LibroReclamacionesForm() {
             <input
               type="tel"
               required
-              placeholder="Ej: 997936599"
+              placeholder="Ej: 987654321"
               value={formData.telefono}
               onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
               className="w-full px-3 py-2 rounded-md border border-zinc-200 focus:outline-none focus:border-[#0A192F]"

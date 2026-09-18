@@ -36,11 +36,15 @@ export function FAQSection({
     setOpenId((prev) => (prev === id ? null : id))
   }
 
-  let waLink = `https://wa.me/${config.whatsappNumber || '51997936599'}`
-  try {
-    waLink = buildGenericWhatsAppLink('¡Hola! Tengo una consulta sobre las condiciones de alquiler.', config.whatsappNumber)
-  } catch {
-    // fallback
+  const cleanPhone = (config.whatsappNumber || '').replace(/\D/g, '')
+  const hasWhatsapp = Boolean(cleanPhone && cleanPhone.length >= 8)
+  let waLink = '#'
+  if (hasWhatsapp) {
+    try {
+      waLink = buildGenericWhatsAppLink('¡Hola! Tengo una consulta sobre las condiciones de alquiler.', config.whatsappNumber)
+    } catch {
+      waLink = '#'
+    }
   }
 
   return (
@@ -149,15 +153,25 @@ export function FAQSection({
         <p className="text-xs text-zinc-500 mb-4">
           Nuestro equipo en Tarapoto responderá tus requerimientos de fechas, vehículos y rutas de inmediato.
         </p>
-        <a
-          href={waLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#25D366] hover:bg-[#1EBE5D] text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-xs"
-        >
-          <MessageCircle className="w-4 h-4" />
-          Consultar por WhatsApp
-        </a>
+        {hasWhatsapp && waLink !== '#' ? (
+          <a
+            href={waLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#25D366] hover:bg-[#1EBE5D] text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-xs"
+          >
+            <MessageCircle className="w-4 h-4" />
+            Consultar por WhatsApp
+          </a>
+        ) : (
+          <a
+            href="/contact"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#0A192F] hover:bg-[#112240] text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-xs"
+          >
+            <MessageCircle className="w-4 h-4" />
+            Contactar al equipo
+          </a>
+        )}
       </div>
     </div>
   )
