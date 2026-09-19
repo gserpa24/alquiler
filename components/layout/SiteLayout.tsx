@@ -12,6 +12,7 @@ import { CurrencyProvider } from '@/contexts/CurrencyContext'
 import { SiteConfigProvider } from '@/contexts/SiteConfigContext'
 import { Toaster } from '@/components/ui/sonner'
 
+import { cn } from '@/lib/utils'
 import { type SiteConfig } from '@/lib/site-config'
 
 interface SiteLayoutProps {
@@ -23,27 +24,19 @@ export function SiteLayout({ children, initialConfig }: SiteLayoutProps) {
   const pathname = usePathname()
   const isAdmin = pathname?.startsWith('/admin')
 
-  if (isAdmin) {
-    return (
-      <SiteConfigProvider initialConfig={initialConfig}>
-        <CurrencyProvider>
-          <main className="flex-1" id="main-content">
-            {children}
-          </main>
-        </CurrencyProvider>
-      </SiteConfigProvider>
-    )
-  }
-
   return (
     <SiteConfigProvider initialConfig={initialConfig}>
       <CurrencyProvider>
-        <Navbar />
-        <main className="flex-1 pt-16" id="main-content">
+        {!isAdmin && <Navbar />}
+        <main className={cn('flex-1', !isAdmin && 'pt-16')} id="main-content">
           {children}
         </main>
-        <Footer />
-        <FloatingWhatsApp />
+        {!isAdmin && (
+          <>
+            <Footer />
+            <FloatingWhatsApp />
+          </>
+        )}
         <Toaster position="bottom-right" richColors />
       </CurrencyProvider>
     </SiteConfigProvider>

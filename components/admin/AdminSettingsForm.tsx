@@ -3,7 +3,7 @@
 // components/admin/AdminSettingsForm.tsx
 // Formulario interactivo para editar los datos institucionales (identidad, redes, atención y ubicación).
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import {
   Save,
@@ -20,20 +20,32 @@ import {
 import { useSiteConfig } from '@/contexts/SiteConfigContext'
 import { type SiteConfig } from '@/lib/site-config'
 
-export function AdminSettingsForm() {
+interface AdminSettingsFormProps {
+  initialConfig?: SiteConfig
+}
+
+export function AdminSettingsForm({ initialConfig }: AdminSettingsFormProps = {}) {
   const { config, updateConfig, resetConfig, isPending } = useSiteConfig()
 
-  const [formData, setFormData] = useState<SiteConfig>({
-    brandName: config.brandName,
-    slogan: config.slogan,
-    instagramUrl: config.instagramUrl,
-    facebookUrl: config.facebookUrl,
-    scheduleWeekdays: config.scheduleWeekdays,
-    scheduleWeekends: config.scheduleWeekends,
-    location: config.location,
-    phone: config.phone,
-    whatsappNumber: config.whatsappNumber,
+  const [formData, setFormData] = useState<SiteConfig>(() => {
+    return initialConfig ?? config
   })
+
+  useEffect(() => {
+    if (config.whatsappNumber || config.phone || config.brandName) {
+      setFormData((prev) => ({
+        brandName: prev.brandName || config.brandName,
+        slogan: prev.slogan || config.slogan,
+        instagramUrl: prev.instagramUrl || config.instagramUrl,
+        facebookUrl: prev.facebookUrl || config.facebookUrl,
+        scheduleWeekdays: prev.scheduleWeekdays || config.scheduleWeekdays,
+        scheduleWeekends: prev.scheduleWeekends || config.scheduleWeekends,
+        location: prev.location || config.location,
+        phone: prev.phone || config.phone,
+        whatsappNumber: prev.whatsappNumber || config.whatsappNumber,
+      }))
+    }
+  }, [config])
 
   const [savedSuccess, setSavedSuccess] = useState(false)
 

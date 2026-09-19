@@ -28,15 +28,25 @@ import {
 function readClientConfig(): SiteConfig | null {
   if (typeof window === 'undefined') return null
   try {
+    // 1. Priorizar localStorage
+    const local = window.localStorage.getItem(SITE_CONFIG_COOKIE_NAME)
+    if (local) {
+      const parsed = parseSiteConfig(local)
+      if (parsed.whatsappNumber || parsed.phone) return parsed
+    }
+
+    // 2. Cookie de respaldo
     const cookies = document.cookie.split(';')
     for (const c of cookies) {
-      const [k, v] = c.trim().split('=')
+      const idx = c.indexOf('=')
+      if (idx === -1) continue
+      const k = c.slice(0, idx).trim()
+      const v = c.slice(idx + 1).trim()
       if (k === SITE_CONFIG_COOKIE_NAME && v) {
-        return parseSiteConfig(v)
+        const parsed = parseSiteConfig(v)
+        if (parsed.whatsappNumber || parsed.phone) return parsed
       }
     }
-    const local = window.localStorage.getItem(SITE_CONFIG_COOKIE_NAME)
-    if (local) return parseSiteConfig(local)
   } catch {
     // fallback
   }
@@ -73,19 +83,60 @@ export function SiteConfigProvider({
   })
   const [isPending, startTransition] = useTransition()
 
-  // Sincronizar en cliente si hay cookie o evento de actualización
+  // Sincronización proactiva con la API del servidor y eventos en tiempo real
   useEffect(() => {
-    function handleSync() {
-      const client = readClientConfig()
-      if (client) {
-        setConfig((prev) => ({ ...prev, ...client }))
+    let isMounted = true
+
+    async function fetchServerConfig() {
+      try {
+        const res = await fetch('/api/site-config', { cache: 'no-store' })
+        if (res.ok) {
+          const data: SiteConfig = await res.json()
+          if (isMounted && data && (data.whatsappNumber || data.phone)) {
+            setConfig((prev) => {
+              if (
+                prev.whatsappNumber === data.whatsappNumber &&
+                prev.phone === data.phone &&
+                prev.brandName === data.brandName
+              ) {
+                return prev
+              }
+              return { ...prev, ...data }
+            })
+            try {
+              window.localStorage.setItem(
+                SITE_CONFIG_COOKIE_NAME,
+                JSON.stringify(data)
+              )
+            } catch {
+              // ignore
+            }
+          }
+        }
+      } catch {
+        const client = readClientConfig()
+        if (isMounted && client && (client.whatsappNumber || client.phone)) {
+          setConfig((prev) => ({ ...prev, ...client }))
+        }
       }
     }
 
-    handleSync()
+    // Consulta inmediata al montar
+    fetchServerConfig()
+
+    function handleSync() {
+      const client = readClientConfig()
+      if (client && (client.whatsappNumber || client.phone)) {
+        setConfig((prev) => ({ ...prev, ...client }))
+      } else {
+        fetchServerConfig()
+      }
+    }
+
     window.addEventListener('storage', handleSync)
     window.addEventListener('autoruta_config_updated', handleSync)
     return () => {
+      isMounted = false
       window.removeEventListener('storage', handleSync)
       window.removeEventListener('autoruta_config_updated', handleSync)
     }

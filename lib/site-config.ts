@@ -36,18 +36,26 @@ export function parseSiteConfig(raw: string | undefined | null): SiteConfig {
   if (!raw) return { ...DEFAULT_SITE_CONFIG }
   try {
     let jsonString = raw.trim()
-    if (!jsonString.startsWith('{')) {
-      jsonString = decodeURIComponent(jsonString)
+    let attempts = 0
+    while (jsonString.includes('%') && attempts < 3) {
+      try {
+        const decoded = decodeURIComponent(jsonString)
+        if (decoded === jsonString) break
+        jsonString = decoded
+        attempts++
+      } catch {
+        break
+      }
     }
     const parsed = JSON.parse(jsonString)
     return {
-      brandName: typeof parsed.brandName === 'string' ? parsed.brandName : DEFAULT_SITE_CONFIG.brandName,
-      slogan: typeof parsed.slogan === 'string' ? parsed.slogan : DEFAULT_SITE_CONFIG.slogan,
-      instagramUrl: typeof parsed.instagramUrl === 'string' ? parsed.instagramUrl : DEFAULT_SITE_CONFIG.instagramUrl,
-      facebookUrl: typeof parsed.facebookUrl === 'string' ? parsed.facebookUrl : DEFAULT_SITE_CONFIG.facebookUrl,
-      scheduleWeekdays: typeof parsed.scheduleWeekdays === 'string' ? parsed.scheduleWeekdays : DEFAULT_SITE_CONFIG.scheduleWeekdays,
-      scheduleWeekends: typeof parsed.scheduleWeekends === 'string' ? parsed.scheduleWeekends : DEFAULT_SITE_CONFIG.scheduleWeekends,
-      location: typeof parsed.location === 'string' ? parsed.location : DEFAULT_SITE_CONFIG.location,
+      brandName: typeof parsed.brandName === 'string' && parsed.brandName ? parsed.brandName : DEFAULT_SITE_CONFIG.brandName,
+      slogan: typeof parsed.slogan === 'string' && parsed.slogan ? parsed.slogan : DEFAULT_SITE_CONFIG.slogan,
+      instagramUrl: typeof parsed.instagramUrl === 'string' && parsed.instagramUrl ? parsed.instagramUrl : DEFAULT_SITE_CONFIG.instagramUrl,
+      facebookUrl: typeof parsed.facebookUrl === 'string' && parsed.facebookUrl ? parsed.facebookUrl : DEFAULT_SITE_CONFIG.facebookUrl,
+      scheduleWeekdays: typeof parsed.scheduleWeekdays === 'string' && parsed.scheduleWeekdays ? parsed.scheduleWeekdays : DEFAULT_SITE_CONFIG.scheduleWeekdays,
+      scheduleWeekends: typeof parsed.scheduleWeekends === 'string' && parsed.scheduleWeekends ? parsed.scheduleWeekends : DEFAULT_SITE_CONFIG.scheduleWeekends,
+      location: typeof parsed.location === 'string' && parsed.location ? parsed.location : DEFAULT_SITE_CONFIG.location,
       phone: typeof parsed.phone === 'string' ? parsed.phone : DEFAULT_SITE_CONFIG.phone,
       whatsappNumber: typeof parsed.whatsappNumber === 'string' ? parsed.whatsappNumber : DEFAULT_SITE_CONFIG.whatsappNumber,
     }
@@ -60,5 +68,5 @@ export function parseSiteConfig(raw: string | undefined | null): SiteConfig {
  * Serializa la configuración para almacenamiento en cookies o localStorage.
  */
 export function serializeSiteConfig(config: SiteConfig): string {
-  return encodeURIComponent(JSON.stringify(config))
+  return JSON.stringify(config)
 }
