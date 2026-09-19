@@ -30,7 +30,7 @@ export function HeroBookingBar() {
         
         const cleanPhone = (config.whatsappNumber || '').replace(/\D/g, '')
         if (!cleanPhone || cleanPhone.length < 8) {
-          toast.info('Aún no hay un número configurado.')
+          toast.warning('Aún no hay un número configurado.')
           return
         }
 

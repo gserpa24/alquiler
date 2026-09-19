@@ -35,7 +35,7 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
         </main>
         <Footer />
         <FloatingWhatsApp />
-        <Toaster position="top-right" richColors />
+        <Toaster position="bottom-right" richColors />
       </CurrencyProvider>
     </SiteConfigProvider>
   )

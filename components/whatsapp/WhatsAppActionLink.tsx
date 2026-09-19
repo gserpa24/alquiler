@@ -31,7 +31,7 @@ export function WhatsAppActionLink({
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (!isEnabled) {
       e.preventDefault()
-      toast.info('Aún no hay un número configurado.')
+      toast.warning('Aún no hay un número configurado.')
     }
   }
 

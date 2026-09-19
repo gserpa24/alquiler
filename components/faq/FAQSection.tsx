@@ -161,7 +161,7 @@ export function FAQSection({
           onClick={(e) => {
             if (!hasWhatsapp || waLink === '#') {
               e.preventDefault()
-              toast.info('Aún no hay un número configurado.')
+              toast.warning('Aún no hay un número configurado.')
             }
           }}
           className={cn(

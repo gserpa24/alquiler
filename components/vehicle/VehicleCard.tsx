@@ -168,7 +168,7 @@ export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
               onClick={(e) => {
                 if (!hasWhatsapp || waUrl === '#') {
                   e.preventDefault()
-                  toast.info('Aún no hay un número configurado.')
+                  toast.warning('Aún no hay un número configurado.')
                 }
               }}
               className={cn(

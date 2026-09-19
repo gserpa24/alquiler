@@ -34,7 +34,7 @@ function LoginForm() {
       const result = await loginAdminAction({ username, password })
 
       if (result.success) {
-        toast.success('¡Bienvenido! Accediendo al panel...')
+        toast.success('¡Inicio exitoso! Entrando al panel...')
         router.push(redirectPath)
         router.refresh()
       } else {
