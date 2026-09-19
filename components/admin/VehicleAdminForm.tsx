@@ -17,7 +17,17 @@ import {
   ChevronDown,
 } from 'lucide-react'
 import { toast } from 'sonner'
-import { type Vehicle, type VehicleCategory, type TransmissionType, type FuelType, type VehicleStatus } from '@/types/vehicle'
+import {
+  type Vehicle,
+  type VehicleCategory,
+  type TransmissionType,
+  type FuelType,
+  type VehicleStatus,
+  CATEGORY_OPTIONS,
+  STATUS_OPTIONS,
+  TRANSMISSION_OPTIONS,
+  FUEL_OPTIONS,
+} from '@/types/vehicle'
 import { type AdminVehicleInput } from '@/lib/validations'
 import { createVehicleAction, updateVehicleAction } from '@/app/actions/admin-vehicles'
 import { VehiclePhotoUploader } from '@/components/admin/VehiclePhotoUploader'
@@ -251,10 +261,11 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
                 onChange={(e) => handleChange('category', e.target.value as VehicleCategory)}
                 className={selectCls}
               >
-                <option value="sport">Compacto</option>
-                <option value="sedan">Sedán</option>
-                <option value="suv">SUV</option>
-                <option value="pickup_4x4">Camioneta</option>
+                {CATEGORY_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
@@ -298,10 +309,11 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
                 onChange={(e) => handleChange('status', e.target.value as VehicleStatus)}
                 className={selectCls}
               >
-                <option value="available">Disponible</option>
-                <option value="rented">Alquilado</option>
-                <option value="maintenance">Mantenimiento</option>
-                <option value="sold">Retirado / Vendido</option>
+                {STATUS_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
@@ -324,9 +336,11 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
                 onChange={(e) => handleChange('transmission', e.target.value as TransmissionType)}
                 className={selectCls}
               >
-                <option value="automatic">Automático</option>
-                <option value="manual">Manual</option>
-                <option value="cvt">CVT</option>
+                {TRANSMISSION_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -339,10 +353,11 @@ export function VehicleAdminForm({ mode, initialVehicle }: VehicleAdminFormProps
                 onChange={(e) => handleChange('fuel', e.target.value as FuelType)}
                 className={selectCls}
               >
-                <option value="gasoline">Gasolina</option>
-                <option value="diesel">Diésel</option>
-                <option value="hybrid">Híbrido</option>
-                <option value="electric">Eléctrico</option>
+                {FUEL_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

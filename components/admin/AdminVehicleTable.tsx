@@ -20,7 +20,14 @@ import {
 } from 'lucide-react'
 import { Reorder, useDragControls } from 'framer-motion'
 import { toast } from 'sonner'
-import { type Vehicle, type VehicleStatus, CATEGORY_LABELS } from '@/types/vehicle'
+import {
+  type Vehicle,
+  type VehicleStatus,
+  CATEGORY_LABELS,
+  STATUS_LABELS,
+  STATUS_OPTIONS,
+  CATEGORY_OPTIONS,
+} from '@/types/vehicle'
 import {
   updateVehicleStatusAction,
   deleteVehicleAction,
@@ -37,13 +44,6 @@ const STATUS_BADGE_STYLES: Record<VehicleStatus, string> = {
   rented:      'bg-amber-50 text-amber-700 border-amber-200',
   maintenance: 'bg-red-50 text-red-700 border-red-200',
   sold:        'bg-zinc-100 text-zinc-500 border-zinc-200',
-}
-
-const STATUS_NAMES: Record<VehicleStatus, string> = {
-  available:   'Disponible',
-  rented:      'Alquilado',
-  maintenance: 'Mantenimiento',
-  sold:        'Retirado / Vendido',
 }
 
 // ── Fila de Escritorio (Desktop Row con Drag Handle) ───────────────────────────
@@ -171,10 +171,11 @@ function AdminVehicleDesktopRow({
             STATUS_BADGE_STYLES[vehicle.status]
           )}
         >
-          <option value="available">Disponible</option>
-          <option value="rented">Alquilado</option>
-          <option value="maintenance">Mantenimiento</option>
-          <option value="sold">Retirado</option>
+          {STATUS_OPTIONS.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
         </select>
       </div>
 
@@ -300,10 +301,11 @@ function AdminVehicleMobileCard({
             STATUS_BADGE_STYLES[vehicle.status]
           )}
         >
-          <option value="available">Disponible</option>
-          <option value="rented">Alquilado</option>
-          <option value="maintenance">Mantenimiento</option>
-          <option value="sold">Retirado</option>
+          {STATUS_OPTIONS.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
         </select>
       </div>
 
@@ -429,7 +431,7 @@ export function AdminVehicleTable({ initialVehicles }: AdminVehicleTableProps) {
     startTransition(async () => {
       const res = await updateVehicleStatusAction(id, newStatus)
       if (res.success) {
-        toast.success(`Estado actualizado a: ${STATUS_NAMES[newStatus]}`)
+        toast.success(`Estado actualizado a: ${STATUS_LABELS[newStatus]}`)
       } else {
         toast.error(res.error ?? 'Error al actualizar estado')
         setVehicles(initialVehicles)
@@ -481,10 +483,11 @@ export function AdminVehicleTable({ initialVehicles }: AdminVehicleTableProps) {
             className="flex-1 min-w-[120px] px-2.5 py-2 min-h-[40px] bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-800 font-medium focus:outline-none focus:border-zinc-900 cursor-pointer"
           >
             <option value="all">Todos los estados</option>
-            <option value="available">Disponibles</option>
-            <option value="rented">Alquilados</option>
-            <option value="maintenance">Mantenimiento</option>
-            <option value="sold">Retirados</option>
+            {STATUS_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
           </select>
 
           {/* Filtro Categoría */}
@@ -494,10 +497,11 @@ export function AdminVehicleTable({ initialVehicles }: AdminVehicleTableProps) {
             className="flex-1 min-w-[120px] px-2.5 py-2 min-h-[40px] bg-zinc-50 border border-zinc-200 rounded-md text-xs text-zinc-800 font-medium focus:outline-none focus:border-zinc-900 cursor-pointer"
           >
             <option value="all">Todas las categorías</option>
-            <option value="sport">Compacto</option>
-            <option value="sedan">Sedán</option>
-            <option value="suv">SUV</option>
-            <option value="pickup_4x4">Camioneta</option>
+            {CATEGORY_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
           </select>
 
           <Link
