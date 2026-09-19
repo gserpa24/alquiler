@@ -34,7 +34,7 @@ import {
   deleteMessageAction,
   getContactMessagesAction,
 } from '@/app/actions/admin-messages'
-import { cn } from '@/lib/utils'
+import { cn, formatDate } from '@/lib/utils'
 
 interface AdminMessagesInboxProps {
   initialMessages: ContactMessage[]
@@ -351,7 +351,7 @@ export function AdminMessagesInbox({
             const StatusIcon = config.icon
             const waUrl = buildReplyWhatsAppUrl(msg)
 
-            const formattedDate = new Date(msg.created_at).toLocaleString('es-PE', {
+            const formattedDate = formatDate(msg.created_at, {
               dateStyle: 'medium',
               timeStyle: 'short',
             })

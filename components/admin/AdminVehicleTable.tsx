@@ -5,7 +5,7 @@
 // Permite ordenar manteniendo presionado y arrastrando sin números de orden visibles.
 // Mobile: card list reordenable. Desktop: tabla grid reordenable con Framer Motion.
 
-import { useState, useRef, useTransition } from 'react'
+import { useState, useRef, useEffect, useTransition } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import {
@@ -367,7 +367,10 @@ export function AdminVehicleTable({ initialVehicles }: AdminVehicleTableProps) {
   // Referencias para sincronización sin re-renders excesivos durante el arrastre
   const vehiclesRef = useRef<Vehicle[]>(vehicles)
   const lastSavedOrderRef = useRef<string[]>(initialVehicles.map((v) => v.id))
-  vehiclesRef.current = vehicles
+
+  useEffect(() => {
+    vehiclesRef.current = vehicles
+  }, [vehicles])
 
   // Filtrado local en vivo
   const isFiltered = search.trim() !== '' || statusFilter !== 'all' || categoryFilter !== 'all'

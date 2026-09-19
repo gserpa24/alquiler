@@ -12,7 +12,6 @@ import {
   MessageCircle,
   Users,
   Briefcase,
-  Luggage,
 } from 'lucide-react'
 import { getSafeGenericWhatsAppLink } from '@/lib/whatsapp'
 import { getSiteConfigFile } from '@/lib/site-config-server'

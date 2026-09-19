@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, HelpCircle, MessageCircle } from 'lucide-react'
 import { FAQ_ITEMS, FAQ_CATEGORIES } from '@/lib/faq-data'
 import { cn } from '@/lib/utils'
@@ -116,21 +115,18 @@ export function FAQSection({
                 </div>
               </button>
 
-              <AnimatePresence initial={false}>
-                {isOpen && (
-                  <motion.div
-                    key="content"
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.22, ease: 'easeInOut' }}
-                  >
-                    <div className="px-4 pb-5 sm:px-5 sm:pb-5 pt-1 text-sm text-zinc-600 leading-relaxed border-t border-zinc-100">
-                      {item.answer}
-                    </div>
-                  </motion.div>
+              <div
+                className={cn(
+                  'grid transition-all duration-200 ease-in-out',
+                  isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
                 )}
-              </AnimatePresence>
+              >
+                <div className="overflow-hidden">
+                  <div className="px-4 pb-5 sm:px-5 sm:pb-5 pt-1 text-sm text-zinc-600 leading-relaxed border-t border-zinc-100">
+                    {item.answer}
+                  </div>
+                </div>
+              </div>
             </div>
           )
         })}

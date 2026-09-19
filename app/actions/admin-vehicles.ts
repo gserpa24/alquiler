@@ -17,6 +17,7 @@ import {
 import { deleteStorageFiles } from '@/lib/supabase/storage'
 import { requireAdminSession } from '@/lib/auth/guard'
 import { type Vehicle, type VehicleStatus } from '@/types/vehicle'
+import { slugify } from '@/lib/utils'
 
 export interface ActionResult<T = unknown> {
   success: boolean
@@ -26,13 +27,7 @@ export interface ActionResult<T = unknown> {
 
 /** Helper para construir un slug amigable y único a partir de marca, modelo, año y color */
 function buildSlug(brand: string, model: string, year: number, color?: string | null): string {
-  const base = `${brand} ${model} ${year} ${color ?? ''}`
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '') // Quitar acentos
-    .replace(/[^a-z0-9]+/g, '-')     // Reemplazar caracteres especiales por guiones
-    .replace(/^-+|-+$/g, '')         // Trim de guiones
-
+  const base = slugify(`${brand} ${model} ${year} ${color ?? ''}`.trim())
   return base || `auto-${Date.now()}`
 }
 

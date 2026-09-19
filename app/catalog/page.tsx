@@ -13,6 +13,13 @@ import { getSiteConfigFile }   from '@/lib/site-config-server'
 
 export const dynamic = 'force-dynamic'
 
+export const metadata: Metadata = {
+  title: 'Catálogo de Vehículos | Alquiler en Tarapoto',
+  description:
+    'Explora nuestra flota de autos, SUV y camionetas 4x4 en Tarapoto. Tarifas claras por día, requisitos simples y reserva directa por WhatsApp.',
+  alternates: { canonical: '/catalog' },
+}
+
 interface CatalogPageProps {
   searchParams: Promise<Record<string, string>>
 }

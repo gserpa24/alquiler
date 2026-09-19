@@ -3,7 +3,7 @@
 // components/admin/AdminSettingsForm.tsx
 // Formulario interactivo para editar los datos institucionales (identidad, redes, atención y ubicación).
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import {
   Save,
@@ -31,7 +31,10 @@ export function AdminSettingsForm({ initialConfig }: AdminSettingsFormProps = {}
     return initialConfig ?? config
   })
 
-  useEffect(() => {
+  // Sincronizar formData cuando el contexto exterior se actualice (ej. recargas externas)
+  const [prevConfig, setPrevConfig] = useState(config)
+  if (prevConfig !== config) {
+    setPrevConfig(config)
     if (config.whatsappNumber || config.phone || config.brandName) {
       setFormData((prev) => ({
         brandName: prev.brandName || config.brandName,
@@ -45,7 +48,7 @@ export function AdminSettingsForm({ initialConfig }: AdminSettingsFormProps = {}
         whatsappNumber: prev.whatsappNumber || config.whatsappNumber,
       }))
     }
-  }, [config])
+  }
 
   const [savedSuccess, setSavedSuccess] = useState(false)
 

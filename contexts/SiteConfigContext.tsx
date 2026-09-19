@@ -121,8 +121,11 @@ export function SiteConfigProvider({
       }
     }
 
-    // Consulta inmediata al montar
-    fetchServerConfig()
+    // Solo consultar servidor si no disponemos de configuración inicial válida
+    const hasInitial = Boolean(initialConfig && (initialConfig.whatsappNumber || initialConfig.phone))
+    if (!hasInitial) {
+      fetchServerConfig()
+    }
 
     function handleSync() {
       const client = readClientConfig()
@@ -140,7 +143,7 @@ export function SiteConfigProvider({
       window.removeEventListener('storage', handleSync)
       window.removeEventListener('autoruta_config_updated', handleSync)
     }
-  }, [])
+  }, [initialConfig])
 
   const updateConfig = useCallback(
     async (updates: Partial<SiteConfig>): Promise<boolean> => {

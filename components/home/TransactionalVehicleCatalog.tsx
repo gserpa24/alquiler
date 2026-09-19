@@ -63,7 +63,7 @@ export function TransactionalVehicleCatalog({ vehicles }: TransactionalVehicleCa
         {/* Fotografía de carretera en la selva peruana serpenteando entre montañas verdes y frondosa vegetación tropical */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/hero-selva-peru.jpg"
+            src="/images/hero-selva-peru.webp"
             alt="Carretera asfaltada sin autos serpenteando en medio de la selva peruana y montañas verdes"
             fill
             priority

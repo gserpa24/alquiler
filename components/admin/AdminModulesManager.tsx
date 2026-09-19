@@ -15,7 +15,6 @@ import {
   XCircle,
 } from 'lucide-react'
 import { useAdminModules } from '@/contexts/AdminModulesContext'
-import { type AdminModuleId } from '@/lib/admin-modules'
 
 const ICON_MAP = {
   LayoutDashboard,

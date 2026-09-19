@@ -4,7 +4,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { ArrowLeft, Settings } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { getAdminSession } from '@/lib/auth/guard'
 import { getSiteConfigFile } from '@/lib/site-config-server'
 import { AdminSettingsForm } from '@/components/admin/AdminSettingsForm'

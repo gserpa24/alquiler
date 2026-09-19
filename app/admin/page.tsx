@@ -21,7 +21,7 @@ import { getAdminSession } from '@/lib/auth/guard'
 import { MODULE_COOKIE_NAME, parseModuleFlags } from '@/lib/admin-modules'
 import { DisabledModuleCard } from '@/components/admin/DisabledModuleCard'
 import { formatPrice } from '@/lib/utils'
-import { SUBJECT_LABELS, MESSAGE_STATUS_LABELS } from '@/types/message'
+import { MESSAGE_STATUS_LABELS } from '@/types/message'
 
 export const dynamic = 'force-dynamic'
 

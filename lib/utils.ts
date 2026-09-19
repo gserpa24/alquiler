@@ -52,3 +52,25 @@ export function truncate(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text
   return text.slice(0, maxLength).trimEnd() + '…'
 }
+
+/**
+ * Formatea una fecha según el estándar local es-PE con zona horaria Perú.
+ * @example formatDate('2024-05-10T12:00:00Z') → '10 de mayo de 2024'
+ */
+export function formatDate(
+  date: string | Date | number,
+  options?: Intl.DateTimeFormatOptions
+): string {
+  const d = typeof date === 'string' || typeof date === 'number' ? new Date(date) : date
+  if (isNaN(d.getTime())) return ''
+
+  const defaultOptions: Intl.DateTimeFormatOptions = {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'America/Lima',
+    ...options,
+  }
+
+  return new Intl.DateTimeFormat('es-PE', defaultOptions).format(d)
+}
