@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { CurrencySwitcher } from '@/components/currency/CurrencySwitcher'
+import { useSiteConfig } from '@/contexts/SiteConfigContext'
 
 const NAV_LINKS = [
   { href: '/',         label: 'Inicio' },
@@ -18,6 +19,7 @@ const NAV_LINKS = [
 
 export function Navbar() {
   const pathname  = usePathname()
+  const { config } = useSiteConfig()
   const [open,      setOpen]      = useState(false)
   const [scrolled,  setScrolled]  = useState(false)
 
@@ -27,10 +29,10 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Cerrar menú en cambio de ruta
-  const [prevPathname, setPrevPathname] = useState(pathname)
-  if (prevPathname !== pathname) {
-    setPrevPathname(pathname)
+  // Cerrar menú en cambio de ruta sincronizando el estado con pathname
+  const [activePath, setActivePath] = useState(pathname)
+  if (activePath !== pathname) {
+    setActivePath(pathname)
     setOpen(false)
   }
 
@@ -57,7 +59,7 @@ export function Navbar() {
           <div className="relative w-10 h-7 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-200">
             <Image
               src="/logo-car.png"
-              alt="AutoRuta"
+              alt={config.brandName || 'AutoRuta'}
               width={40}
               height={26}
               className="object-contain w-auto h-6"
@@ -66,7 +68,14 @@ export function Navbar() {
             />
           </div>
           <span className="text-base font-bold tracking-tight text-zinc-900 select-none">
-            AUTO<span className="text-[#0A192F] font-bold">RUTA</span>
+            {config.brandName.length > 4 ? (
+              <>
+                {config.brandName.slice(0, 4)}
+                <span className="text-[#0A192F] font-bold">{config.brandName.slice(4)}</span>
+              </>
+            ) : (
+              config.brandName
+            )}
           </span>
         </Link>
 
