@@ -3,10 +3,8 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
-import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
-import { useSiteConfig } from '@/contexts/SiteConfigContext'
+import { useWhatsApp } from '@/hooks/useWhatsApp'
 
 /**
  * Botón flotante de WhatsApp visible únicamente en el sitio público.
@@ -16,7 +14,7 @@ import { useSiteConfig } from '@/contexts/SiteConfigContext'
  */
 export function FloatingWhatsApp() {
   const pathname = usePathname()
-  const { config } = useSiteConfig()
+  const { isConfigured, getGenericLink, handleDisabledClick } = useWhatsApp()
   const [hovered, setHovered] = useState(false)
 
   // Ocultar en todas las rutas del panel administrativo
@@ -24,24 +22,7 @@ export function FloatingWhatsApp() {
     return null
   }
 
-  const cleanPhone = (config.whatsappNumber || '').replace(/\D/g, '')
-  const hasWhatsapp = Boolean(cleanPhone && cleanPhone.length >= 8)
-
-  let waLink = '#'
-  if (hasWhatsapp) {
-    try {
-      waLink = buildGenericWhatsAppLink(undefined, config.whatsappNumber)
-    } catch {
-      waLink = '#'
-    }
-  }
-
-  const handleClick = (e: React.MouseEvent) => {
-    if (!hasWhatsapp || waLink === '#') {
-      e.preventDefault()
-      toast.warning('Aún no hay un número configurado.')
-    }
-  }
+  const { url } = getGenericLink()
 
   return (
     <div
@@ -60,7 +41,7 @@ export function FloatingWhatsApp() {
             role="tooltip"
           >
             <p className="text-xs font-medium text-zinc-800 whitespace-nowrap">
-              {hasWhatsapp ? 'Atención inmediata por WhatsApp' : 'Aún no hay un número configurado'}
+              {isConfigured ? 'Atención inmediata por WhatsApp' : 'Aún no hay un número configurado'}
             </p>
           </motion.div>
         )}
@@ -68,7 +49,7 @@ export function FloatingWhatsApp() {
 
       {/* Botón principal */}
       <div className="relative flex items-center justify-center">
-        {hasWhatsapp && (
+        {isConfigured && (
           <>
             {/* Onda de pulso sutil y elegante */}
             <span className="absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-35 animate-ping duration-1000 pointer-events-none" />
@@ -78,18 +59,18 @@ export function FloatingWhatsApp() {
         )}
 
         <motion.a
-          href={hasWhatsapp && waLink !== '#' ? waLink : '#'}
-          target={hasWhatsapp && waLink !== '#' ? '_blank' : undefined}
-          rel={hasWhatsapp && waLink !== '#' ? 'noopener noreferrer' : undefined}
-          onClick={handleClick}
-          aria-label={hasWhatsapp ? 'Abrir WhatsApp' : 'Aún no hay un número configurado'}
+          href={isConfigured ? url : '#'}
+          target={isConfigured ? '_blank' : undefined}
+          rel={isConfigured ? 'noopener noreferrer' : undefined}
+          onClick={handleDisabledClick}
+          aria-label={isConfigured ? 'Abrir WhatsApp' : 'Aún no hay un número configurado'}
           onHoverStart={() => setHovered(true)}
           onHoverEnd={() => setHovered(false)}
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.94 }}
           className={cn(
             'relative z-10 flex items-center justify-center w-[70px] h-[70px] rounded-full text-white shadow-2xl transition-all duration-200 border-[2.5px]',
-            hasWhatsapp
+            isConfigured
               ? 'bg-[#25D366] hover:bg-[#20bd5a] border-white cursor-pointer'
               : 'bg-zinc-400 hover:bg-zinc-500 border-zinc-200 cursor-pointer'
           )}

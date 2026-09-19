@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { MapPin, Phone, Mail, Clock, MessageSquare } from 'lucide-react'
 import { ContactForm } from '@/components/contact/ContactForm'
 import { WhatsAppActionLink } from '@/components/whatsapp/WhatsAppActionLink'
-import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
+import { getSafeGenericWhatsAppLink } from '@/lib/whatsapp'
 import { getSiteConfigFile } from '@/lib/site-config-server'
 
 export const metadata: Metadata = {
@@ -14,16 +14,10 @@ export const metadata: Metadata = {
 
 export default async function ContactPage() {
   const config = await getSiteConfigFile()
-  const cleanWa = (config.whatsappNumber || '').replace(/\D/g, '')
-  const hasWhatsapp = Boolean(cleanWa && cleanWa.length >= 8)
-  let waLink = '#'
-  if (hasWhatsapp) {
-    try {
-      waLink = buildGenericWhatsAppLink(undefined, config.whatsappNumber)
-    } catch {
-      waLink = '#'
-    }
-  }
+  const { url: waLink, isConfigured: hasWhatsapp } = getSafeGenericWhatsAppLink(
+    undefined,
+    config.whatsappNumber
+  )
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 lg:pt-10 pb-2 sm:pb-4">

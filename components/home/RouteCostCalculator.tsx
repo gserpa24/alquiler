@@ -12,9 +12,7 @@ import {
   Info,
 } from 'lucide-react'
 import { MOCK_VEHICLES } from '@/lib/mock-data'
-import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
-import { useSiteConfig } from '@/contexts/SiteConfigContext'
-import { toast } from 'sonner'
+import { useWhatsApp } from '@/hooks/useWhatsApp'
 import { cn } from '@/lib/utils'
 
 interface RoutePreset {
@@ -77,9 +75,7 @@ const POPULAR_ROUTES: RoutePreset[] = [
 ]
 
 export function RouteCostCalculator() {
-  const { config } = useSiteConfig()
-  const cleanPhone = (config.whatsappNumber || '').replace(/\D/g, '')
-  const hasWhatsapp = Boolean(cleanPhone && cleanPhone.length >= 8)
+  const { getGenericLink, handleDisabledClick } = useWhatsApp()
 
   const [selectedRouteId, setSelectedRouteId] = useState<string>(POPULAR_ROUTES[0].id)
   const [selectedVehicleId, setSelectedVehicleId] = useState<string>(MOCK_VEHICLES[0].id)
@@ -125,14 +121,7 @@ export function RouteCostCalculator() {
 
 ¿Podrían confirmarme disponibilidad del vehículo y condiciones para estas fechas? ¡Gracias!`
 
-  let waLink = '#'
-  if (hasWhatsapp) {
-    try {
-      waLink = buildGenericWhatsAppLink(whatsAppMessage, config.whatsappNumber)
-    } catch {
-      waLink = '#'
-    }
-  }
+  const { url: waLink, isConfigured } = getGenericLink(whatsAppMessage)
 
   return (
     <section id="panel-de-ruteo" className="py-16 sm:py-24 border-b border-zinc-100 bg-zinc-50/50">
@@ -384,18 +373,13 @@ export function RouteCostCalculator() {
             {/* CTA WhatsApp con datos de ruteo precargados */}
             <div className="pt-2">
               <a
-                href={hasWhatsapp && waLink !== '#' ? waLink : '#'}
-                target={hasWhatsapp && waLink !== '#' ? '_blank' : undefined}
-                rel={hasWhatsapp && waLink !== '#' ? 'noopener noreferrer' : undefined}
-                onClick={(e) => {
-                  if (!hasWhatsapp || waLink === '#') {
-                    e.preventDefault()
-                    toast.warning('Aún no hay un número configurado.')
-                  }
-                }}
+                href={isConfigured && waLink !== '#' ? waLink : '#'}
+                target={isConfigured && waLink !== '#' ? '_blank' : undefined}
+                rel={isConfigured && waLink !== '#' ? 'noopener noreferrer' : undefined}
+                onClick={handleDisabledClick}
                 className={cn(
                   'w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-md text-xs font-semibold uppercase tracking-wider transition-all shadow-xs',
-                  hasWhatsapp && waLink !== '#'
+                  isConfigured && waLink !== '#'
                     ? 'bg-[#0A192F] text-white hover:bg-[#152e52] active:scale-[0.99] cursor-pointer'
                     : 'bg-zinc-200 text-zinc-400 border border-zinc-300 hover:bg-zinc-200 cursor-not-allowed'
                 )}

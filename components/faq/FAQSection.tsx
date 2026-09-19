@@ -4,10 +4,8 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, HelpCircle, MessageCircle } from 'lucide-react'
 import { FAQ_ITEMS, FAQ_CATEGORIES } from '@/lib/faq-data'
-import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
-import { useSiteConfig } from '@/contexts/SiteConfigContext'
 import { cn } from '@/lib/utils'
-import { toast } from 'sonner'
+import { useWhatsApp } from '@/hooks/useWhatsApp'
 
 interface FAQSectionProps {
   showCategoryFilters?: boolean
@@ -24,9 +22,12 @@ export function FAQSection({
   title = 'Preguntas Frecuentes',
   subtitle = 'Resolvemos tus principales dudas sobre requisitos, garantías, proceso de consulta y políticas de servicio en Perú.',
 }: FAQSectionProps) {
-  const { config } = useSiteConfig()
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [openId, setOpenId] = useState<string | null>(null)
+  const { getGenericLink, handleDisabledClick } = useWhatsApp()
+  const { url: waLink, isConfigured } = getGenericLink(
+    '¡Hola! Tengo una consulta sobre las condiciones de alquiler.'
+  )
 
   const filteredItems = FAQ_ITEMS.filter((item) => {
     if (selectedCategory === 'all') return true
@@ -35,17 +36,6 @@ export function FAQSection({
 
   const toggleItem = (id: string) => {
     setOpenId((prev) => (prev === id ? null : id))
-  }
-
-  const cleanPhone = (config.whatsappNumber || '').replace(/\D/g, '')
-  const hasWhatsapp = Boolean(cleanPhone && cleanPhone.length >= 8)
-  let waLink = '#'
-  if (hasWhatsapp) {
-    try {
-      waLink = buildGenericWhatsAppLink('¡Hola! Tengo una consulta sobre las condiciones de alquiler.', config.whatsappNumber)
-    } catch {
-      waLink = '#'
-    }
   }
 
   return (
@@ -155,18 +145,13 @@ export function FAQSection({
           Nuestro equipo en Tarapoto responderá tus requerimientos de fechas, vehículos y rutas de inmediato.
         </p>
         <a
-          href={hasWhatsapp && waLink !== '#' ? waLink : '#'}
-          target={hasWhatsapp && waLink !== '#' ? '_blank' : undefined}
-          rel={hasWhatsapp && waLink !== '#' ? 'noopener noreferrer' : undefined}
-          onClick={(e) => {
-            if (!hasWhatsapp || waLink === '#') {
-              e.preventDefault()
-              toast.warning('Aún no hay un número configurado.')
-            }
-          }}
+          href={isConfigured && waLink !== '#' ? waLink : '#'}
+          target={isConfigured && waLink !== '#' ? '_blank' : undefined}
+          rel={isConfigured && waLink !== '#' ? 'noopener noreferrer' : undefined}
+          onClick={handleDisabledClick}
           className={cn(
             'inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors shadow-xs',
-            hasWhatsapp && waLink !== '#'
+            isConfigured && waLink !== '#'
               ? 'bg-[#25D366] hover:bg-[#1EBE5D] text-white cursor-pointer'
               : 'bg-zinc-200 text-zinc-400 border border-zinc-300 hover:bg-zinc-200 cursor-not-allowed'
           )}

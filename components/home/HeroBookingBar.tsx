@@ -4,13 +4,12 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Calendar, Car, ArrowRight, Clock } from 'lucide-react'
 import { MOCK_VEHICLES } from '@/lib/mock-data'
-import { buildVehicleWhatsAppLink } from '@/lib/whatsapp'
-import { useSiteConfig } from '@/contexts/SiteConfigContext'
+import { useWhatsApp } from '@/hooks/useWhatsApp'
 import { toast } from 'sonner'
 
 export function HeroBookingBar() {
   const router = useRouter()
-  const { config } = useSiteConfig()
+  const { isConfigured, getVehicleLink } = useWhatsApp()
   const [pickupDate, setPickupDate] = useState('')
   const [returnDate, setReturnDate] = useState('')
   const [selectedVehicle, setSelectedVehicle] = useState('')
@@ -23,26 +22,21 @@ export function HeroBookingBar() {
     if (selectedVehicle) {
       const v = availableVehicles.find((item) => item.slug === selectedVehicle)
       if (v) {
-        // Generar mensaje enriquecido con fechas hacia WhatsApp
-        const dateNote = pickupDate && returnDate 
-          ? ` del ${pickupDate} al ${returnDate}` 
-          : ''
-        
-        const cleanPhone = (config.whatsappNumber || '').replace(/\D/g, '')
-        if (!cleanPhone || cleanPhone.length < 8) {
+        if (!isConfigured) {
           toast.warning('Aún no hay un número configurado.')
           return
         }
 
-        try {
-          const waUrl = buildVehicleWhatsAppLink({
-            brand: v.brand,
-            model: v.model,
-            year: v.year,
-            color: v.color,
-            phone: config.whatsappNumber,
-          })
-          
+        const dateNote = pickupDate && returnDate 
+          ? ` del ${pickupDate} al ${returnDate}` 
+          : ''
+
+        const { url: waUrl, isConfigured: valid } = getVehicleLink(
+          { brand: v.brand, model: v.model, year: v.year, color: v.color },
+          pickupDate && returnDate ? { pickupDate, returnDate } : undefined
+        )
+
+        if (valid && waUrl !== '#') {
           if (dateNote) {
             const customMsg = `¡Hola! Vi el *${v.brand} ${v.model} ${v.year}* en su catálogo y me gustaría cotizarlo${dateNote}. 🚗\n\n¿Podría indicarme disponibilidad y condiciones? ¡Muchas gracias!`
             const base = waUrl.split('?text=')[0]
@@ -51,7 +45,7 @@ export function HeroBookingBar() {
           }
           window.open(waUrl, '_blank')
           return
-        } catch {
+        } else {
           router.push(`/catalog/${v.slug}`)
           return
         }

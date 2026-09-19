@@ -5,10 +5,8 @@
 
 import { motion } from 'framer-motion'
 import { ExternalLink } from 'lucide-react'
-import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
-import { buildVehicleWhatsAppLink } from '@/lib/whatsapp'
-import { useSiteConfig } from '@/contexts/SiteConfigContext'
+import { useWhatsApp } from '@/hooks/useWhatsApp'
 
 interface WhatsAppCTAProps {
   brand:      string
@@ -37,42 +35,17 @@ export function WhatsAppCTA({
   className,
   label = 'Consultar por WhatsApp',
 }: WhatsAppCTAProps) {
-  const { config } = useSiteConfig()
-  const cleanPhone = (config.whatsappNumber || '').replace(/\D/g, '')
-  const hasWhatsapp = Boolean(cleanPhone && cleanPhone.length >= 8)
-
-  let href = '#'
-  if (hasWhatsapp) {
-    try {
-      href = buildVehicleWhatsAppLink({
-        brand,
-        model,
-        year,
-        color,
-        phone: config.whatsappNumber,
-      })
-    } catch {
-      href = '#'
-    }
-  }
-
-  const isWa = hasWhatsapp && href !== '#'
-
-  const handleClick = (e: React.MouseEvent) => {
-    if (!isWa) {
-      e.preventDefault()
-      toast.warning('Aún no hay un número configurado.')
-    }
-  }
+  const { getVehicleLink, handleDisabledClick } = useWhatsApp()
+  const { url, isConfigured } = getVehicleLink({ brand, model, year, color })
 
   return (
     <motion.a
-      href={isWa ? href : '#'}
-      target={isWa ? '_blank' : undefined}
-      rel={isWa ? 'noopener noreferrer' : undefined}
-      onClick={handleClick}
-      whileHover={isWa ? { scale: 1.02 } : undefined}
-      whileTap={isWa ? { scale: 0.98 } : undefined}
+      href={isConfigured ? url : '#'}
+      target={isConfigured ? '_blank' : undefined}
+      rel={isConfigured ? 'noopener noreferrer' : undefined}
+      onClick={handleDisabledClick}
+      whileHover={isConfigured ? { scale: 1.02 } : undefined}
+      whileTap={isConfigured ? { scale: 0.98 } : undefined}
       aria-label={`Consultar sobre el ${brand} ${model} ${year}`}
       className={cn(
         // Base
@@ -80,12 +53,12 @@ export function WhatsAppCTA({
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366]',
         'w-full max-w-full min-w-0 py-2.5 sm:py-3 px-3 sm:px-4 min-h-[44px]',
         // Variantes cuando está configurado
-        isWa && [
+        isConfigured && [
           variant === 'primary' && 'bg-[#25D366] text-white hover:bg-[#20bd5a] shadow-xs cursor-pointer',
           variant === 'outline' && 'border border-[#25D366]/40 text-[#128C7E] bg-white hover:border-[#25D366] hover:bg-[#25D366]/5 cursor-pointer',
         ],
         // Variante deshabilitada cuando no hay número
-        !isWa && 'bg-zinc-200 text-zinc-400 border border-zinc-300 hover:bg-zinc-200 cursor-not-allowed',
+        !isConfigured && 'bg-zinc-200 text-zinc-400 border border-zinc-300 hover:bg-zinc-200 cursor-not-allowed',
         className,
       )}
     >
@@ -101,7 +74,7 @@ export function WhatsAppCTA({
 
       <span className="truncate">{label}</span>
 
-      {isWa && (
+      {isConfigured && (
         <ExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 opacity-70" aria-hidden="true" />
       )}
     </motion.a>

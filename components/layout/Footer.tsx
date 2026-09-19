@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Phone, MapPin, Clock, Share2, Users } from 'lucide-react'
 import { useSiteConfig } from '@/contexts/SiteConfigContext'
-import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
+import { useWhatsApp } from '@/hooks/useWhatsApp'
 
 const FOOTER_LINKS = [
   { section: 'Explora', links: [
@@ -26,15 +26,8 @@ export function Footer() {
   const { config } = useSiteConfig()
   const year = new Date().getFullYear()
 
-  let waLink = '#'
-  const cleanPhone = (config.whatsappNumber || '').replace(/\D/g, '')
-  if (cleanPhone && cleanPhone.length >= 8) {
-    try {
-      waLink = buildGenericWhatsAppLink(undefined, config.whatsappNumber)
-    } catch {
-      waLink = '#'
-    }
-  }
+  const { getGenericLink } = useWhatsApp()
+  const { url: waLink, isConfigured } = getGenericLink()
 
   return (
     <footer className="bg-zinc-50 border-t border-zinc-200 mt-8 sm:mt-10 lg:mt-12" role="contentinfo">
@@ -138,7 +131,7 @@ export function Footer() {
               {config.phone ? (
                 <li className="flex items-start gap-2.5 text-zinc-500">
                   <Phone className="w-4 h-4 mt-0.5 shrink-0 text-[#0A192F] stroke-[1.5]" aria-hidden="true" />
-                  {waLink !== '#' ? (
+                  {isConfigured && waLink !== '#' ? (
                     <a href={waLink} target="_blank" rel="noopener noreferrer" className="hover:text-zinc-900 font-medium transition-colors">
                       {config.phone}
                     </a>

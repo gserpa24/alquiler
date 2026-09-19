@@ -7,11 +7,9 @@ import { Users, Fuel, Settings2, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { convertPrice, formatCurrencyPrice } from '@/lib/currency'
 import { useCurrency } from '@/contexts/CurrencyContext'
-import { useSiteConfig } from '@/contexts/SiteConfigContext'
 import { type VehicleCard as VehicleCardType, CATEGORY_LABELS, FUEL_LABELS } from '@/types/vehicle'
-import { buildVehicleWhatsAppLink } from '@/lib/whatsapp'
 import { StatusBadge } from '@/components/vehicle/StatusBadge'
-import { toast } from 'sonner'
+import { useWhatsApp } from '@/hooks/useWhatsApp'
 
 interface VehicleCardProps extends HTMLAttributes<HTMLDivElement> {
   vehicle: VehicleCardType
@@ -23,36 +21,17 @@ interface VehicleCardProps extends HTMLAttributes<HTMLDivElement> {
 
 export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
   ({ vehicle, variant = 'default', priority = false, pickupDate, returnDate, className, ...props }, ref) => {
-    // Currency context for price conversion
     const { currency, rates, isLoading: ratesLoading } = useCurrency()
-    const { config } = useSiteConfig()
-
-    // Generar enlace directo a WhatsApp para "Reservar" (incluyendo rango de fechas si se especificaron)
-    const cleanPhone = (config.whatsappNumber || '').replace(/\D/g, '')
-    const hasWhatsapp = Boolean(cleanPhone && cleanPhone.length >= 8)
-    let waUrl = '#'
-    if (hasWhatsapp) {
-      try {
-        const baseWaUrl = buildVehicleWhatsAppLink({
-          brand: vehicle.brand,
-          model: vehicle.model,
-          year: vehicle.year,
-          color: vehicle.color,
-          phone: config.whatsappNumber,
-        })
-
-        if (pickupDate && returnDate) {
-          const vehicleName = `${vehicle.brand} ${vehicle.model} ${vehicle.year}${vehicle.color ? ` (${vehicle.color})` : ''}`
-          const customMessage = `¡Hola! Vi el *${vehicleName}* en su catálogo y me gustaría reservarlo del *${pickupDate}* al *${returnDate}*. 🚗\n\n¿Podría confirmarme disponibilidad y precio final? ¡Muchas gracias!`
-          const baseUrl = baseWaUrl.split('?text=')[0]
-          waUrl = `${baseUrl}?text=${encodeURIComponent(customMessage)}`
-        } else {
-          waUrl = baseWaUrl
-        }
-      } catch {
-        waUrl = '#'
-      }
-    }
+    const { getVehicleLink, handleDisabledClick } = useWhatsApp()
+    const { url: waUrl, isConfigured } = getVehicleLink(
+      {
+        brand: vehicle.brand,
+        model: vehicle.model,
+        year: vehicle.year,
+        color: vehicle.color,
+      },
+      { pickupDate, returnDate }
+    )
 
     const transmissionLabel =
       vehicle.transmission === 'automatic' || vehicle.transmission === 'cvt'
@@ -162,18 +141,13 @@ export const VehicleCard = forwardRef<HTMLDivElement, VehicleCardProps>(
               Info
             </Link>
             <a
-              href={hasWhatsapp && waUrl !== '#' ? waUrl : '#'}
-              target={hasWhatsapp && waUrl !== '#' ? '_blank' : undefined}
-              rel={hasWhatsapp && waUrl !== '#' ? 'noopener noreferrer' : undefined}
-              onClick={(e) => {
-                if (!hasWhatsapp || waUrl === '#') {
-                  e.preventDefault()
-                  toast.warning('Aún no hay un número configurado.')
-                }
-              }}
+              href={isConfigured ? waUrl : '#'}
+              target={isConfigured ? '_blank' : undefined}
+              rel={isConfigured ? 'noopener noreferrer' : undefined}
+              onClick={handleDisabledClick}
               className={cn(
                 'inline-flex items-center justify-center gap-1.5 px-4 py-2 min-h-[40px] rounded-md text-xs font-semibold uppercase tracking-wider transition-all shadow-xs ml-auto shrink-0 whitespace-nowrap',
-                hasWhatsapp && waUrl !== '#'
+                isConfigured
                   ? 'bg-[#25D366] text-white hover:bg-[#20bd5a] active:scale-[0.99] cursor-pointer'
                   : 'bg-zinc-200 text-zinc-400 border border-zinc-300 hover:bg-zinc-200 cursor-not-allowed'
               )}

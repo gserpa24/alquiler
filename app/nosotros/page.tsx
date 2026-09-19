@@ -14,7 +14,7 @@ import {
   Briefcase,
   Luggage,
 } from 'lucide-react'
-import { buildGenericWhatsAppLink } from '@/lib/whatsapp'
+import { getSafeGenericWhatsAppLink } from '@/lib/whatsapp'
 import { getSiteConfigFile } from '@/lib/site-config-server'
 import { WhatsAppActionLink } from '@/components/whatsapp/WhatsAppActionLink'
 
@@ -33,19 +33,10 @@ export const metadata: Metadata = {
 
 export default async function NosotrosPage() {
   const config = await getSiteConfigFile()
-  const cleanWa = (config.whatsappNumber || '').replace(/\D/g, '')
-  const hasWhatsapp = Boolean(cleanWa && cleanWa.length >= 8)
-  let waUrl = '#'
-  if (hasWhatsapp) {
-    try {
-      waUrl = buildGenericWhatsAppLink(
-        '¡Hola! Estuve viendo su página web y me gustaría consultar disponibilidad y condiciones de alquiler en Tarapoto.',
-        config.whatsappNumber
-      )
-    } catch {
-      waUrl = '#'
-    }
-  }
+  const { url: waUrl, isConfigured: hasWhatsapp } = getSafeGenericWhatsAppLink(
+    '¡Hola! Estuve viendo su página web y me gustaría consultar disponibilidad y condiciones de alquiler en Tarapoto.',
+    config.whatsappNumber
+  )
 
   return (
     <div className="min-h-screen bg-white text-zinc-900 pb-2 sm:pb-4">
