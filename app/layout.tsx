@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import { SiteLayout } from '@/components/layout/SiteLayout'
+import { getSiteConfigFile } from '@/lib/site-config-server'
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -61,7 +62,9 @@ interface RootLayoutProps {
   children: React.ReactNode
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default async function RootLayout({ children }: RootLayoutProps) {
+  const initialConfig = await getSiteConfigFile()
+
   return (
     <html
       lang="es"
@@ -69,7 +72,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-white text-zinc-900 antialiased selection:bg-slate-900 selection:text-white">
-        <SiteLayout>{children}</SiteLayout>
+        <SiteLayout initialConfig={initialConfig}>{children}</SiteLayout>
         <Analytics />
       </body>
     </html>

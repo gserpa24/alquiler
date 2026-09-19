@@ -35,7 +35,11 @@ export const SITE_CONFIG_COOKIE_NAME = 'autoruta_site_config'
 export function parseSiteConfig(raw: string | undefined | null): SiteConfig {
   if (!raw) return { ...DEFAULT_SITE_CONFIG }
   try {
-    const parsed = JSON.parse(decodeURIComponent(raw))
+    let jsonString = raw.trim()
+    if (!jsonString.startsWith('{')) {
+      jsonString = decodeURIComponent(jsonString)
+    }
+    const parsed = JSON.parse(jsonString)
     return {
       brandName: typeof parsed.brandName === 'string' ? parsed.brandName : DEFAULT_SITE_CONFIG.brandName,
       slogan: typeof parsed.slogan === 'string' ? parsed.slogan : DEFAULT_SITE_CONFIG.slogan,

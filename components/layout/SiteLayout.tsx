@@ -12,22 +12,31 @@ import { CurrencyProvider } from '@/contexts/CurrencyContext'
 import { SiteConfigProvider } from '@/contexts/SiteConfigContext'
 import { Toaster } from '@/components/ui/sonner'
 
-export function SiteLayout({ children }: { children: React.ReactNode }) {
+import { type SiteConfig } from '@/lib/site-config'
+
+interface SiteLayoutProps {
+  children: React.ReactNode
+  initialConfig?: SiteConfig
+}
+
+export function SiteLayout({ children, initialConfig }: SiteLayoutProps) {
   const pathname = usePathname()
   const isAdmin = pathname?.startsWith('/admin')
 
   if (isAdmin) {
     return (
-      <CurrencyProvider>
-        <main className="flex-1" id="main-content">
-          {children}
-        </main>
-      </CurrencyProvider>
+      <SiteConfigProvider initialConfig={initialConfig}>
+        <CurrencyProvider>
+          <main className="flex-1" id="main-content">
+            {children}
+          </main>
+        </CurrencyProvider>
+      </SiteConfigProvider>
     )
   }
 
   return (
-    <SiteConfigProvider>
+    <SiteConfigProvider initialConfig={initialConfig}>
       <CurrencyProvider>
         <Navbar />
         <main className="flex-1 pt-16" id="main-content">
