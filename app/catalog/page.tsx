@@ -9,16 +9,9 @@ import { VehicleFilters }     from '@/components/vehicle/VehicleFilters'
 import { VehicleGridSkeleton } from '@/components/vehicle/VehicleCardSkeleton'
 import { getVehicles }        from '@/lib/supabase/queries'
 import { VehicleFilterSchema } from '@/lib/validations'
+import { getSiteConfigFile }   from '@/lib/site-config-server'
 
-export const metadata: Metadata = {
-  title: 'Catálogo de Vehículos | AutoRuta Tarapoto',
-  description:
-    'Explora nuestra flota de sedanes confiables, compactos urbanos y SUVs familiares accesibles para ruteo diario y viajes por carretera. Consulta disponibilidad por WhatsApp.',
-  alternates: { canonical: '/catalog' },
-}
-
-// Revalidar cada 60 segundos (ISR) — la disponibilidad cambia con frecuencia
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
 
 interface CatalogPageProps {
   searchParams: Promise<Record<string, string>>
@@ -31,7 +24,10 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
   const parsed = VehicleFilterSchema.safeParse(rawParams)
   const filters = parsed.success ? parsed.data : { page: 1, limit: 12 }
 
-  const { vehicles, total, page, pages } = await getVehicles(filters)
+  const [{ vehicles, total, page, pages }, config] = await Promise.all([
+    getVehicles(filters),
+    getSiteConfigFile(),
+  ])
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 lg:pt-10 pb-4 sm:pb-6 lg:pb-8">
@@ -41,6 +37,11 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-950">
           Catálogo de Vehículos
         </h1>
+        {config.slogan && (
+          <p className="text-sm sm:text-base text-zinc-500 mt-1.5 max-w-2xl font-normal">
+            {config.slogan}
+          </p>
+        )}
       </header>
 
       {/* ── Layout: sidebar + grid ──────────────────────────────── */}

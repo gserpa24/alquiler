@@ -6,6 +6,7 @@ import { type VehicleCard as VehicleCardType } from '@/types/vehicle'
 import { VehicleCard } from '@/components/vehicle/VehicleCard'
 import { TransactionalSearchHero } from '@/components/home/TransactionalSearchHero'
 import { FAQSection } from '@/components/faq/FAQSection'
+import { useSiteConfig } from '@/contexts/SiteConfigContext'
 import { cn } from '@/lib/utils'
 
 interface TransactionalVehicleCatalogProps {
@@ -21,6 +22,7 @@ const CATEGORY_TABS = [
 ]
 
 export function TransactionalVehicleCatalog({ vehicles }: TransactionalVehicleCatalogProps) {
+  const { config } = useSiteConfig()
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [pickupDate, setPickupDate] = useState<string>('')
   const [returnDate, setReturnDate] = useState<string>('')
@@ -56,8 +58,8 @@ export function TransactionalVehicleCatalog({ vehicles }: TransactionalVehicleCa
 
   return (
     <div className="w-full">
-      {/* ── Hero Principal con Imagen de Carretera en la Selva Peruana (Sin autos, paisaje amazónico) ── */}
-      <section className="relative flex items-center justify-center py-8 sm:py-10 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-zinc-200">
+      {/* ── Hero Principal con Imagen de Carretera en la Selva Peruana ── */}
+      <section className="relative flex items-center justify-center py-10 sm:py-14 lg:py-16 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-zinc-200">
         {/* Fotografía de carretera en la selva peruana serpenteando entre montañas verdes y frondosa vegetación tropical */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -68,12 +70,24 @@ export function TransactionalVehicleCatalog({ vehicles }: TransactionalVehicleCa
             sizes="100vw"
             className="object-cover object-[center_55%]"
           />
-          {/* Overlay suave cristalino sin desenfoques para máxima nitidez del paisaje */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40" />
+          {/* Overlay suave para máxima legibilidad del título y el buscador */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/60" />
         </div>
 
-        {/* Bloque central del formulario de búsqueda */}
-        <div className="relative z-10 w-full max-w-4xl mx-auto">
+        {/* Bloque central: Identidad + Formulario de búsqueda */}
+        <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center">
+          {/* Nombre y Slogan del Servicio institucional */}
+          <div className="text-center mb-6 sm:mb-8 px-4 max-w-2xl">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white drop-shadow-md">
+              {config.brandName || 'AutoRuta'}
+            </h1>
+            {config.slogan && (
+              <p className="mt-2 sm:mt-3 text-sm sm:text-base md:text-lg text-zinc-100 font-medium leading-relaxed drop-shadow-sm">
+                {config.slogan}
+              </p>
+            )}
+          </div>
+
           <TransactionalSearchHero
             onSearch={handleSearch}
             initialCategory={selectedCategory}

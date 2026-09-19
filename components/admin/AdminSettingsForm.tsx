@@ -137,7 +137,7 @@ export function AdminSettingsForm({ initialConfig }: AdminSettingsFormProps = {}
                 className="w-full px-3 py-2 text-xs rounded-lg border border-zinc-300 focus:outline-none focus:border-[#0A192F] focus:ring-1 focus:ring-[#0A192F] bg-white text-zinc-900 resize-y"
               />
               <p className="text-[11px] text-zinc-400 mt-1">
-                Aparece debajo del logo en el pie de página del catálogo y sitio web.
+                Aparece en el banner principal del inicio, en el catálogo de vehículos y en el pie de página.
               </p>
             </div>
 
