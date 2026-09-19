@@ -1,6 +1,13 @@
 // __tests__/whatsapp.test.ts
 import { describe, it, expect } from 'vitest'
-import { buildVehicleWhatsAppLink, buildGenericWhatsAppLink } from '@/lib/whatsapp'
+import {
+  buildVehicleWhatsAppLink,
+  buildGenericWhatsAppLink,
+  cleanPhoneNumber,
+  isValidWhatsAppNumber,
+  getSafeVehicleWhatsAppLink,
+  getSafeGenericWhatsAppLink,
+} from '@/lib/whatsapp'
 
 const BASE_PARAMS = {
   brand: 'Toyota',
@@ -85,6 +92,47 @@ describe('buildGenericWhatsAppLink', () => {
     expect(url).toContain(encodeURIComponent('Consulta de prueba'))
   })
 })
+
+describe('Helpers de validación y links seguros de WhatsApp', () => {
+  it('cleanPhoneNumber limpia espacios, guiones y signos', () => {
+    expect(cleanPhoneNumber('+51 (997) 936-599')).toBe('51997936599')
+    expect(cleanPhoneNumber(null)).toBe('')
+    expect(cleanPhoneNumber(undefined)).toBe('')
+  })
+
+  it('isValidWhatsAppNumber valida longitud E.164 (8 a 15 dígitos)', () => {
+    expect(isValidWhatsAppNumber('51997936599')).toBe(true)
+    expect(isValidWhatsAppNumber('+51 997 936 599')).toBe(true)
+    expect(isValidWhatsAppNumber('1234567')).toBe(false)
+    expect(isValidWhatsAppNumber('')).toBe(false)
+    expect(isValidWhatsAppNumber(null)).toBe(false)
+  })
+
+  it('getSafeVehicleWhatsAppLink devuelve url y isConfigured=true cuando es válido', () => {
+    const res = getSafeVehicleWhatsAppLink(BASE_PARAMS, '51997936599')
+    expect(res.isConfigured).toBe(true)
+    expect(res.url).toContain('wa.me/51997936599')
+  })
+
+  it('getSafeVehicleWhatsAppLink devuelve # y isConfigured=false cuando no hay número', () => {
+    const res = getSafeVehicleWhatsAppLink(BASE_PARAMS, '')
+    expect(res.isConfigured).toBe(false)
+    expect(res.url).toBe('#')
+  })
+
+  it('getSafeGenericWhatsAppLink devuelve url y isConfigured=true cuando es válido', () => {
+    const res = getSafeGenericWhatsAppLink('Hola', '51997936599')
+    expect(res.isConfigured).toBe(true)
+    expect(res.url).toContain('wa.me/51997936599')
+  })
+
+  it('getSafeGenericWhatsAppLink devuelve # y isConfigured=false cuando número es nulo', () => {
+    const res = getSafeGenericWhatsAppLink('Hola', null)
+    expect(res.isConfigured).toBe(false)
+    expect(res.url).toBe('#')
+  })
+})
+
 
 // __tests__/validations.test.ts
 import { describe as describeV, it as itV, expect as expectV } from 'vitest'
