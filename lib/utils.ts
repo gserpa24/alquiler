@@ -2,6 +2,8 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
+import { formatCurrencyPrice } from '@/lib/currency'
+
 /**
  * Combina clases de Tailwind resolviendo conflictos con tailwind-merge.
  * Uso: cn('px-4 py-2', isActive && 'bg-gold', className)
@@ -11,18 +13,13 @@ export function cn(...inputs: ClassValue[]): string {
 }
 
 /**
- * Formatea un precio numérico como string con símbolo de moneda.
- * Locale por defecto: es-PE (Perú). Moneda por defecto: PEN.
+ * Formatea un precio numérico como string con símbolo de moneda delegando
+ * al motor centralizado de divisas en lib/currency.ts.
  * @example formatPrice(150) → 'S/ 150'
- * @example formatPrice(50, 'USD') → 'US$ 50'
+ * @example formatPrice(50, 'USD') → '$ 50'
  */
 export function formatPrice(amount: number, currency = 'PEN'): string {
-  return new Intl.NumberFormat('es-PE', {
-    style:                'currency',
-    currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount)
+  return formatCurrencyPrice(amount, currency)
 }
 
 /**
