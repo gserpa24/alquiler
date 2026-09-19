@@ -40,18 +40,31 @@ CREATE POLICY "contact_messages_public_insert" ON contact_messages
   FOR INSERT
   WITH CHECK (true);
 
--- Lectura: solo administradores autenticados
+-- Lectura: solo service_role o administradores con app_metadata->>'role' = 'admin'
 CREATE POLICY "contact_messages_admin_select" ON contact_messages
   FOR SELECT
-  USING (auth.role() = 'authenticated');
+  USING (
+    auth.jwt() ->> 'role' = 'service_role'
+    OR auth.jwt() -> 'app_metadata' ->> 'role' = 'admin'
+  );
 
--- Actualización: solo administradores autenticados
+-- Actualización: solo service_role o administradores con app_metadata->>'role' = 'admin'
 CREATE POLICY "contact_messages_admin_update" ON contact_messages
   FOR UPDATE
-  USING (auth.role() = 'authenticated')
-  WITH CHECK (auth.role() = 'authenticated');
+  USING (
+    auth.jwt() ->> 'role' = 'service_role'
+    OR auth.jwt() -> 'app_metadata' ->> 'role' = 'admin'
+  )
+  WITH CHECK (
+    auth.jwt() ->> 'role' = 'service_role'
+    OR auth.jwt() -> 'app_metadata' ->> 'role' = 'admin'
+  );
 
--- Eliminación: solo administradores autenticados
+-- Eliminación: solo service_role o administradores con app_metadata->>'role' = 'admin'
 CREATE POLICY "contact_messages_admin_delete" ON contact_messages
   FOR DELETE
-  USING (auth.role() = 'authenticated');
+  USING (
+    auth.jwt() ->> 'role' = 'service_role'
+    OR auth.jwt() -> 'app_metadata' ->> 'role' = 'admin'
+  );
+

@@ -24,6 +24,7 @@ export interface ToggleModuleResult {
  * Consulta los flags activos de módulos para el usuario autenticado.
  */
 export async function getAdminModuleFlagsAction(): Promise<Record<AdminModuleId, boolean>> {
+  await requireAdminSession()
   const cookieStore = await cookies()
   const raw = cookieStore.get(MODULE_COOKIE_NAME)?.value
   return parseModuleFlags(raw)

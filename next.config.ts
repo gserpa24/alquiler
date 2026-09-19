@@ -52,7 +52,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
+            value: 'camera=(self), microphone=(), geolocation=()',
           },
           {
             key: 'X-DNS-Prefetch-Control',
@@ -66,12 +66,16 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://cdn.vercel-insights.com",
+              process.env.NODE_ENV === 'development'
+                ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://cdn.vercel-insights.com"
+                : "script-src 'self' 'unsafe-inline' https://vercel.live https://cdn.vercel-insights.com",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https://images.unsplash.com https://*.supabase.co",
               "font-src 'self' data:",
               "connect-src 'self' https://open.er-api.com https://*.supabase.co wss://*.supabase.co https://*.vercel-insights.com https://cdn.vercel-insights.com",
               "frame-src 'self' https://www.google.com",
+              "frame-ancestors 'none'",
+              "form-action 'self'",
               "object-src 'none'",
               "base-uri 'self'",
             ].join('; '),

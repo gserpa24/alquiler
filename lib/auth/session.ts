@@ -8,6 +8,16 @@ const SESSION_MAX_AGE = 60 * 60 * 24 * 7 // 7 días en segundos
  * Secreto para firmar y validar tokens de sesión HMAC.
  * Requiere estrictamente variables de entorno seguras de servidor.
  */
+// Fallback aleatorio generado en memoria para desarrollo/pruebas locales
+// Mitiga la falsificación de tokens HMAC por atacantes que conozcan secretos hardcodeados
+const devFallbackSecret: string =
+  ((globalThis as unknown as { __autoruta_dev_secret__?: string }).__autoruta_dev_secret__ ??=
+    crypto.randomUUID() + '-' + Date.now().toString(36))
+
+/**
+ * Secreto para firmar y validar tokens de sesión HMAC.
+ * Requiere estrictamente variables de entorno seguras de servidor.
+ */
 function getSecretKey(): string {
   const secret = process.env.ADMIN_SESSION_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!secret) {
@@ -16,19 +26,24 @@ function getSecretKey(): string {
         'Seguridad crítica: ADMIN_SESSION_SECRET o SUPABASE_SERVICE_ROLE_KEY deben estar definidos en producción.'
       )
     }
-    return 'autoruta-dev-only-secret-do-not-use-in-production'
+    return devFallbackSecret
   }
   return secret
 }
 
 /**
  * Comparación en tiempo constante para mitigar ataques de temporización (timing attacks).
+ * Itera sobre la longitud máxima de ambos valores para evitar la filtración de longitud.
  */
-function constantTimeCompare(a: string, b: string): boolean {
-  if (a.length !== b.length) return false
-  let mismatch = 0
-  for (let i = 0; i < a.length; i++) {
-    mismatch |= a.charCodeAt(i) ^ b.charCodeAt(i)
+export function constantTimeCompare(a: string, b: string): boolean {
+  const lenA = a.length
+  const lenB = b.length
+  let mismatch = lenA ^ lenB
+  const maxLen = Math.max(lenA, lenB)
+  for (let i = 0; i < maxLen; i++) {
+    const charA = i < lenA ? a.charCodeAt(i) : 0
+    const charB = i < lenB ? b.charCodeAt(i) : 0
+    mismatch |= charA ^ charB
   }
   return mismatch === 0
 }

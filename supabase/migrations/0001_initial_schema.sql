@@ -74,9 +74,14 @@ ALTER TABLE vehicles ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "vehicles_public_read" ON vehicles
   FOR SELECT USING (status != 'sold');
 
--- Escritura: solo usuarios autenticados con rol admin
--- (configurar en Supabase Auth: custom claim 'app_role' = 'admin')
+-- Escritura: solo service_role o usuarios con app_metadata->>'role' = 'admin'
 CREATE POLICY "vehicles_admin_write" ON vehicles
   FOR ALL
-  USING (auth.role() = 'authenticated')
-  WITH CHECK (auth.role() = 'authenticated');
+  USING (
+    auth.jwt() ->> 'role' = 'service_role'
+    OR auth.jwt() -> 'app_metadata' ->> 'role' = 'admin'
+  )
+  WITH CHECK (
+    auth.jwt() ->> 'role' = 'service_role'
+    OR auth.jwt() -> 'app_metadata' ->> 'role' = 'admin'
+  );

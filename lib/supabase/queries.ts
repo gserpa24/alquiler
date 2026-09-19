@@ -32,10 +32,12 @@ function applyMockFilters(vehicles: Vehicle[], filters: Partial<VehicleFilter>):
   if (filters.priceMax)     result = result.filter((v) => v.daily_rate !== null && v.daily_rate <= (filters.priceMax ?? 99999))
 
   if (filters.search) {
-    const q = filters.search.toLowerCase()
-    result = result.filter(
-      (v) => v.brand.toLowerCase().includes(q) || v.model.toLowerCase().includes(q),
-    )
+    const q = filters.search.replace(/[,.():"'\\]/g, '').trim().toLowerCase()
+    if (q.length > 0) {
+      result = result.filter(
+        (v) => v.brand.toLowerCase().includes(q) || v.model.toLowerCase().includes(q),
+      )
+    }
   }
 
   result.sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
@@ -101,8 +103,11 @@ export async function getVehicles(
   if (filters.priceMin)     query = query.gte('daily_rate',  filters.priceMin)
   if (filters.priceMax)     query = query.lte('daily_rate',  filters.priceMax)
   if (filters.search) {
-    const q = filters.search
-    query = query.or(`brand.ilike.%${q}%,model.ilike.%${q}%`)
+    // Sanitización contra PostgREST filter injection: eliminar delimitadores estructurales (, . ( ) : " ' \)
+    const sanitized = filters.search.replace(/[,.():"'\\]/g, '').trim()
+    if (sanitized.length > 0) {
+      query = query.or(`brand.ilike.%${sanitized}%,model.ilike.%${sanitized}%`)
+    }
   }
 
   const { data, error, count } = await query

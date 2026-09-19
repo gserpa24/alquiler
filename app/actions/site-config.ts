@@ -16,6 +16,7 @@ import {
   getSiteConfigFile,
 } from '@/lib/site-config-server'
 import { requireAdminSession } from '@/lib/auth/guard'
+import { SiteConfigSchema } from '@/lib/validations'
 
 export interface SiteConfigActionResult {
   success: boolean
@@ -27,22 +28,31 @@ export interface SiteConfigActionResult {
  * Server Action: Guarda la configuración institucional del sitio.
  */
 export async function updateSiteConfigAction(
-  updates: Partial<SiteConfig>
+  updates: unknown
 ): Promise<SiteConfigActionResult> {
   try {
     await requireAdminSession()
 
+    const validated = SiteConfigSchema.safeParse(updates)
+    if (!validated.success) {
+      return {
+        success: false,
+        error: validated.error.issues[0]?.message ?? 'Datos de configuración inválidos',
+      }
+    }
+
+    const data = validated.data
     const current = await getSiteConfigFile()
     const merged: SiteConfig = {
-      brandName: updates.brandName?.trim() || current.brandName,
-      slogan: updates.slogan?.trim() || current.slogan,
-      instagramUrl: updates.instagramUrl?.trim() || current.instagramUrl,
-      facebookUrl: updates.facebookUrl?.trim() || current.facebookUrl,
-      scheduleWeekdays: updates.scheduleWeekdays?.trim() || current.scheduleWeekdays,
-      scheduleWeekends: updates.scheduleWeekends?.trim() || current.scheduleWeekends,
-      location: updates.location?.trim() || current.location,
-      phone: updates.phone?.trim() || current.phone,
-      whatsappNumber: updates.whatsappNumber?.replace(/\D/g, '') || current.whatsappNumber,
+      brandName: data.brandName?.trim() || current.brandName,
+      slogan: data.slogan?.trim() || current.slogan,
+      instagramUrl: data.instagramUrl?.trim() || current.instagramUrl,
+      facebookUrl: data.facebookUrl?.trim() || current.facebookUrl,
+      scheduleWeekdays: data.scheduleWeekdays?.trim() || current.scheduleWeekdays,
+      scheduleWeekends: data.scheduleWeekends?.trim() || current.scheduleWeekends,
+      location: data.location?.trim() || current.location,
+      phone: data.phone?.trim() || current.phone,
+      whatsappNumber: data.whatsappNumber?.replace(/\D/g, '') || current.whatsappNumber,
     }
 
     // Persistir en archivo local

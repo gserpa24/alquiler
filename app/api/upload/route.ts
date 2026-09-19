@@ -16,6 +16,48 @@ const ALLOWED_MIME_TYPES = new Set([
 const ALLOWED_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.avif'])
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB
 
+/**
+ * Valida los magic bytes (firma binaria del archivo) para asegurar que el contenido
+ * sea efectivamente una imagen real (JPEG, PNG, WebP o AVIF).
+ */
+function isValidImageMagicBytes(buffer: Buffer): boolean {
+  if (buffer.length < 12) return false
+
+  // JPEG: FF D8 FF
+  const isJpeg = buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff
+  if (isJpeg) return true
+
+  // PNG: 89 50 4E 47
+  const isPng = buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4e && buffer[3] === 0x47
+  if (isPng) return true
+
+  // WebP: RIFF....WEBP
+  const isWebp =
+    buffer[0] === 0x52 &&
+    buffer[1] === 0x49 &&
+    buffer[2] === 0x46 &&
+    buffer[3] === 0x46 &&
+    buffer[8] === 0x57 &&
+    buffer[9] === 0x45 &&
+    buffer[10] === 0x42 &&
+    buffer[11] === 0x50
+  if (isWebp) return true
+
+  // AVIF: ....ftypavif o ....ftypavis
+  const isAvif =
+    buffer[4] === 0x66 &&
+    buffer[5] === 0x74 &&
+    buffer[6] === 0x79 &&
+    buffer[7] === 0x70 &&
+    buffer[8] === 0x61 &&
+    buffer[9] === 0x76 &&
+    buffer[10] === 0x69 &&
+    (buffer[11] === 0x66 || buffer[11] === 0x73)
+  if (isAvif) return true
+
+  return false
+}
+
 export async function POST(request: NextRequest) {
   try {
     // 1. Validar autenticación de administrador (Broken Access Control prevention)
@@ -81,6 +123,14 @@ export async function POST(request: NextRequest) {
 
       const bytes = await file.arrayBuffer()
       const buffer = Buffer.from(bytes)
+
+      // 4. Validar firma binaria real del archivo (Magic Bytes) contra spoofing
+      if (!isValidImageMagicBytes(buffer)) {
+        return NextResponse.json(
+          { error: 'El contenido del archivo no corresponde a un formato de imagen válido (JPG, PNG, WEBP o AVIF).' },
+          { status: 400 }
+        )
+      }
 
       // Sanitizar nombre base del archivo contra Path Traversal
       const sanitizedBase = path

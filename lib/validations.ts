@@ -10,7 +10,7 @@ export const VehicleFilterSchema = z.object({
   seats:        z.coerce.number().int().min(2).max(9).optional(),
   priceMin:     z.coerce.number().min(0).optional(),
   priceMax:     z.coerce.number().max(99999).optional(),
-  search:       z.string().max(100).optional(),
+  search:       z.string().max(100).regex(/^[a-zA-Z0-9\s\-áéíóúÁÉÍÓÚñÑ]*$/, 'Búsqueda contiene caracteres no permitidos').optional(),
   page:         z.coerce.number().int().min(1).default(1),
   limit:        z.coerce.number().int().min(1).max(50).default(12),
 }).refine(
@@ -87,3 +87,24 @@ export const LibroReclamacionSchema = z.object({
 })
 
 export type LibroReclamacionInput = z.infer<typeof LibroReclamacionSchema>
+
+/** Esquema de validación para la configuración general del sitio / empresa */
+export const SiteConfigSchema = z.object({
+  brandName:        z.string().min(2, 'El nombre de la empresa debe tener al menos 2 caracteres').max(60).optional(),
+  slogan:           z.string().max(150, 'El slogan no puede superar los 150 caracteres').optional(),
+  phone:            z.string().max(30, 'Número de teléfono demasiado largo').optional(),
+  whatsappNumber:   z.string().max(20, 'Número de WhatsApp demasiado largo').optional(),
+  location:         z.string().max(200, 'La dirección no puede superar los 200 caracteres').optional(),
+  scheduleWeekdays: z.string().max(100).optional(),
+  scheduleWeekends: z.string().max(100).optional(),
+  instagramUrl:     z.string().max(200).optional().refine(
+    (v) => !v || v.startsWith('http://') || v.startsWith('https://') || v.startsWith('/'),
+    { message: 'URL de Instagram no válida' }
+  ),
+  facebookUrl:      z.string().max(200).optional().refine(
+    (v) => !v || v.startsWith('http://') || v.startsWith('https://') || v.startsWith('/'),
+    { message: 'URL de Facebook no válida' }
+  ),
+})
+
+export type SiteConfigInput = z.infer<typeof SiteConfigSchema>

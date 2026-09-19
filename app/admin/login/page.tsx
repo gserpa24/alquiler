@@ -10,10 +10,19 @@ import { ShieldCheck, Lock, User, Eye, EyeOff, ArrowRight, ArrowLeft } from 'luc
 import { toast } from 'sonner'
 import { loginAdminAction } from '@/app/actions/auth-actions'
 
+function getSafeRedirect(path: string | null): string {
+  if (!path) return '/admin'
+  // Solo permitir rutas relativas locales seguras
+  if (!path.startsWith('/') || path.startsWith('//') || path.includes(':') || path.includes('\\')) {
+    return '/admin'
+  }
+  return path
+}
+
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirectPath = searchParams.get('redirect') || '/admin'
+  const redirectPath = getSafeRedirect(searchParams.get('redirect'))
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')

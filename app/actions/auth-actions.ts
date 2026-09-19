@@ -8,6 +8,7 @@ import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import {
   createSessionToken,
+  constantTimeCompare,
   SESSION_COOKIE_NAME,
   SESSION_MAX_AGE,
 } from '@/lib/auth/session'
@@ -45,12 +46,16 @@ export async function loginAdminAction(formData: unknown): Promise<LoginResult> 
   const { username, password } = validated.data
   const normalizedUser = username.toLowerCase().trim()
 
-  // 1. Verificación por credenciales maestras de administrador configuradas
-  const isMasterMatch =
-    Boolean(ADMIN_USERNAME && ADMIN_PASSWORD) &&
+  // 1. Verificación por credenciales maestras de administrador con tiempo constante
+  const isMasterUserMatch =
+    Boolean(ADMIN_USERNAME) &&
     (normalizedUser === ADMIN_USERNAME.toLowerCase() ||
-      normalizedUser === `${ADMIN_USERNAME.toLowerCase()}@autoruta.pe`) &&
-    password === ADMIN_PASSWORD
+      normalizedUser === `${ADMIN_USERNAME.toLowerCase()}@autoruta.pe`)
+
+  const isMasterPassMatch =
+    Boolean(ADMIN_PASSWORD) && constantTimeCompare(password, ADMIN_PASSWORD)
+
+  const isMasterMatch = isMasterUserMatch && isMasterPassMatch
 
   if (isMasterMatch) {
     const token = await createSessionToken(normalizedUser)
